@@ -15,10 +15,10 @@
         :root {
             --color-bg-deep: #0b2b3b;
             --color-accent: #8fd8ef;
-            --glass-bg: rgba(255, 255, 255, 0.12);
+            --glass-bg: rgba(255, 255, 255, 0.08);
             --glass-border: rgba(255, 255, 255, 0.20);
-            --glass-hover-bg: rgba(255, 255, 255, 0.22);
-            --glass-header-bg: rgba(11, 43, 59, 0.55);
+            --glass-hover-bg: rgba(255, 255, 255, 0.18);
+            --glass-header-bg: rgba(11, 43, 59, 0.45);
             --shadow-card: 0 30px 60px -16px rgba(0, 0, 0, 0.45);
             --shadow-item: 0 4px 16px -6px rgba(0, 0, 0, 0.15);
             --shadow-toast: 0 8px 30px rgba(0, 0, 0, 0.35);
@@ -46,7 +46,7 @@
             content: '';
             position: fixed;
             inset: 0;
-            background: rgba(0, 0, 0, 0.30);
+            background: rgba(0, 0, 0, 0.25);
             pointer-events: none;
             z-index: 0;
         }
@@ -106,8 +106,8 @@
 
         .server-card {
             background: var(--glass-bg);
-            backdrop-filter: blur(12px) saturate(1.2);
-            -webkit-backdrop-filter: blur(12px) saturate(1.2);
+            backdrop-filter: blur(5px) saturate(1.1);
+            -webkit-backdrop-filter: blur(5px) saturate(1.1);
             border-radius: var(--radius-card);
             border: 1px solid var(--glass-border);
             box-shadow: var(--shadow-card), inset 0 1px 0 rgba(255, 255, 255, 0.08);
@@ -132,20 +132,20 @@
         }
 
         .server-header.online {
-            background: linear-gradient(135deg, rgba(76, 175, 80, 0.25), rgba(76, 175, 80, 0.08));
+            background: linear-gradient(135deg, rgba(76, 175, 80, 0.20), rgba(76, 175, 80, 0.05));
         }
         .server-header.offline {
-            background: linear-gradient(135deg, rgba(244, 67, 54, 0.25), rgba(244, 67, 54, 0.08));
+            background: linear-gradient(135deg, rgba(244, 67, 54, 0.20), rgba(244, 67, 54, 0.05));
         }
         .server-header.bedrock {
-            background: linear-gradient(135deg, rgba(33, 150, 243, 0.25), rgba(33, 150, 243, 0.08));
+            background: linear-gradient(135deg, rgba(33, 150, 243, 0.20), rgba(33, 150, 243, 0.05));
         }
 
         .server-icon {
             width: 56px;
             height: 56px;
             border-radius: 12px;
-            background: rgba(255, 255, 255, 0.15);
+            background: rgba(255, 255, 255, 0.12);
             padding: 3px;
             flex-shrink: 0;
             object-fit: cover;
@@ -169,22 +169,22 @@
             border-radius: var(--radius-btn);
             font-size: 0.8rem;
             font-weight: 600;
-            background: rgba(255, 255, 255, 0.12);
-            backdrop-filter: blur(6px);
-            -webkit-backdrop-filter: blur(6px);
+            background: rgba(255, 255, 255, 0.10);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
             color: #fff;
             text-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
             white-space: nowrap;
         }
 
         .server-header.online .server-status {
-            background: rgba(76, 175, 80, 0.35);
+            background: rgba(76, 175, 80, 0.30);
         }
         .server-header.offline .server-status {
-            background: rgba(244, 67, 54, 0.35);
+            background: rgba(244, 67, 54, 0.30);
         }
         .server-header.bedrock .server-status {
-            background: rgba(33, 150, 243, 0.35);
+            background: rgba(33, 150, 243, 0.30);
         }
 
         .server-body {
@@ -228,21 +228,26 @@
             letter-spacing: 0.02em;
         }
         .server-type-badge.java {
-            background: rgba(76, 175, 80, 0.2);
+            background: rgba(76, 175, 80, 0.18);
             color: #81c784;
         }
         .server-type-badge.bedrock {
-            background: rgba(33, 150, 243, 0.2);
+            background: rgba(33, 150, 243, 0.18);
             color: #64b5f6;
         }
 
         .server-motd {
-            background: rgba(0, 0, 0, 0.25);
-            backdrop-filter: blur(4px);
-            -webkit-backdrop4 color;
-rem 1rem;
-px.;
- rgba0.06);
+            background: rgba(0, 0, 0, 0.15);
+            backdrop-filter: blur(3px);
+            -webkit-backdrop-filter: blur(3px);
+            color: #ddf4ff;
+            padding: 0.8rem 1rem;
+            border-radius: 10px;
+            margin-top: auto;
+            font-size: 0.82rem;
+            line-height: 1.5;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.06);
             min-height: 60px;
             display: flex;
             align-items: center;
@@ -254,8 +259,8 @@ px.;
             text-align: center;
             padding: 3rem 2rem;
             background: var(--glass-bg);
-            backdrop-filter: blur(12px) saturate(1.2);
-            -webkit-backdrop-filter: blur(12px) saturate(1.2);
+            backdrop-filter: blur(5px) saturate(1.1);
+            -webkit-backdrop-filter: blur(5px) saturate(1.1);
             border-radius: var(--radius-card);
             border: 1px solid var(--glass-border);
             box-shadow: var(--shadow-card);
@@ -270,9 +275,9 @@ px.;
         .modal-overlay {
             position: fixed;
             inset: 0;
-            background: rgba(0, 0, 0, 0.55);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
+            background: rgba(0, 0, 0, 0.40);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -284,9 +289,9 @@ px.;
             width: 92%;
             max-width: 720px;
             max-height: 85vh;
-            background: rgba(20, 45, 60, 0.85);
-            backdrop-filter: blur(20px) saturate(1.3);
-            -webkit-backdrop-filter: blur(20px) saturate(1.3);
+            background: rgba(11, 35, 50, 0.75);
+            backdrop-filter: blur(8px) saturate(1.1);
+            -webkit-backdrop-filter: blur(8px) saturate(1.1);
             border-radius: var(--radius-card);
             border: 1px solid var(--glass-border);
             box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5);
@@ -320,7 +325,7 @@ px.;
             width: 44px;
             height: 44px;
             border-radius: 10px;
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.08);
             padding: 2px;
             flex-shrink: 0;
         }
@@ -366,7 +371,7 @@ px.;
             align-items: center;
             gap: 0.8rem;
             padding: 0.8rem 1rem;
-            background: rgba(255, 255, 255, 0.06);
+            background: rgba(255, 255, 255, 0.05);
             border-radius: 10px;
             border: 1px solid rgba(255, 255, 255, 0.08);
             flex-wrap: wrap;
@@ -378,7 +383,7 @@ px.;
 
         .date-input {
             padding: 6px 12px;
-            background: rgba(255, 255, 255, 0.08);
+            background: rgba(255, 255, 255, 0.06);
             border: 1px solid rgba(255, 255, 255, 0.12);
             border-radius: 8px;
             color: #fff;
