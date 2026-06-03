@@ -12,11 +12,9 @@
     <link href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        /* ===== 设计令牌 — 与导航页一致 ===== */
         :root {
             --color-bg-deep: #0b2b3b;
             --color-accent: #8fd8ef;
-            --color-accent-soft: rgba(143, 216, 239, 0.15);
             --glass-bg: rgba(255, 255, 255, 0.12);
             --glass-border: rgba(255, 255, 255, 0.20);
             --glass-hover-bg: rgba(255, 255, 255, 0.22);
@@ -34,7 +32,6 @@
             --transition: 0.25s ease;
         }
 
-        /* ===== Reset ===== */
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
@@ -43,22 +40,19 @@
             font-family: var(--font-sans);
             -webkit-font-smoothing: antialiased;
             background: var(--color-bg-deep) url('138936740_p0.png') center / cover no-repeat fixed;
-            background-blend-mode: overlay;
         }
 
-        /* 遮罩层 */
         body::before {
             content: '';
             position: fixed;
             inset: 0;
-            background: rgba(0, 0, 0, 0.35);
+            background: rgba(0, 0, 0, 0.30);
             pointer-events: none;
             z-index: 0;
         }
 
         body > * { position: relative; z-index: 1; }
 
-        /* ===== 容器 ===== */
         .container {
             max-width: 1200px;
             margin: 0 auto;
@@ -70,7 +64,6 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* ===== 标题 ===== */
         .page-header {
             text-align: center;
             margin-bottom: 2.5rem;
@@ -105,14 +98,12 @@
             color: #fff;
         }
 
-        /* ===== 卡片网格 ===== */
         .server-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             gap: 1.2rem;
         }
 
-        /* ===== 卡片 ===== */
         .server-card {
             background: var(--glass-bg);
             backdrop-filter: blur(12px) saturate(1.2);
@@ -125,7 +116,6 @@
             cursor: pointer;
             display: flex;
             flex-direction: column;
-            contain: layout style;
         }
 
         .server-card:hover {
@@ -133,7 +123,6 @@
             box-shadow: 0 20px 50px -16px rgba(0, 0, 0, 0.5);
         }
 
-        /* ===== 卡片头部 ===== */
         .server-header {
             padding: 1.2rem 1.2rem 1rem;
             display: flex;
@@ -198,7 +187,6 @@
             background: rgba(33, 150, 243, 0.35);
         }
 
-        /* ===== 卡片内容 ===== */
         .server-body {
             padding: 1rem 1.2rem 1.2rem;
             flex: 1;
@@ -248,19 +236,13 @@
             color: #64b5f6;
         }
 
-        /* ===== MOTD ===== */
         .server-motd {
             background: rgba(0, 0, 0, 0.25);
             backdrop-filter: blur(4px);
-            -webkit-backdrop-filter: blur(4px);
-            color: #ddf4ff;
-            padding: 0.8rem 1rem;
-            border-radius: 10px;
-            margin-top: auto;
-            font-size: 0.82rem;
-            line-height: 1.5;
-            text-align: center;
-            border: 1px solid rgba(255, 255, 255, 0.06);
+            -webkit-backdrop4 color;
+rem 1rem;
+px.;
+ rgba0.06);
             min-height: 60px;
             display: flex;
             align-items: center;
@@ -268,7 +250,6 @@
             overflow-wrap: break-word;
         }
 
-        /* ===== 空状态 ===== */
         .no-servers {
             text-align: center;
             padding: 3rem 2rem;
@@ -286,7 +267,6 @@
             font-weight: 500;
         }
 
-        /* ===== 模态框 ===== */
         .modal-overlay {
             position: fixed;
             inset: 0;
@@ -381,13 +361,6 @@
             margin: 1.2rem 0;
         }
 
-        .modal-body .chart-controls {
-            display: flex;
-            justify-content: center;
-            gap: 0.8rem;
-            margin-top: 1rem;
-        }
-
         .date-selector {
             display: flex;
             align-items: center;
@@ -436,7 +409,6 @@
             font-family: var(--font-mono);
         }
 
-        /* ===== 滚动条 ===== */
         .modal-body::-webkit-scrollbar {
             width: 6px;
         }
@@ -447,53 +419,24 @@
             background: rgba(255, 255, 255, 0.15);
             border-radius: 3px;
         }
-        .modal-body::-webkit-scrollbar-thumb:hover {
-            background: rgba(255, 255, 255, 0.25);
-        }
 
-        /* ===== 响应式 ===== */
         @media (max-width: 700px) {
             :root { --body-pad: 1.5rem; }
-            .server-grid {
-                grid-template-columns: 1fr;
-            }
-            .server-header {
-                padding: 1rem 1rem 0.8rem;
-            }
-            .server-body {
-                padding: 0.8rem 1rem 1rem;
-            }
-            .server-icon {
-                width: 44px;
-                height: 44px;
-            }
+            .server-grid { grid-template-columns: 1fr; }
+            .server-header { padding: 1rem 1rem 0.8rem; }
+            .server-body { padding: 0.8rem 1rem 1rem; }
+            .server-icon { width: 44px; height: 44px; }
         }
 
         @media (max-width: 480px) {
             :root { --body-pad: 1rem; }
-            .server-grid {
-                gap: 0.8rem;
-            }
-            .modal-content {
-                width: 96%;
-                border-radius: 1.5rem;
-            }
-            .modal-header {
-                padding: 1rem 1rem;
-            }
-            .modal-header h3 {
-                font-size: 0.95rem;
-            }
-            .modal-body {
-                padding: 1rem;
-            }
-            .modal-body .chart-wrapper {
-                height: 200px;
-            }
-            .date-selector {
-                flex-direction: column;
-                align-items: stretch;
-            }
+            .server-grid { gap: 0.8rem; }
+            .modal-content { width: 96%; border-radius: 1.5rem; }
+            .modal-header { padding: 1rem; }
+            .modal-header h3 { font-size: 0.95rem; }
+            .modal-body { padding: 1rem; }
+            .modal-body .chart-wrapper { height: 200px; }
+            .date-selector { flex-direction: column; align-items: stretch; }
         }
 
         @media (prefers-reduced-motion: reduce) {
@@ -517,7 +460,7 @@
 
 <div class="container">
     <header class="page-header">
-        <h1>🎮 Minecraft 服务器</h1>
+        <h1>Minecraft 服务器</h1>
         <p class="sub">
             <a href="https://snowblock.top">❄️ SnowBlock</a>
             <span style="color:rgba(200,235,250,0.3);margin:0 6px;">·</span>
@@ -526,10 +469,9 @@
     </header>
 
     <div class="server-grid">
-        <!-- 卡片 1：在线 Java -->
         <div class="server-card" data-server-id="1">
             <div class="server-header online">
-                <img src="https://via.placeholder.com/56?text=🌲" alt="Server Icon" class="server-icon">
+                <div class="server-icon" style="display:flex;align-items:center;justify-content:center;font-size:1.8rem;">🌲</div>
                 <div class="server-name">示例生存服</div>
                 <div class="server-status">在线</div>
             </div>
@@ -556,10 +498,9 @@
             </div>
         </div>
 
-        <!-- 卡片 2：离线 -->
         <div class="server-card" data-server-id="2">
             <div class="server-header offline">
-                <div class="server-icon" style="background:rgba(255,255,255,0.05);display:flex;align-items:center;justify-content:center;font-size:1.5rem;">💤</div>
+                <div class="server-icon" style="display:flex;align-items:center;justify-content:center;font-size:1.8rem;">💤</div>
                 <div class="server-name">离线测试服</div>
                 <div class="server-status">离线</div>
             </div>
@@ -578,10 +519,9 @@
             </div>
         </div>
 
-        <!-- 卡片 3：基岩版 -->
         <div class="server-card" data-server-id="3">
             <div class="server-header online bedrock">
-                <img src="https://via.placeholder.com/56?text=🌊" alt="Server Icon" class="server-icon">
+                <div class="server-icon" style="display:flex;align-items:center;justify-content:center;font-size:1.8rem;">🌊</div>
                 <div class="server-name">基岩互通服</div>
                 <div class="server-status">在线</div>
             </div>
@@ -610,16 +550,13 @@
     </div>
 </div>
 
-<!-- 模态框 -->
 <div id="chartModal" class="modal-overlay" style="display:none;">
     <div class="modal-content">
         <div class="modal-header">
             <h3 id="modalTitle">服务器在线人数历史数据</h3>
             <button id="closeModal" class="close-btn" aria-label="关闭">✕</button>
         </div>
-        <div id="modalBody" class="modal-body">
-            <!-- 动态注入 -->
-        </div>
+        <div id="modalBody" class="modal-body"></div>
     </div>
 </div>
 
@@ -627,54 +564,48 @@
 (function() {
     'use strict';
 
-    const chartModal = document.getElementById('chartModal');
-    const modalTitle = document.getElementById('modalTitle');
-    const modalBody = document.getElementById('modalBody');
-    const closeModalBtn = document.getElementById('closeModal');
-
-    let currentChart = null;
+    var chartModal = document.getElementById('chartModal');
+    var modalTitle = document.getElementById('modalTitle');
+    var modalBody = document.getElementById('modalBody');
+    var closeBtn = document.getElementById('closeModal');
+    var currentChart = null;
 
     function hideModal() {
         if (chartModal) chartModal.style.display = 'none';
         if (currentChart) { currentChart.destroy(); currentChart = null; }
     }
 
-    function showModal(serverId, serverName) {
+    function showModal(id, name) {
         if (!chartModal || !modalBody) return;
 
-        const card = document.querySelector('.server-card[data-server-id="' + serverId + '"]');
-        let iconHtml = '';
+        var card = document.querySelector('.server-card[data-server-id="' + id + '"]');
+        var iconHtml = '';
         if (card) {
-            const img = card.querySelector('.server-icon');
-            if (img && img.tagName === 'IMG' && img.src) {
-                iconHtml = '<span class="modal-title-icon"><img src="' + img.src + '" alt=""></span>';
+            var iconEl = card.querySelector('.server-icon');
+            if (iconEl && iconEl.textContent) {
+                iconHtml = '<span class="modal-title-icon" style="display:flex;align-items:center;justify-content:center;font-size:1.6rem;background:rgba(255,255,255,0.08);border-radius:10px;">' + iconEl.textContent + '</span>';
             }
         }
-        modalTitle.innerHTML = iconHtml + serverName + ' — 在线人数历史';
+        modalTitle.innerHTML = iconHtml + name + ' — 在线人数历史';
 
         modalBody.innerHTML =
             '<div class="date-selector">' +
                 '<label>📅 选择日期（模拟）</label>' +
                 '<input type="date" id="mockDate" class="date-input" value="' + new Date().toISOString().split('T')[0] + '">' +
             '</div>' +
-            '<div class="chart-wrapper">' +
-                '<canvas id="modalPlayerChart"></canvas>' +
-            '</div>' +
+            '<div class="chart-wrapper"><canvas id="modalPlayerChart"></canvas></div>' +
             '<p class="modal-note">* 静态演示数据，非真实服务器状态</p>';
 
-        const ctx = document.getElementById('modalPlayerChart');
+        var ctx = document.getElementById('modalPlayerChart');
         if (ctx && typeof Chart !== 'undefined') {
             if (currentChart) currentChart.destroy();
-            const labels = ['10:00', '11:00', '12:00', '13:00', '14:00', '15:00'];
-            const values = [3, 8, 15, 12, 18, 22];
-
             currentChart = new Chart(ctx, {
                 type: 'line',
                 data: {
-                    labels: labels,
+                    labels: ['10:00', '11:00', '12:00', '13:00', '14:00', '15:00'],
                     datasets: [{
                         label: '在线人数',
-                        data: values,
+                        data: [3, 8, 15, 12, 18, 22],
                         borderColor: '#8fd8ef',
                         backgroundColor: 'rgba(143, 216, 239, 0.15)',
                         borderWidth: 2,
@@ -713,17 +644,13 @@
         chartModal.style.display = 'flex';
     }
 
-    // 卡片点击
     document.querySelectorAll('.server-card').forEach(function(card) {
         var id = card.getAttribute('data-server-id');
         var name = card.querySelector('.server-name')?.textContent || '服务器';
-        card.addEventListener('click', function() {
-            showModal(id, name);
-        });
+        card.addEventListener('click', function() { showModal(id, name); });
     });
 
-    // 关闭
-    if (closeModalBtn) closeModalBtn.addEventListener('click', hideModal);
+    if (closeBtn) closeBtn.addEventListener('click', hideModal);
     if (chartModal) chartModal.addEventListener('click', function(e) {
         if (e.target === this) hideModal();
     });
@@ -731,13 +658,11 @@
         if (e.key === 'Escape') hideModal();
     });
 
-    // 日期切换 → 随机模拟数据
     document.addEventListener('change', function(e) {
         if (e.target && e.target.id === 'mockDate' && currentChart) {
-            var newData = Array.from({length: 6}, function() {
+            currentChart.data.datasets[0].data = Array.from({length: 6}, function() {
                 return Math.floor(Math.random() * 28) + 2;
             });
-            currentChart.data.datasets[0].data = newData;
             currentChart.update();
         }
     });
