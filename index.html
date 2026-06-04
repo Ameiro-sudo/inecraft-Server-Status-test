@@ -4,29 +4,31 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Minecraft 服务器状态 · SnowBlock</title>
-    <meta name="theme-color" content="#0b2b3b">
+    <meta name="theme-color" content="#8DB8D8">
     <meta name="color-scheme" content="light">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>❄️</text></svg>">
+    <link rel="preload" href="https://snowblock.top/138936740_p0.webp" as="image">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
+            --bg-gradient: linear-gradient(160deg, #8DB8D8 0%, #C5DCEB 50%, #E8F0F5 100%);
             --color-bg-deep: #0b2b3b;
             --color-accent: #8fd8ef;
-            --glass-bg: rgba(255, 255, 255, 0.08);
-            --glass-border: rgba(255, 255, 255, 0.20);
-            --glass-hover-bg: rgba(255, 255, 255, 0.18);
-            --glass-header-bg: rgba(11, 43, 59, 0.45);
-            --shadow-card: 0 30px 60px -16px rgba(0, 0, 0, 0.45);
-            --shadow-item: 0 4px 16px -6px rgba(0, 0, 0, 0.15);
-            --shadow-toast: 0 8px 30px rgba(0, 0, 0, 0.35);
+            --glass-bg: rgba(255,255,255,0.12);
+            --glass-border: rgba(255,255,255,0.20);
+            --glass-hover-bg: rgba(255,255,255,0.22);
+            --glass-header-bg: rgba(11,43,59,0.55);
+            --shadow-card: 0 30px 60px -16px rgba(0,0,0,0.45);
+            --shadow-item: 0 4px 16px -6px rgba(0,0,0,0.15);
+            --shadow-toast: 0 8px 30px rgba(0,0,0,0.35);
             --radius-card: 2.2rem;
             --radius-item: 1.2rem;
             --radius-btn: 2rem;
-            --font-mono: 'SF Mono', 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
-            --font-sans: 'Segoe UI', Roboto, 'Helvetica Neue', system-ui, -apple-system, sans-serif;
+            --font-mono: 'SF Mono','Cascadia Code','Fira Code','Consolas',monospace;
+            --font-sans: 'Segoe UI',Roboto,'Helvetica Neue',system-ui,-apple-system,sans-serif;
             --font-title: 'ZCOOL KuaiLe', cursive, var(--font-sans);
             --body-pad: 2.5rem;
             --transition: 0.25s ease;
@@ -39,64 +41,84 @@
             padding: var(--body-pad);
             font-family: var(--font-sans);
             -webkit-font-smoothing: antialiased;
-            background: var(--color-bg-deep) url('138936740_p0.webp') center / cover no-repeat fixed;
+            background: var(--bg-gradient);
+            overflow-x: hidden;
+        }
+
+        body.bg-loaded {
+            background: var(--color-bg-deep) url('https://snowblock.top/138936740_p0.webp') center / cover no-repeat fixed;
         }
 
         body::before {
             content: '';
             position: fixed;
             inset: 0;
-            background: rgba(0, 0, 0, 0.25);
+            background: rgba(0,0,0,0.30);
             pointer-events: none;
             z-index: 0;
         }
 
         body > * { position: relative; z-index: 1; }
 
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            animation: fadeIn 0.8s ease;
+        #snowCanvas {
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+        #loader {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            background: var(--bg-gradient);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            transition: opacity 0.5s ease;
         }
 
-        .page-header {
-            text-align: center;
-            margin-bottom: 2.5rem;
+        #loader.hide { opacity: 0; pointer-events: none; }
+
+        #loader .loader-icon {
+            font-size: 3rem;
+            animation: loaderPulse 1.5s ease-in-out infinite;
         }
+
+        @keyframes loaderPulse {
+            0%, 100% { opacity: 0.4; transform: scale(0.95); }
+            50%      { opacity: 1;   transform: scale(1.05); }
+        }
+
+        #loader .loader-text {
+            color: rgba(255,255,255,0.65);
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            letter-spacing: 0.05em;
+            text-shadow: 0 1px 4px rgba(0,0,0,0.1);
+        }
+
+        .container { max-width: 1200px; margin: 0 auto; }
+
+        .page-header { text-align: center; margin-bottom: 2.5rem; }
 
         .page-header h1 {
-            font-size: clamp(1.8rem, 5vw, 2.8rem);
-            font-weight: 400;
-            font-family: var(--font-title);
-            background: linear-gradient(135deg, #ffe6b0, #c0f0ff);
-            background-clip: text;
-            -webkit-background-clip: text;
-            color: transparent;
-            line-height: 1.3;
-            text-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
+            font-size: clamp(1.8rem,5vw,2.8rem); font-weight: 400; font-family: var(--font-title);
+            background: linear-gradient(135deg,#ffe6b0,#c0f0ff);
+            background-clip: text; -webkit-background-clip: text; color: transparent;
+            line-height: 1.3; text-shadow: 0 2px 12px rgba(0,0,0,0.3);
         }
 
         .page-header .sub {
-            color: rgba(200, 235, 250, 0.70);
-            margin-top: 0.3rem;
-            font-family: var(--font-mono);
-            font-size: clamp(0.7rem, 1.5vw, 0.85rem);
-            letter-spacing: 0.03em;
+            color: rgba(200,235,250,0.70); margin-top: 0.3rem;
+            font-family: var(--font-mono); font-size: clamp(0.7rem,1.5vw,0.85rem); letter-spacing: 0.03em;
         }
-
-        .page-header .sub a {
-            color: var(--color-accent);
-            text-decoration: none;
-            transition: color var(--transition);
-        }
-        .page-header .sub a:hover {
-            color: #fff;
-        }
+        .page-header .sub a { color: var(--color-accent); text-decoration: none; transition: color var(--transition); }
+        .page-header .sub a:hover { color: #fff; }
 
         .server-grid {
             display: grid;
@@ -106,324 +128,171 @@
 
         .server-card {
             background: var(--glass-bg);
-            backdrop-filter: blur(5px) saturate(1.1);
-            -webkit-backdrop-filter: blur(5px) saturate(1.1);
+            backdrop-filter: blur(12px) saturate(1.2);
+            -webkit-backdrop-filter: blur(12px) saturate(1.2);
             border-radius: var(--radius-card);
             border: 1px solid var(--glass-border);
-            box-shadow: var(--shadow-card), inset 0 1px 0 rgba(255, 255, 255, 0.08);
-            overflow: hidden;
-            transition: transform var(--transition), box-shadow var(--transition);
-            cursor: pointer;
-            display: flex;
-            flex-direction: column;
+            box-shadow: var(--shadow-card), inset 0 1px 0 rgba(255,255,255,0.08);
+            overflow: hidden; transition: transform var(--transition), box-shadow var(--transition);
+            cursor: pointer; display: flex; flex-direction: column;
         }
-
-        .server-card:hover {
-            transform: translateY(-6px);
-            box-shadow: 0 20px 50px -16px rgba(0, 0, 0, 0.5);
-        }
+        .server-card:hover { transform: translateY(-6px); box-shadow: 0 20px 50px -16px rgba(0,0,0,0.5); }
 
         .server-header {
             padding: 1.2rem 1.2rem 1rem;
-            display: flex;
-            align-items: center;
-            gap: 0.8rem;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            display: flex; align-items: center; gap: 0.8rem;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
         }
-
-        .server-header.online {
-            background: linear-gradient(135deg, rgba(76, 175, 80, 0.20), rgba(76, 175, 80, 0.05));
-        }
-        .server-header.offline {
-            background: linear-gradient(135deg, rgba(244, 67, 54, 0.20), rgba(244, 67, 54, 0.05));
-        }
-        .server-header.bedrock {
-            background: linear-gradient(135deg, rgba(33, 150, 243, 0.20), rgba(33, 150, 243, 0.05));
-        }
+        .server-header.online  { background: linear-gradient(135deg, rgba(76,175,80,0.20), rgba(76,175,80,0.05)); }
+        .server-header.offline { background: linear-gradient(135deg, rgba(244,67,54,0.20), rgba(244,67,54,0.05)); }
+        .server-header.bedrock { background: linear-gradient(135deg, rgba(33,150,243,0.20), rgba(33,150,243,0.05)); }
 
         .server-icon {
-            width: 56px;
-            height: 56px;
-            border-radius: 12px;
-            background: rgba(255, 255, 255, 0.12);
-            padding: 3px;
-            flex-shrink: 0;
-            object-fit: cover;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+            width: 56px; height: 56px; border-radius: 12px;
+            background: rgba(255,255,255,0.12); padding: 3px; flex-shrink: 0;
+            object-fit: cover; box-shadow: 0 2px 8px rgba(0,0,0,0.2);
             transition: transform var(--transition);
         }
-        .server-card:hover .server-icon {
-            transform: scale(1.05);
-        }
+        .server-card:hover .server-icon { transform: scale(1.05); }
 
         .server-name {
-            font-size: clamp(1rem, 2.5vw, 1.15rem);
-            font-weight: 600;
-            color: #fff;
-            text-shadow: 0 1px 6px rgba(0, 0, 0, 0.3);
-            flex: 1;
+            font-size: clamp(1rem,2.5vw,1.15rem); font-weight: 600; color: #fff;
+            text-shadow: 0 1px 6px rgba(0,0,0,0.3); flex: 1;
         }
 
         .server-status {
-            padding: 4px 12px;
-            border-radius: var(--radius-btn);
-            font-size: 0.8rem;
-            font-weight: 600;
-            background: rgba(255, 255, 255, 0.10);
-            backdrop-filter: blur(4px);
-            -webkit-backdrop-filter: blur(4px);
-            color: #fff;
-            text-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
-            white-space: nowrap;
+            padding: 4px 12px; border-radius: var(--radius-btn); font-size: 0.8rem; font-weight: 600;
+            background: rgba(255,255,255,0.10);
+            backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
+            color: #fff; text-shadow: 0 1px 4px rgba(0,0,0,0.2); white-space: nowrap;
         }
-
-        .server-header.online .server-status {
-            background: rgba(76, 175, 80, 0.30);
-        }
-        .server-header.offline .server-status {
-            background: rgba(244, 67, 54, 0.30);
-        }
-        .server-header.bedrock .server-status {
-            background: rgba(33, 150, 243, 0.30);
-        }
+        .server-header.online .server-status  { background: rgba(76,175,80,0.30); }
+        .server-header.offline .server-status { background: rgba(244,67,54,0.30); }
+        .server-header.bedrock .server-status { background: rgba(33,150,243,0.30); }
 
         .server-body {
-            padding: 1rem 1.2rem 1.2rem;
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
+            padding: 1rem 1.2rem 1.2rem; flex: 1;
+            display: flex; flex-direction: column; gap: 0.5rem;
         }
 
-        .server-info {
-            display: flex;
-            align-items: baseline;
-            gap: 0.5rem;
-        }
+        .server-info { display: flex; align-items: baseline; gap: 0.5rem; }
 
         .server-info label {
-            font-size: 0.75rem;
-            color: rgba(200, 235, 250, 0.65);
-            font-weight: 500;
-            min-width: 60px;
-            flex-shrink: 0;
-            text-transform: uppercase;
-            letter-spacing: 0.04em;
+            font-size: 0.75rem; color: rgba(200,235,250,0.65); font-weight: 500;
+            min-width: 60px; flex-shrink: 0; text-transform: uppercase; letter-spacing: 0.04em;
         }
 
         .server-info p,
-        .server-info .value {
-            color: #e8f4fa;
-            font-size: 0.9rem;
-            font-family: var(--font-mono);
-            word-break: break-all;
-        }
+        .server-info .value { color: #e8f4fa; font-size: 0.9rem; font-family: var(--font-mono); word-break: break-all; }
 
         .server-type-badge {
-            display: inline-block;
-            padding: 2px 10px;
-            border-radius: 20px;
-            font-size: 0.7rem;
-            font-weight: 600;
-            letter-spacing: 0.02em;
+            display: inline-block; padding: 2px 10px; border-radius: 20px;
+            font-size: 0.7rem; font-weight: 600; letter-spacing: 0.02em;
         }
-        .server-type-badge.java {
-            background: rgba(76, 175, 80, 0.18);
-            color: #81c784;
-        }
-        .server-type-badge.bedrock {
-            background: rgba(33, 150, 243, 0.18);
-            color: #64b5f6;
-        }
+        .server-type-badge.java    { background: rgba(76,175,80,0.18); color: #81c784; }
+        .server-type-badge.bedrock { background: rgba(33,150,243,0.18); color: #64b5f6; }
 
         .server-motd {
-            background: rgba(0, 0, 0, 0.15);
-            backdrop-filter: blur(3px);
-            -webkit-backdrop-filter: blur(3px);
-            color: #ddf4ff;
-            padding: 0.8rem 1rem;
-            border-radius: 10px;
-            margin-top: auto;
-            font-size: 0.82rem;
-            line-height: 1.5;
-            text-align: center;
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            min-height: 60px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow-wrap: break-word;
+            background: rgba(0,0,0,0.15);
+            backdrop-filter: blur(8px) saturate(1.2);
+            -webkit-backdrop-filter: blur(8px) saturate(1.2);
+            color: #ddf4ff; padding: 0.8rem 1rem; border-radius: 10px;
+            margin-top: auto; font-size: 0.82rem; line-height: 1.5; text-align: center;
+            border: 1px solid rgba(255,255,255,0.06); min-height: 60px;
+            display: flex; align-items: center; justify-content: center; overflow-wrap: break-word;
         }
 
         .no-servers {
-            text-align: center;
-            padding: 3rem 2rem;
+            text-align: center; padding: 3rem 2rem;
             background: var(--glass-bg);
-            backdrop-filter: blur(5px) saturate(1.1);
-            -webkit-backdrop-filter: blur(5px) saturate(1.1);
+            backdrop-filter: blur(12px) saturate(1.2);
+            -webkit-backdrop-filter: blur(12px) saturate(1.2);
             border-radius: var(--radius-card);
             border: 1px solid var(--glass-border);
-            box-shadow: var(--shadow-card);
-            color: rgba(200, 235, 250, 0.70);
+            box-shadow: var(--shadow-card); color: rgba(200,235,250,0.70);
         }
-        .no-servers h2 {
-            color: #fff;
-            margin-bottom: 0.5rem;
-            font-weight: 500;
-        }
+        .no-servers h2 { color: #fff; margin-bottom: 0.5rem; font-weight: 500; }
 
         .modal-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.40);
-            backdrop-filter: blur(4px);
-            -webkit-backdrop-filter: blur(4px);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            animation: fadeIn 0.3s ease;
+            position: fixed; inset: 0;
+            background: rgba(0,0,0,0.40);
+            backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
+            display: flex; justify-content: center; align-items: center;
+            z-index: 1000; animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to   { opacity: 1; transform: translateY(0); }
         }
 
         .modal-content {
-            width: 92%;
-            max-width: 720px;
-            max-height: 85vh;
-            background: rgba(11, 35, 50, 0.75);
-            backdrop-filter: blur(8px) saturate(1.1);
-            -webkit-backdrop-filter: blur(8px) saturate(1.1);
+            width: 92%; max-width: 720px; max-height: 85vh;
+            background: rgba(11,35,50,0.75);
+            backdrop-filter: blur(12px) saturate(1.2);
+            -webkit-backdrop-filter: blur(12px) saturate(1.2);
             border-radius: var(--radius-card);
             border: 1px solid var(--glass-border);
-            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5);
-            overflow: hidden;
-            animation: modalIn 0.35s ease;
+            box-shadow: 0 30px 80px rgba(0,0,0,0.5);
+            overflow: hidden; animation: modalIn 0.35s ease;
         }
 
         @keyframes modalIn {
             from { opacity: 0; transform: scale(0.95) translateY(10px); }
-            to { opacity: 1; transform: scale(1) translateY(0); }
+            to   { opacity: 1; transform: scale(1) translateY(0); }
         }
 
         .modal-header {
             padding: 1.2rem 1.5rem;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+            display: flex; justify-content: space-between; align-items: center;
         }
 
-        .modal-header h3 {
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: #fff;
-            display: flex;
-            align-items: center;
-            gap: 0.6rem;
-        }
+        .modal-header h3 { font-size: 1.1rem; font-weight: 600; color: #fff; display: flex; align-items: center; gap: 0.6rem; }
 
         .modal-title-icon {
-            width: 44px;
-            height: 44px;
-            border-radius: 10px;
-            background: rgba(255, 255, 255, 0.08);
-            padding: 2px;
-            flex-shrink: 0;
+            width: 44px; height: 44px; border-radius: 10px;
+            background: rgba(255,255,255,0.08); padding: 2px; flex-shrink: 0;
         }
-        .modal-title-icon img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            border-radius: 8px;
-        }
+        .modal-title-icon img { width: 100%; height: 100%; object-fit: cover; border-radius: 8px; }
 
         .close-btn {
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            cursor: pointer;
-            color: rgba(255, 255, 255, 0.5);
-            width: 36px;
-            height: 36px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            border-radius: 50%;
+            background: none; border: none; font-size: 1.5rem; cursor: pointer;
+            color: rgba(255,255,255,0.5); width: 36px; height: 36px;
+            display: flex; justify-content: center; align-items: center; border-radius: 50%;
             transition: background var(--transition), color var(--transition);
         }
-        .close-btn:hover {
-            background: rgba(255, 255, 255, 0.1);
-            color: #fff;
-        }
+        .close-btn:hover { background: rgba(255,255,255,0.1); color: #fff; }
 
-        .modal-body {
-            padding: 1.5rem;
-            max-height: calc(85vh - 80px);
-            overflow-y: auto;
-        }
-
-        .modal-body .chart-wrapper {
-            height: 280px;
-            margin: 1.2rem 0;
-        }
+        .modal-body { padding: 1.5rem; max-height: calc(85vh - 80px); overflow-y: auto; }
+        .modal-body .chart-wrapper { height: 280px; margin: 1.2rem 0; }
 
         .date-selector {
-            display: flex;
-            align-items: center;
-            gap: 0.8rem;
-            padding: 0.8rem 1rem;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 10px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            flex-wrap: wrap;
+            display: flex; align-items: center; gap: 0.8rem;
+            padding: 0.8rem 1rem; background: rgba(255,255,255,0.05);
+            border-radius: 10px; border: 1px solid rgba(255,255,255,0.08); flex-wrap: wrap;
         }
-        .date-selector label {
-            color: rgba(200, 235, 250, 0.7);
-            font-size: 0.85rem;
-        }
+        .date-selector label { color: rgba(200,235,250,0.7); font-size: 0.85rem; }
 
         .date-input {
-            padding: 6px 12px;
-            background: rgba(255, 255, 255, 0.06);
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            border-radius: 8px;
-            color: #fff;
-            font-size: 0.85rem;
-            font-family: var(--font-mono);
-            outline: none;
-            transition: border var(--transition);
+            padding: 6px 12px; background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.12); border-radius: 8px;
+            color: #fff; font-size: 0.85rem; font-family: var(--font-mono);
+            outline: none; transition: border var(--transition);
         }
-        .date-input:focus {
-            border-color: var(--color-accent);
-        }
-        .date-input::-webkit-calendar-picker-indicator {
-            filter: invert(1);
-            cursor: pointer;
-        }
+        .date-input:focus { border-color: var(--color-accent); }
+        .date-input::-webkit-calendar-picker-indicator { filter: invert(1); cursor: pointer; }
 
-        .status-error {
-            color: #ef9a9a;
-            text-align: center;
-            padding: 1rem;
-        }
+        .status-error { color: #ef9a9a; text-align: center; padding: 1rem; }
 
         .modal-note {
-            text-align: center;
-            color: rgba(200, 235, 250, 0.40);
-            font-size: 0.75rem;
-            margin-top: 0.8rem;
-            font-family: var(--font-mono);
+            text-align: center; color: rgba(200,235,250,0.40);
+            font-size: 0.75rem; margin-top: 0.8rem; font-family: var(--font-mono);
         }
 
-        .modal-body::-webkit-scrollbar {
-            width: 6px;
-        }
-        .modal-body::-webkit-scrollbar-track {
-            background: transparent;
-        }
-        .modal-body::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.15);
-            border-radius: 3px;
-        }
+        .modal-body::-webkit-scrollbar { width: 6px; }
+        .modal-body::-webkit-scrollbar-track { background: transparent; }
+        .modal-body::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 3px; }
 
         @media (max-width: 700px) {
             :root { --body-pad: 1.5rem; }
@@ -442,26 +311,40 @@
             .modal-body { padding: 1rem; }
             .modal-body .chart-wrapper { height: 200px; }
             .date-selector { flex-direction: column; align-items: stretch; }
+            #loader .loader-icon { font-size: 2.2rem; }
+            #loader .loader-text { font-size: 0.75rem; }
         }
 
         @media (prefers-reduced-motion: reduce) {
             * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+            #snowCanvas { display: none; }
+            #loader { display: none; }
+            body { background: var(--color-bg-deep) url('https://snowblock.top/138936740_p0.webp') center / cover no-repeat fixed; }
         }
 
         @media print {
             body { background: #fff; padding: 1rem; }
             body::before { display: none; }
+            #loader { display: none; }
             .server-card { background: #fafafa; backdrop-filter: none; border: 1px solid #ddd; box-shadow: none; }
-            .server-header.online { background: #e8f5e9; }
+            .server-header.online  { background: #e8f5e9; }
             .server-header.offline { background: #ffebee; }
             .server-header.bedrock { background: #e3f2fd; }
             .server-name, .server-info p, .server-motd { color: #333; }
             .server-status { color: #333; background: rgba(0,0,0,0.05); }
             .page-header h1 { background: none; color: #0b2b3b; }
+            #snowCanvas { display: none; }
         }
     </style>
 </head>
 <body>
+
+<div id="loader">
+    <div class="loader-icon">❄️</div>
+    <div class="loader-text">Loading...</div>
+</div>
+
+<canvas id="snowCanvas"></canvas>
 
 <div class="container">
     <header class="page-header">
@@ -481,25 +364,11 @@
                 <div class="server-status">在线</div>
             </div>
             <div class="server-body">
-                <div class="server-info">
-                    <label>地址</label>
-                    <p>play.example.com</p>
-                </div>
-                <div class="server-info">
-                    <label>类型</label>
-                    <span class="server-type-badge java">Java</span>
-                </div>
-                <div class="server-info">
-                    <label>人数</label>
-                    <p>12 / 20</p>
-                </div>
-                <div class="server-info">
-                    <label>版本</label>
-                    <p>1.20.4</p>
-                </div>
-                <div class="server-motd">
-                    欢迎来到 示例服务器  Enjoy!
-                </div>
+                <div class="server-info"><label>地址</label><p>play.example.com</p></div>
+                <div class="server-info"><label>类型</label><span class="server-type-badge java">Java</span></div>
+                <div class="server-info"><label>人数</label><p>12 / 20</p></div>
+                <div class="server-info"><label>版本</label><p>1.20.4</p></div>
+                <div class="server-motd">欢迎来到 示例服务器  Enjoy!</div>
             </div>
         </div>
 
@@ -510,17 +379,9 @@
                 <div class="server-status">离线</div>
             </div>
             <div class="server-body">
-                <div class="server-info">
-                    <label>地址</label>
-                    <p>offline.example.com</p>
-                </div>
-                <div class="server-info">
-                    <label>类型</label>
-                    <span class="server-type-badge java">Java</span>
-                </div>
-                <div class="server-motd" style="color:rgba(200,235,250,0.4);">
-                    服务器无法连接
-                </div>
+                <div class="server-info"><label>地址</label><p>offline.example.com</p></div>
+                <div class="server-info"><label>类型</label><span class="server-type-badge java">Java</span></div>
+                <div class="server-motd" style="color:rgba(200,235,250,0.4);">服务器无法连接</div>
             </div>
         </div>
 
@@ -531,25 +392,11 @@
                 <div class="server-status">在线</div>
             </div>
             <div class="server-body">
-                <div class="server-info">
-                    <label>地址</label>
-                    <p>bedrock.example.com:19132</p>
-                </div>
-                <div class="server-info">
-                    <label>类型</label>
-                    <span class="server-type-badge bedrock">基岩</span>
-                </div>
-                <div class="server-info">
-                    <label>人数</label>
-                    <p>5 / 10</p>
-                </div>
-                <div class="server-info">
-                    <label>版本</label>
-                    <p>1.20.30</p>
-                </div>
-                <div class="server-motd">
-                    基岩版生存 欢迎加入
-                </div>
+                <div class="server-info"><label>地址</label><p>bedrock.example.com:19132</p></div>
+                <div class="server-info"><label>类型</label><span class="server-type-badge bedrock">基岩</span></div>
+                <div class="server-info"><label>人数</label><p>5 / 10</p></div>
+                <div class="server-info"><label>版本</label><p>1.20.30</p></div>
+                <div class="server-motd">基岩版生存 欢迎加入</div>
             </div>
         </div>
     </div>
@@ -569,6 +416,79 @@
 (function() {
     'use strict';
 
+    var loader = document.getElementById('loader');
+    var bgImg = new Image();
+    var bgLoaded = false;
+    var minDelay = false;
+    var MIN_LOAD_TIME = 800;
+
+    function finishLoading() {
+        if (!bgLoaded || !minDelay) return;
+        document.body.classList.add('bg-loaded');
+        requestAnimationFrame(function() {
+            requestAnimationFrame(function() {
+                loader.classList.add('hide');
+                setTimeout(function() {
+                    if (loader && loader.parentNode) loader.parentNode.removeChild(loader);
+                }, 500);
+            });
+        });
+    }
+
+    bgImg.onload = function() { bgLoaded = true; finishLoading(); };
+    bgImg.onerror = function() { bgLoaded = true; finishLoading(); };
+    bgImg.src = 'https://snowblock.top/138936740_p0.webp';
+    if (bgImg.complete) bgLoaded = true;
+
+    setTimeout(function() { minDelay = true; finishLoading(); }, MIN_LOAD_TIME);
+
+    var canvas = document.getElementById('snowCanvas');
+    var ctx = canvas.getContext('2d');
+    var particles = [];
+    var w, h;
+
+    function resizeCanvas() {
+        w = canvas.width = window.innerWidth;
+        h = canvas.height = window.innerHeight;
+    }
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+
+    var MAX_PARTICLES = 60;
+
+    function createParticle() {
+        return {
+            x: Math.random() * w, y: -10,
+            r: Math.random() * 2.5 + 1.2,
+            speed: Math.random() * 0.6 + 0.15,
+            wind: Math.random() * 0.3 - 0.15,
+            alpha: Math.random() * 0.35 + 0.15
+        };
+    }
+
+    function initSnow() {
+        for (var i = 0; i < 40; i++) {
+            var p = createParticle(); p.y = Math.random() * h; particles.push(p);
+        }
+    }
+    initSnow();
+
+    function drawSnow() {
+        ctx.clearRect(0, 0, w, h);
+        for (var i = 0; i < particles.length; i++) {
+            var p = particles[i];
+            ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+            ctx.fillStyle = 'rgba(255, 255, 255, ' + p.alpha + ')'; ctx.fill();
+            p.y += p.speed; p.x += p.wind;
+            if (p.y > h + 10) particles[i] = createParticle();
+            if (p.x > w + 10) p.x = -10;
+            if (p.x < -10) p.x = w + 10;
+        }
+        while (particles.length < MAX_PARTICLES) particles.push(createParticle());
+        requestAnimationFrame(drawSnow);
+    }
+    drawSnow();
+
     var chartModal = document.getElementById('chartModal');
     var modalTitle = document.getElementById('modalTitle');
     var modalBody = document.getElementById('modalBody');
@@ -582,7 +502,6 @@
 
     function showModal(id, name) {
         if (!chartModal || !modalBody) return;
-
         var card = document.querySelector('.server-card[data-server-id="' + id + '"]');
         var iconHtml = '';
         if (card) {
@@ -592,7 +511,6 @@
             }
         }
         modalTitle.innerHTML = iconHtml + name + ' — 在线人数历史';
-
         modalBody.innerHTML =
             '<div class="date-selector">' +
                 '<label>📅 选择日期（模拟）</label>' +
@@ -601,51 +519,36 @@
             '<div class="chart-wrapper"><canvas id="modalPlayerChart"></canvas></div>' +
             '<p class="modal-note">* 静态演示数据，非真实服务器状态</p>';
 
-        var ctx = document.getElementById('modalPlayerChart');
-        if (ctx && typeof Chart !== 'undefined') {
+        var chartCtx = document.getElementById('modalPlayerChart');
+        if (chartCtx && typeof Chart !== 'undefined') {
             if (currentChart) currentChart.destroy();
-            currentChart = new Chart(ctx, {
+            currentChart = new Chart(chartCtx, {
                 type: 'line',
                 data: {
-                    labels: ['10:00', '11:00', '12:00', '13:00', '14:00', '15:00'],
+                    labels: ['10:00','11:00','12:00','13:00','14:00','15:00'],
                     datasets: [{
-                        label: '在线人数',
-                        data: [3, 8, 15, 12, 18, 22],
-                        borderColor: '#8fd8ef',
-                        backgroundColor: 'rgba(143, 216, 239, 0.15)',
-                        borderWidth: 2,
-                        pointBackgroundColor: '#8fd8ef',
-                        pointBorderColor: '#fff',
-                        pointBorderWidth: 1,
-                        pointRadius: 4,
-                        tension: 0.35,
-                        fill: true
+                        label: '在线人数', data: [3,8,15,12,18,22],
+                        borderColor: '#8fd8ef', backgroundColor: 'rgba(143,216,239,0.15)',
+                        borderWidth: 2, pointBackgroundColor: '#8fd8ef',
+                        pointBorderColor: '#fff', pointBorderWidth: 1,
+                        pointRadius: 4, tension: 0.35, fill: true
                     }]
                 },
                 options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
+                    responsive: true, maintainAspectRatio: false,
                     plugins: {
                         legend: { labels: { color: 'rgba(255,255,255,0.7)' } },
                         tooltip: { mode: 'index', intersect: false }
                     },
                     scales: {
-                        x: {
-                            ticks: { color: 'rgba(255,255,255,0.5)' },
-                            grid: { color: 'rgba(255,255,255,0.05)' }
-                        },
-                        y: {
-                            beginAtZero: true,
-                            ticks: { color: 'rgba(255,255,255,0.5)' },
-                            grid: { color: 'rgba(255,255,255,0.05)' }
-                        }
+                        x: { ticks: { color: 'rgba(255,255,255,0.5)' }, grid: { color: 'rgba(255,255,255,0.05)' } },
+                        y: { beginAtZero: true, ticks: { color: 'rgba(255,255,255,0.5)' }, grid: { color: 'rgba(255,255,255,0.05)' } }
                     }
                 }
             });
         } else {
             modalBody.innerHTML += '<p class="status-error">⚠️ Chart.js 加载失败</p>';
         }
-
         chartModal.style.display = 'flex';
     }
 
@@ -656,18 +559,12 @@
     });
 
     if (closeBtn) closeBtn.addEventListener('click', hideModal);
-    if (chartModal) chartModal.addEventListener('click', function(e) {
-        if (e.target === this) hideModal();
-    });
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') hideModal();
-    });
+    if (chartModal) chartModal.addEventListener('click', function(e) { if (e.target === this) hideModal(); });
+    document.addEventListener('keydown', function(e) { if (e.key === 'Escape') hideModal(); });
 
     document.addEventListener('change', function(e) {
         if (e.target && e.target.id === 'mockDate' && currentChart) {
-            currentChart.data.datasets[0].data = Array.from({length: 6}, function() {
-                return Math.floor(Math.random() * 28) + 2;
-            });
+            currentChart.data.datasets[0].data = Array.from({length: 6}, function() { return Math.floor(Math.random() * 28) + 2; });
             currentChart.update();
         }
     });
