@@ -14,7 +14,6 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
-            --bg-gradient: linear-gradient(160deg, #8DB8D8 0%, #C5DCEB 50%, #E8F0F5 100%);
             --color-bg-deep: #0b2b3b;
             --color-accent: #8fd8ef;
             --glass-bg: rgba(255,255,255,0.12);
@@ -24,13 +23,13 @@
             --shadow-card: 0 30px 60px -16px rgba(0,0,0,0.45);
             --shadow-item: 0 4px 16px -6px rgba(0,0,0,0.15);
             --shadow-toast: 0 8px 30px rgba(0,0,0,0.35);
-            --radius-card: 2.2rem;
-            --radius-item: 1.2rem;
+            --radius-card: 3rem;
+            --radius-item: 1.5rem;
             --radius-btn: 2rem;
             --font-mono: 'SF Mono','Cascadia Code','Fira Code','Consolas',monospace;
             --font-sans: 'Segoe UI',Roboto,'Helvetica Neue',system-ui,-apple-system,sans-serif;
             --font-title: 'ZCOOL KuaiLe', cursive, var(--font-sans);
-            --body-pad: 2.5rem;
+            --body-pad: clamp(1.2rem, 5.88vw, 2.5rem);
             --transition: 0.25s ease;
         }
 
@@ -41,19 +40,17 @@
             padding: var(--body-pad);
             font-family: var(--font-sans);
             -webkit-font-smoothing: antialiased;
-            background: var(--bg-gradient);
+            background:
+                url('https://snowblock.top/138936740_p0.webp') center / cover no-repeat fixed,
+                linear-gradient(160deg, #cce7f5, #b3daf2, #9fccee);
             overflow-x: hidden;
-        }
-
-        body.bg-loaded {
-            background: var(--color-bg-deep) url('https://snowblock.top/138936740_p0.webp') center / cover no-repeat fixed;
         }
 
         body::before {
             content: '';
             position: fixed;
             inset: 0;
-            background: rgba(0,0,0,0.30);
+            background: rgba(255,255,255,0.08);
             pointer-events: none;
             z-index: 0;
         }
@@ -67,39 +64,139 @@
             height: 100%;
             pointer-events: none;
             z-index: 0;
+            opacity: 0;
+            transition: opacity 1.5s ease 0.5s;
         }
+        #loader.hidden ~ #snowCanvas { opacity: 1; }
 
+        /* ===== 加载层（统一风格） ===== */
         #loader {
             position: fixed;
             inset: 0;
-            z-index: 9999;
-            background: var(--bg-gradient);
+            background: linear-gradient(135deg, #d4eaf7, #b8d8ee, #d4eaf7);
+            background-size: 200% 200%;
+            animation: loaderBgShift 6s ease infinite;
+            backdrop-filter: blur(6px);
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 1rem;
-            transition: opacity 0.5s ease;
+            z-index: 9999;
+            transition: opacity 0.5s ease, visibility 0.5s ease, transform 0.5s ease;
         }
 
-        #loader.hide { opacity: 0; pointer-events: none; }
-
-        #loader .loader-icon {
-            font-size: 3rem;
-            animation: loaderPulse 1.5s ease-in-out infinite;
+        @keyframes loaderBgShift {
+            0%   { background-position: 0% 0%; }
+            50%  { background-position: 100% 100%; }
+            100% { background-position: 0% 0%; }
         }
 
-        @keyframes loaderPulse {
-            0%, 100% { opacity: 0.4; transform: scale(0.95); }
-            50%      { opacity: 1;   transform: scale(1.05); }
+        #loader.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transform: scale(1.05);
         }
 
-        #loader .loader-text {
-            color: rgba(255,255,255,0.65);
-            font-family: var(--font-mono);
-            font-size: 0.85rem;
-            letter-spacing: 0.05em;
-            text-shadow: 0 1px 4px rgba(0,0,0,0.1);
+        .loader-crystal {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.2rem;
+        }
+
+        .crystal-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .crystal-svg {
+            width: 90px;
+            height: 90px;
+            animation: crystalFloat 4s ease-in-out infinite;
+            filter: drop-shadow(0 0 12px rgba(143,216,239,0.3));
+        }
+
+        @keyframes crystalFloat {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            25%      { transform: translateY(-8px) rotate(3deg); }
+            75%      { transform: translateY(4px) rotate(-2deg); }
+        }
+
+        .crystal-svg .main-line {
+            stroke-dasharray: 360;
+            stroke-dashoffset: 360;
+            animation: drawCrystal 3.5s ease-in-out infinite alternate;
+        }
+
+        .crystal-svg .inner-line {
+            stroke-dasharray: 240;
+            stroke-dashoffset: 240;
+            animation: drawCrystal 3.5s ease-in-out 0.6s infinite alternate;
+        }
+
+        .crystal-svg .core-line {
+            stroke-dasharray: 80;
+            stroke-dashoffset: 80;
+            animation: drawCrystal 2.5s ease-in-out 1.2s infinite alternate;
+        }
+
+        @keyframes drawCrystal {
+            0%   { stroke-dashoffset: 360; }
+            60%  { stroke-dashoffset: 0; }
+            100% { stroke-dashoffset: 0; }
+        }
+
+        .crystal-glow {
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(143,216,239,0.15), transparent 70%);
+            animation: glowPulse 3s ease-in-out infinite;
+        }
+
+        @keyframes glowPulse {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50%      { opacity: 0.8; transform: scale(1.2); }
+        }
+
+        .loader-text-frost {
+            font-family: var(--font-title);
+            font-size: 1.3rem;
+            background: linear-gradient(135deg, #8fd8ef, #c0f0ff, #ffe6b0, #8fd8ef);
+            background-size: 300% 300%;
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            animation: frostShift 4s ease infinite;
+        }
+
+        @keyframes frostShift {
+            0%   { background-position: 0% 50%; }
+            50%  { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .loader-dots {
+            display: flex;
+            gap: 6px;
+            margin-top: 0.2rem;
+        }
+
+        .loader-dots span {
+            width: 6px; height: 6px;
+            border-radius: 50%;
+            background: #8fd8ef;
+            animation: dotBounce 1.2s ease-in-out infinite;
+        }
+        .loader-dots span:nth-child(2) { animation-delay: 0.2s; }
+        .loader-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes dotBounce {
+            0%,100% { transform: translateY(0); opacity: 0.3; }
+            50%      { transform: translateY(-8px); opacity: 1; }
         }
 
         .container { max-width: 1200px; margin: 0 auto; }
@@ -311,8 +408,35 @@
             .modal-body { padding: 1rem; }
             .modal-body .chart-wrapper { height: 200px; }
             .date-selector { flex-direction: column; align-items: stretch; }
-            #loader .loader-icon { font-size: 2.2rem; }
-            #loader .loader-text { font-size: 0.75rem; }
+            .crystal-svg { width: 60px; height: 60px; }
+            .loader-text-frost { font-size: 1rem; }
+        }
+
+        /* ===== 暗色模式 ===== */
+        @media (prefers-color-scheme: dark) {
+            body {
+                background:
+                    url('https://snowblock.top/138936740_p0.webp') center / cover no-repeat fixed,
+                    linear-gradient(160deg, #0b1a24, #162b36);
+            }
+
+            body::before { background: rgba(0,0,0,0.25); }
+
+            #loader {
+                background: linear-gradient(135deg, #0d1f2b, #142a38, #0d1f2b);
+                background-size: 200% 200%;
+            }
+
+            .server-card { background: rgba(0, 18, 30, 0.55); }
+            .server-header.online  { background: linear-gradient(135deg, rgba(76,175,80,0.15), rgba(76,175,80,0.03)); }
+            .server-header.offline { background: linear-gradient(135deg, rgba(244,67,54,0.15), rgba(244,67,54,0.03)); }
+            .server-header.bedrock { background: linear-gradient(135deg, rgba(33,150,243,0.15), rgba(33,150,243,0.03)); }
+            .page-header h1 { text-shadow: 0 2px 12px rgba(0,0,0,0.5); }
+            .server-name { color: #d0e4f0; }
+            .server-info p, .server-info .value { color: #8ab0c8; }
+            .server-motd { color: #b0d0e0; }
+            .modal-content { background: rgba(0, 15, 28, 0.85); }
+            .no-servers { background: rgba(0, 18, 30, 0.55); }
         }
 
         @media (prefers-reduced-motion: reduce) {
@@ -323,9 +447,10 @@
         }
 
         @media print {
-            body { background: #fff; padding: 1rem; }
+            body { background: #fff !important; padding: 1rem; }
             body::before { display: none; }
             #loader { display: none; }
+            #snowCanvas { display: none; }
             .server-card { background: #fafafa; backdrop-filter: none; border: 1px solid #ddd; box-shadow: none; }
             .server-header.online  { background: #e8f5e9; }
             .server-header.offline { background: #ffebee; }
@@ -333,15 +458,60 @@
             .server-name, .server-info p, .server-motd { color: #333; }
             .server-status { color: #333; background: rgba(0,0,0,0.05); }
             .page-header h1 { background: none; color: #0b2b3b; }
-            #snowCanvas { display: none; }
+            .modal-overlay { display: none !important; }
         }
     </style>
 </head>
 <body>
 
 <div id="loader">
-    <div class="loader-icon">❄️</div>
-    <div class="loader-text">Loading...</div>
+    <div class="loader-crystal">
+        <div class="crystal-wrapper">
+            <div class="crystal-glow"></div>
+            <svg class="crystal-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                <path class="main-line" stroke="#8fd8ef" stroke-width="2.2" stroke-linecap="round"
+                      fill="none"
+                      d="M50 5 L50 95
+                         M50 5 L75 25 L50 50
+                         M50 5 L25 25 L50 50
+                         M50 95 L75 75 L50 50
+                         M50 95 L25 75 L50 50
+                         M50 50 L95 50
+                         M75 25 L95 50
+                         M25 25 L5 50
+                         M75 75 L95 50
+                         M25 75 L5 50" />
+                <path class="inner-line" stroke="#c0f0ff" stroke-width="1.4" stroke-linecap="round"
+                      fill="none"
+                      d="M50 15 L50 85
+                         M50 15 L65 30 L50 50
+                         M50 15 L35 30 L50 50
+                         M50 85 L65 70 L50 50
+                         M50 85 L35 70 L50 50
+                         M50 50 L85 50
+                         M65 30 L85 50
+                         M35 30 L15 50
+                         M65 70 L85 50
+                         M35 70 L15 50" />
+                <path class="core-line" stroke="#ffe6b0" stroke-width="1.8" stroke-linecap="round"
+                      fill="none"
+                      d="M50 38 L50 62
+                         M50 38 L57 44 L50 50
+                         M50 38 L43 44 L50 50
+                         M50 62 L57 56 L50 50
+                         M50 62 L43 56 L50 50
+                         M50 50 L62 50
+                         M57 44 L62 50
+                         M43 44 L38 50
+                         M57 56 L62 50
+                         M43 56 L38 50" />
+            </svg>
+        </div>
+        <div class="loader-text-frost">❄️ 正在连接雪境</div>
+        <div class="loader-dots">
+            <span></span><span></span><span></span>
+        </div>
+    </div>
 </div>
 
 <canvas id="snowCanvas"></canvas>
@@ -427,7 +597,7 @@
         document.body.classList.add('bg-loaded');
         requestAnimationFrame(function() {
             requestAnimationFrame(function() {
-                loader.classList.add('hide');
+                loader.classList.add('hidden');
                 setTimeout(function() {
                     if (loader && loader.parentNode) loader.parentNode.removeChild(loader);
                 }, 500);
