@@ -1,20 +1,6 @@
 (function() {
     'use strict';
 
-    var toast = document.getElementById('toast');
-    var toastTimer = null;
-
-    function showToast(msg, dur) {
-        if (!toast) return;
-        if (dur === undefined) dur = 2000;
-        toast.textContent = msg;
-        toast.classList.add('show');
-        clearTimeout(toastTimer);
-        toastTimer = setTimeout(function() {
-            toast.classList.remove('show');
-        }, dur);
-    }
-
     var chartModal = document.getElementById('chartModal');
     var modalTitle = document.getElementById('modalTitle');
     var modalBody = document.getElementById('modalBody');
