@@ -288,6 +288,7 @@
             <span class="dot">·</span>
             只是演示 没有后端
         </p>
+        <button id="themeToggle" class="theme-toggle" aria-label="切换暗色模式">🌙</button>
     </header>
 
     <div class="server-grid">
@@ -349,74 +350,22 @@
 <script src="app.js" defer></script>
 
 <script>
-(function() {
-    var loader = document.getElementById('loader');
-    var bgImg = new Image();
-    bgImg.src = 'https://snowblock.top/138936740_p0.webp';
-    var loaded = false;
-    var minDelay = false;
-
-    function check() {
-        if (!loaded || !minDelay) return;
-        loader.classList.add('hidden');
-        setTimeout(function() {
-            if (loader && loader.parentNode) loader.parentNode.removeChild(loader);
-        }, 600);
-    }
-
-    bgImg.onload = function() { loaded = true; check(); };
-    bgImg.onerror = function() { loaded = true; check(); };
-    if (bgImg.complete) loaded = true;
-    setTimeout(function() { minDelay = true; check(); }, 1500);
-    setTimeout(function() { loaded = true; minDelay = true; check(); }, 5000);
-
-    var canvas = document.getElementById('snowCanvas');
-    if (canvas) {
-        var ctx = canvas.getContext('2d');
-        var particles = [];
-        var w, h;
-
-        function resize() {
-            w = canvas.width = window.innerWidth;
-            h = canvas.height = window.innerHeight;
-        }
-        resize();
-        window.addEventListener('resize', resize);
-
-        var MAX_PARTICLES = window.innerWidth < 768 ? 30 : 60;
-
-        function create() {
-            return {
-                x: Math.random() * w, y: Math.random() * h,
-                r: Math.random() * 2.5 + 1.2,
-                speed: Math.random() * 0.6 + 0.15,
-                wind: Math.random() * 0.3 - 0.15,
-                alpha: Math.random() * 0.35 + 0.15
-            };
-        }
-
-        for (var i = 0; i < MAX_PARTICLES; i++) particles.push(create());
-
-        function draw() {
-            ctx.clearRect(0, 0, w, h);
-            for (var i = 0; i < particles.length; i++) {
-                var p = particles[i];
-                ctx.beginPath();
-                ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-                ctx.fillStyle = 'rgba(255, 255, 255, ' + p.alpha + ')';
-                ctx.fill();
-                p.y += p.speed;
-                p.x += p.wind;
-                if (p.y > h + 10) particles[i] = create();
-                if (p.x > w + 10) p.x = -10;
-                if (p.x < -10) p.x = w + 10;
-            }
-            while (particles.length < MAX_PARTICLES) particles.push(create());
-            requestAnimationFrame(draw);
-        }
-        draw();
-    }
-})();
+!function(){
+var l=document.getElementById('loader'),i=new Image,b=!1,m=!1;
+i.src='https://snowblock.top/138936740_p0.webp';
+i.onload=function(){b=!0;f()};
+i.onerror=function(){b=!0;f()};
+setTimeout(function(){m=!0;f()},1500);
+setTimeout(function(){if(!l.classList.contains('hidden')){b=!0;m=!0;f()}},5000);
+function f(){if(b&&m&&!l.classList.contains('hidden')){l.classList.add('hidden');document.body.classList.add('bg-loaded');l.addEventListener('transitionend',function(){l.style.display='none'},{once:true})}}
+var n=document.getElementById('snowCanvas'),t=n.getContext('2d'),p=[],w,h;
+function rs(){w=n.width=innerWidth;h=n.height=innerHeight}
+function cp(){return{x:Math.random()*w,y:Math.random()*h-20,r:Math.random()*2.4+1,s:Math.random()*.6+.2,w:Math.random()*.3-.12,a:Math.random()*.4+.15}}
+function is(){p=Array.from({length:window.innerWidth<768?30:60},cp)}
+function ds(){t.clearRect(0,0,w,h);for(var e=0;e<p.length;e++){var o=p[e];t.beginPath(),t.arc(o.x,o.y,o.r,0,Math.PI*2),t.fillStyle='rgba(255,255,255,'+o.a+')',t.fill(),o.y+=o.s,o.x+=o.w,o.y>h+25&&(p[e]=cp()),o.x>w+20?o.x=-15:o.x<-20&&(o.x=w+10)}for(;p.length<(window.innerWidth<768?40:60);)p.push(cp());requestAnimationFrame(ds)}
+addEventListener('resize',rs);rs();is();ds();
+!function(){var e=document.getElementById('themeToggle');if(!e)return;var t=localStorage.getItem('theme'),n=window.matchMedia('(prefers-color-scheme: dark)').matches;function o(t){t?(document.documentElement.classList.add('dark'),e.textContent='☀️'):(document.documentElement.classList.remove('dark'),e.textContent='🌙')}'dark'===t?o(!0):'light'===t?o(!1):o(n),e.addEventListener('click',function(){var t=document.documentElement.classList.toggle('dark');e.textContent=t?'☀️':'🌙',localStorage.setItem('theme',t?'dark':'light')})}();
+}();
 </script>
 </body>
 </html>
