@@ -219,6 +219,12 @@
             0%, 100% { transform: translateY(0); opacity: 0.3; }
             50%      { transform: translateY(-8px); opacity: 1; }
         }
+
+        @media (prefers-color-scheme: dark) {
+            #loader { background: linear-gradient(135deg, #0d1f2b, #142a38, #0d1f2b); background-size: 200% 200%; }
+            body { background: url(https://snowblock.top/138936740_p0.webp) center/cover fixed, linear-gradient(160deg,#0b1a24,#162b36); }
+            body::before { background: rgba(0,0,0,0.25); }
+        }
     </style>
 
 </head>
