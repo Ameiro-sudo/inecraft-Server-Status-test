@@ -25,7 +25,7 @@
         modalTitle.innerHTML = iconHtml + name + ' — 在线人数历史';
         modalBody.innerHTML =
             '<div class="date-selector">' +
-                '<label>📅 选择日期（模拟）</label>' +
+                '<label>选择日期（模拟）</label>' +
                 '<input type="date" id="mockDate" class="date-input" value="' + new Date().toISOString().split('T')[0] + '">' +
             '</div>' +
             '<div class="chart-wrapper"><canvas id="modalPlayerChart"></canvas></div>' +
@@ -59,7 +59,7 @@
                 }
             });
         } else {
-            modalBody.innerHTML += '<p class="status-error">⚠️ Chart.js 加载失败</p>';
+            modalBody.innerHTML += '<p class="status-error">Chart.js 加载失败</p>';
         }
         chartModal.style.display = 'flex';
     }
