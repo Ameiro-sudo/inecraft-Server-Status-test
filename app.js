@@ -1,78 +1,29 @@
 (function() {
     'use strict';
 
-    var loader = document.getElementById('loader');
-    var bgImg = new Image();
-    var bgLoaded = false;
-    var minDelay = false;
-    var MIN_LOAD_TIME = 800;
+    var toast = document.getElementById('toast');
+    var toastTimer = null;
 
-    function finishLoading() {
-        if (!bgLoaded || !minDelay) return;
-        document.body.classList.add('bg-loaded');
-        requestAnimationFrame(function() {
-            requestAnimationFrame(function() {
-                loader.classList.add('hidden');
-                setTimeout(function() {
-                    if (loader && loader.parentNode) loader.parentNode.removeChild(loader);
-                }, 500);
+    function showToast(msg, dur) {
+        if (!toast) return;
+        if (dur === undefined) dur = 2000;
+        toast.textContent = msg;
+        toast.classList.add('show');
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(function() {
+            toast.classList.remove('show');
+        }, dur);
+    }
+
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function() {
+            navigator.serviceWorker.register('/sw.js').then(function(reg) {
+                console.log('SW registered:', reg.scope);
+            }).catch(function(err) {
+                console.log('SW registration failed:', err);
             });
         });
     }
-
-    bgImg.onload = function() { bgLoaded = true; finishLoading(); };
-    bgImg.onerror = function() { bgLoaded = true; finishLoading(); };
-    bgImg.src = 'https://snowblock.top/138936740_p0.webp';
-    if (bgImg.complete) bgLoaded = true;
-
-    setTimeout(function() { minDelay = true; finishLoading(); }, MIN_LOAD_TIME);
-
-    var canvas = document.getElementById('snowCanvas');
-    var ctx = canvas.getContext('2d');
-    var particles = [];
-    var w, h;
-
-    function resizeCanvas() {
-        w = canvas.width = window.innerWidth;
-        h = canvas.height = window.innerHeight;
-    }
-    resizeCanvas();
-    window.addEventListener('resize', resizeCanvas);
-
-    var MAX_PARTICLES = 60;
-
-    function createParticle() {
-        return {
-            x: Math.random() * w, y: -10,
-            r: Math.random() * 2.5 + 1.2,
-            speed: Math.random() * 0.6 + 0.15,
-            wind: Math.random() * 0.3 - 0.15,
-            alpha: Math.random() * 0.35 + 0.15
-        };
-    }
-
-    function initSnow() {
-        for (var i = 0; i < 40; i++) {
-            var p = createParticle(); p.y = Math.random() * h; particles.push(p);
-        }
-    }
-    initSnow();
-
-    function drawSnow() {
-        ctx.clearRect(0, 0, w, h);
-        for (var i = 0; i < particles.length; i++) {
-            var p = particles[i];
-            ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-            ctx.fillStyle = 'rgba(255, 255, 255, ' + p.alpha + ')'; ctx.fill();
-            p.y += p.speed; p.x += p.wind;
-            if (p.y > h + 10) particles[i] = createParticle();
-            if (p.x > w + 10) p.x = -10;
-            if (p.x < -10) p.x = w + 10;
-        }
-        while (particles.length < MAX_PARTICLES) particles.push(createParticle());
-        requestAnimationFrame(drawSnow);
-    }
-    drawSnow();
 
     var chartModal = document.getElementById('chartModal');
     var modalTitle = document.getElementById('modalTitle');
