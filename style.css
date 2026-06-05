@@ -10,7 +10,7 @@
 }
 
 .page-header .sub {
-    color: rgba(200,235,250,0.70); margin-top: 0.3rem;
+    color: rgba(230,245,255,0.85); margin-top: 0.3rem;
     font-family: var(--font-mono); font-size: clamp(0.7rem,1.5vw,0.85rem); letter-spacing: 0.03em;
 }
 .page-header .sub a { color: var(--color-accent); text-decoration: none; transition: color 0.25s; }
