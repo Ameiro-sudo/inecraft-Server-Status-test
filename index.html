@@ -68,7 +68,7 @@
             content: '';
             position: fixed;
             inset: 0;
-            background: rgba(255,255,255,0.08);
+            background: rgba(0,0,0,0.12);
             pointer-events: none;
             z-index: 0;
         }
@@ -288,7 +288,6 @@
             <span class="dot">·</span>
             只是演示 没有后端
         </p>
-        <button id="themeToggle" class="theme-toggle" aria-label="切换暗色模式">🌙</button>
     </header>
 
     <div class="server-grid">
@@ -364,7 +363,6 @@ function cp(){return{x:Math.random()*w,y:Math.random()*h-20,r:Math.random()*2.4+
 function is(){p=Array.from({length:window.innerWidth<768?30:60},cp)}
 function ds(){t.clearRect(0,0,w,h);for(var e=0;e<p.length;e++){var o=p[e];t.beginPath(),t.arc(o.x,o.y,o.r,0,Math.PI*2),t.fillStyle='rgba(255,255,255,'+o.a+')',t.fill(),o.y+=o.s,o.x+=o.w,o.y>h+25&&(p[e]=cp()),o.x>w+20?o.x=-15:o.x<-20&&(o.x=w+10)}for(;p.length<(window.innerWidth<768?40:60);)p.push(cp());requestAnimationFrame(ds)}
 addEventListener('resize',rs);rs();is();ds();
-!function(){var e=document.getElementById('themeToggle');if(!e)return;var t=localStorage.getItem('theme'),n=window.matchMedia('(prefers-color-scheme: dark)').matches;function o(t){t?(document.documentElement.classList.add('dark'),e.textContent='☀️'):(document.documentElement.classList.remove('dark'),e.textContent='🌙')}'dark'===t?o(!0):'light'===t?o(!1):o(n),e.addEventListener('click',function(){var t=document.documentElement.classList.toggle('dark');e.textContent=t?'☀️':'🌙',localStorage.setItem('theme',t?'dark':'light')})}();
 }();
 </script>
 </body>

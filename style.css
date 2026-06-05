@@ -35,9 +35,9 @@
     cursor: pointer; display: flex; flex-direction: column;
 }
 .server-card::before {
-    content: ''; position: absolute; inset: 0;
+    content: ''; position: absolute; inset: -1px;
     border-radius: inherit;
-    background: rgba(0,0,0,0.25);
+    background: rgba(0,0,0,0.35);
     z-index: -1; pointer-events: none;
 }
 .server-card:hover { transform: translateY(-6px); box-shadow: 0 20px 50px -16px rgba(0,0,0,0.5); }
@@ -258,14 +258,6 @@
     transform: translateX(-50%) translateY(0);
 }
 
-.theme-toggle {
-  position: absolute; top: 0.5rem; right: 0;
-  background: none; border: none; cursor: pointer; font-size: 1.2rem;
-  color: rgba(230,245,255,0.9); padding: 0.3rem;
-  transition: transform 0.25s;
-}
-.theme-toggle:hover { transform: scale(1.2); }
-
 @media (prefers-color-scheme: dark) {
     .toast { background: rgba(0,0,0,0.80); border-color: rgba(255,255,255,0.06); }
 }
@@ -279,7 +271,7 @@
     }
 
     body::before { background: rgba(0,0,0,0.25); }
-    .server-card::before { background: rgba(0, 0, 0, 0.35); }
+    .server-card::before { background: rgba(0, 0, 0, 0.40); }
 
     #loader {
         background: linear-gradient(135deg, #0d1f2b, #142a38, #0d1f2b);
@@ -297,33 +289,6 @@
     .modal-content { background: rgba(0, 15, 28, 0.85); }
     .no-servers { background: rgba(0, 18, 30, 0.55); }
 }
-
-html.dark .toast { background: rgba(0,0,0,0.80); border-color: rgba(255,255,255,0.06); }
-
-html.dark body {
-    background:
-        url('https://snowblock.top/138936740_p0.webp') center / cover no-repeat fixed,
-        linear-gradient(160deg, #0b1a24, #162b36);
-}
-
-html.dark body::before { background: rgba(0,0,0,0.25); }
-html.dark .server-card::before { background: rgba(0, 0, 0, 0.35); }
-
-html.dark #loader {
-    background: linear-gradient(135deg, #0d1f2b, #142a38, #0d1f2b);
-    background-size: 200% 200%;
-}
-
-html.dark .server-card { background: rgba(0, 18, 30, 0.55); }
-html.dark .server-header.online  { background: linear-gradient(135deg, rgba(76,175,80,0.15), rgba(76,175,80,0.03)); }
-html.dark .server-header.offline { background: linear-gradient(135deg, rgba(244,67,54,0.15), rgba(244,67,54,0.03)); }
-html.dark .server-header.bedrock { background: linear-gradient(135deg, rgba(33,150,243,0.15), rgba(33,150,243,0.03)); }
-html.dark .page-header h1 { text-shadow: 0 2px 12px rgba(0,0,0,0.5); }
-html.dark .server-name { color: #d0e4f0; }
-html.dark .server-info p, html.dark .server-info .value { color: #8ab0c8; }
-html.dark .server-motd { color: #b0d0e0; }
-html.dark .modal-content { background: rgba(0, 15, 28, 0.85); }
-html.dark .no-servers { background: rgba(0, 18, 30, 0.55); }
 
 @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
