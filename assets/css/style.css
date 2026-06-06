@@ -266,7 +266,7 @@
 @media (prefers-color-scheme: dark) {
     body {
         background:
-            url('assets/img/138936740_p0.webp') center / cover no-repeat fixed,
+            url('https://cdn.jsdelivr.net/gh/ninasukiwww-png/my-images/status/138936740_p0.webp') center / cover no-repeat fixed,
             linear-gradient(160deg, #0b1a24, #162b36);
     }
 
@@ -295,7 +295,7 @@
     .server-card:hover { transform: none !important; }
     #snowCanvas { display: none; }
     #loader { display: none; }
-    body { background: var(--color-bg-deep) url('assets/img/138936740_p0.webp') center/cover fixed; }
+    body { background: var(--color-bg-deep) url('https://cdn.jsdelivr.net/gh/ninasukiwww-png/my-images/status/138936740_p0.webp') center/cover fixed; }
 }
 
 @media print {
