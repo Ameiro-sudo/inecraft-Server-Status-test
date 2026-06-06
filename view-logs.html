@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API调用日志 · SnowBlock</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body class="admin-page">
+    <div class="admin-container">
+        <div class="header">
+            <h1>API调用日志</h1>
+            <div class="nav-links">
+                <a href="admin.html" class="nav-btn">服务器管理</a>
+                <a href="view-logs.html" class="nav-btn">查看日志</a>
+                <a href="index.html" class="nav-btn">返回首页</a>
+            </div>
+        </div>
+        <div class="log-list" id="logList"></div>
+    </div>
+    <script>
+    var logs = [
+        { time: '2026-06-06 10:00:00', msg: 'API请求成功: play.example.com (Java) — 在线人数 12/20' },
+        { time: '2026-06-06 10:00:01', msg: 'API请求成功: mini.example.com (Java) — 在线人数 5/20' },
+        { time: '2026-06-06 10:00:02', msg: 'API请求成功: bedrock.example.com:19132 (基岩) — 在线人数 3/10' },
+        { time: '2026-06-06 09:55:01', msg: 'API请求超时: offline.example.com (Java)' },
+        { time: '2026-06-06 09:50:00', msg: 'API请求成功: play.example.com (Java) — 在线人数 10/20' },
+        { time: '2026-06-06 09:45:00', msg: 'API请求成功: bedrock.example.com:19132 (基岩) — 在线人数 4/10' },
+        { time: '2026-06-06 09:30:00', msg: '历史数据已归档: 30天前的记录已清理' },
+        { time: '2026-06-06 09:00:00', msg: '系统监控启动 — 共 4 台服务器' }
+    ];
+    var list = document.getElementById('logList');
+    list.innerHTML = logs.map(function(l) {
+        return '<div class="log-entry-line"><span class="log-time">' + l.time + '</span><span class="log-message">' + l.msg + '</span></div>';
+    }).join('');
+    </script>
+</body>
+</html>

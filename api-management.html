@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API管理 · SnowBlock</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body class="admin-page">
+    <div class="admin-container">
+        <div class="header">
+            <h1>API管理</h1>
+            <div class="nav-links">
+                <a href="admin.html" class="nav-btn">← 返回管理页面</a>
+            </div>
+        </div>
+
+        <div class="success" id="msg" style="display:none;"></div>
+
+        <h2>选择API</h2>
+        <form onsubmit="return false;" class="form-container">
+            <div class="form-group">
+                <label for="javaApi">Java版服务器API:</label>
+                <select id="javaApi">
+                    <option value="https://api.mcsrvstat.us/2/">mcapi.us (默认)</option>
+                    <option value="http://cow.mc6.cn:10709/raw/">MC6 原始API</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="bedrockApi">基岩版服务器API:</label>
+                <select id="bedrockApi">
+                    <option value="https://api.mcsrvstat.us/bedrock/3/">mcapi.us 基岩 (默认)</option>
+                </select>
+            </div>
+            <button type="submit" class="btn" id="saveApiBtn">保存选择</button>
+            <button type="submit" class="btn" style="background:rgba(76,175,80,0.20);color:#81c784;" id="fetchApiBtn">获取API最新信息</button>
+        </form>
+
+        <h2>API信息</h2>
+        <div class="api-list">
+            <h3 style="font-family:var(--font-title);font-weight:400;color:rgba(200,235,250,0.7);margin:1rem 0 0.6rem;">Java版API</h3>
+            <div class="api-item">
+                <div class="api-info" style="font-weight:600;">mcapi.us</div>
+                <div class="api-info"><small>https://api.mcsrvstat.us/2/</small></div>
+                <div class="api-website" style="margin-top:0.4rem;"><a href="https://mcsrvstat.us" target="_blank" style="color:var(--color-accent);font-size:0.85rem;">官方网站</a></div>
+            </div>
+            <div class="api-item">
+                <div class="api-info" style="font-weight:600;">MC6 原始API</div>
+                <div class="api-info"><small>http://cow.mc6.cn:10709/raw/</small></div>
+            </div>
+
+            <h3 style="font-family:var(--font-title);font-weight:400;color:rgba(200,235,250,0.7);margin:1rem 0 0.6rem;">基岩版API</h3>
+            <div class="api-item">
+                <div class="api-info" style="font-weight:600;">mcapi.us 基岩</div>
+                <div class="api-info"><small>https://api.mcsrvstat.us/bedrock/3/</small></div>
+                <div class="api-website" style="margin-top:0.4rem;"><a href="https://mcsrvstat.us" target="_blank" style="color:var(--color-accent);font-size:0.85rem;">官方网站</a></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    document.getElementById('saveApiBtn').addEventListener('click', function() {
+        var m = document.getElementById('msg');
+        m.textContent = 'API选择已保存 (演示)';
+        m.style.display = 'block';
+        setTimeout(function(){ m.style.display = 'none'; }, 3000);
+    });
+    document.getElementById('fetchApiBtn').addEventListener('click', function() {
+        var m = document.getElementById('msg');
+        m.textContent = 'API信息已更新 (演示)';
+        m.style.display = 'block';
+        setTimeout(function(){ m.style.display = 'none'; }, 3000);
+    });
+    </script>
+</body>
+</html>

@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>服务器管理 · SnowBlock</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body class="admin-page">
+    <div class="admin-container">
+        <div class="header">
+            <h1>服务器管理</h1>
+            <div class="nav-links">
+                <a href="index.html" class="nav-btn">回到主页</a>
+                <a href="view-logs.html" class="nav-btn">查看日志</a>
+                <a href="api-management.html" class="nav-btn">API管理</a>
+                <a href="login.html" class="nav-btn danger">退出登录</a>
+            </div>
+        </div>
+
+        <div class="success" id="msg" style="display:none;"></div>
+
+        <div class="form-container" id="addForm">
+            <h2>添加服务器</h2>
+            <form onsubmit="return false;">
+                <input type="hidden" id="editId" value="">
+                <div class="form-group">
+                    <label for="srvName">服务器名称</label>
+                    <input type="text" id="srvName" placeholder="例如: 生存服务器" required>
+                </div>
+                <div class="form-group">
+                    <label for="srvAddr">服务器地址 (域名或IP:端口)</label>
+                    <input type="text" id="srvAddr" placeholder="例如: play.example.com" required>
+                </div>
+                <div class="form-group">
+                    <label for="srvType">服务器类型</label>
+                    <select id="srvType">
+                        <option value="java">Java版</option>
+                        <option value="bedrock">基岩版</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="srvWeight">排序权重（数字越大越靠前）</label>
+                    <input type="number" id="srvWeight" value="1000" min="0" max="9999">
+                    <small>默认值：1000</small>
+                </div>
+                <button type="submit" class="btn" id="saveBtn">添加服务器</button>
+            </form>
+        </div>
+
+        <h2>服务器列表</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>名称</th>
+                    <th>地址</th>
+                    <th>类型</th>
+                    <th>权重</th>
+                    <th>创建时间</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody id="srvTable"></tbody>
+        </table>
+    </div>
+
+    <script>
+    var servers = [
+        { id:1, name:'生存服务器', address:'play.example.com', type:'java', weight:1000, created:'2026-01-15 10:30:00' },
+        { id:2, name:'小游戏服务器', address:'mini.example.com', type:'java', weight:900, created:'2026-02-20 14:00:00' },
+        { id:3, name:'基岩互通服', address:'bedrock.example.com:19132', type:'bedrock', weight:800, created:'2026-03-10 09:15:00' }
+    ];
+    var nextId = 4;
+
+    function render() {
+        var tbody = document.getElementById('srvTable');
+        tbody.innerHTML = servers.map(function(s) {
+            return '<tr>' +
+                '<td>' + s.id + '</td>' +
+                '<td>' + s.name + '</td>' +
+                '<td>' + s.address + '</td>' +
+                '<td>' + (s.type === 'java' ? 'Java版' : '基岩版') + '</td>' +
+                '<td>' + s.weight + '</td>' +
+                '<td>' + s.created + '</td>' +
+                '<td>' +
+                    '<a href="#" class="action-btn edit-btn" onclick="editSrv(' + s.id + ');return false;">编辑</a>' +
+                    '<a href="#" class="action-btn delete-btn" onclick="delSrv(' + s.id + ');return false;">删除</a>' +
+                '</td></tr>';
+        }).join('');
+    }
+
+    function msg(text) { var m = document.getElementById('msg'); m.textContent = text; m.style.display = 'block'; setTimeout(function(){ m.style.display = 'none'; }, 3000); }
+
+    document.getElementById('saveBtn').addEventListener('click', function() {
+        var editId = document.getElementById('editId').value;
+        var name = document.getElementById('srvName').value.trim();
+        var addr = document.getElementById('srvAddr').value.trim();
+        if (!name || !addr) { msg('请填写服务器名称和地址'); return; }
+        if (editId) {
+            var s = servers.find(function(x) { return x.id == editId; });
+            if (s) { s.name = name; s.address = addr; s.type = document.getElementById('srvType').value; s.weight = parseInt(document.getElementById('srvWeight').value) || 1000; }
+            document.getElementById('editId').value = '';
+            document.getElementById('saveBtn').textContent = '添加服务器';
+            msg('服务器已更新');
+        } else {
+            servers.push({ id: nextId++, name: name, address: addr, type: document.getElementById('srvType').value, weight: parseInt(document.getElementById('srvWeight').value) || 1000, created: new Date().toISOString().replace('T',' ').substring(0,19) });
+            msg('服务器已添加');
+        }
+        document.getElementById('srvName').value = '';
+        document.getElementById('srvAddr').value = '';
+        render();
+    });
+
+    function editSrv(id) {
+        var s = servers.find(function(x) { return x.id == id; });
+        if (!s) return;
+        document.getElementById('editId').value = s.id;
+        document.getElementById('srvName').value = s.name;
+        document.getElementById('srvAddr').value = s.address;
+        document.getElementById('srvType').value = s.type;
+        document.getElementById('srvWeight').value = s.weight;
+        document.getElementById('saveBtn').textContent = '更新服务器';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function delSrv(id) {
+        if (!confirm('确定要删除这个服务器吗？')) return;
+        servers = servers.filter(function(s) { return s.id != id; });
+        render();
+        msg('服务器已删除');
+    }
+
+    render();
+    </script>
+</body>
+</html>

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>在线人数历史 · SnowBlock</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+    <div class="install-container chart-standalone">
+        <header class="page-header">
+            <h1>在线人数历史记录</h1>
+        </header>
+
+        <div class="chart-controls" style="gap:1rem;flex-wrap:wrap;">
+            <div class="control-group">
+                <label for="serverSelect">选择服务器:</label>
+                <select id="serverSelect" class="date-input">
+                    <option value="0">生存服务器</option>
+                    <option value="1">基岩互通服</option>
+                </select>
+            </div>
+            <div class="control-group">
+                <label>查看模式:</label>
+                <select id="viewMode" class="date-input">
+                    <option value="aggregated">聚合数据</option>
+                    <option value="raw">原始数据</option>
+                </select>
+            </div>
+            <button id="refreshBtn" class="chart-btn" style="font-size:0.85rem;">刷新</button>
+        </div>
+
+        <div class="chart-wrapper" style="height:400px;">
+            <canvas id="historyChart"></canvas>
+        </div>
+
+        <p class="modal-note" id="dataInfo">* 静态演示数据</p>
+        <p style="text-align:center;margin-top:1rem;"><a href="index.html" style="color:var(--color-accent);font-size:0.8rem;">返回主页</a></p>
+    </div>
+
+    <script>
+    var datasets = {
+        0: {
+            aggregated: { labels: ['06-01','06-02','06-03','06-04','06-05','06-06'], values: [8,12,15,10,18,22] },
+            raw: { labels: ['10:00','11:00','12:00','13:00','14:00','15:00','16:00'], values: [3,8,15,12,18,22,17] }
+        },
+        1: {
+            aggregated: { labels: ['06-01','06-02','06-03','06-04','06-05','06-06'], values: [4,6,5,7,8,5] },
+            raw: { labels: ['10:00','11:00','12:00','13:00','14:00','15:00'], values: [2,4,7,6,8,5] }
+        }
+    };
+
+    var chart = null;
+    function renderChart() {
+        var sid = document.getElementById('serverSelect').value;
+        var mode = document.getElementById('viewMode').value;
+        var data = datasets[sid][mode];
+        var ctx = document.getElementById('historyChart');
+
+        if (chart) chart.destroy();
+
+        chart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: data.labels,
+                datasets: [{
+                    label: '在线人数',
+                    data: data.values,
+                    borderColor: '#8fd8ef',
+                    backgroundColor: 'rgba(143,216,239,0.15)',
+                    borderWidth: 2,
+                    pointBackgroundColor: '#8fd8ef',
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 1,
+                    pointRadius: 4,
+                    tension: 0.35,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { labels: { color: 'rgba(255,255,255,0.7)' } },
+                    tooltip: { mode: 'index', intersect: false }
+                },
+                scales: {
+                    x: { ticks: { color: 'rgba(255,255,255,0.5)' }, grid: { color: 'rgba(255,255,255,0.05)' } },
+                    y: { beginAtZero: true, ticks: { color: 'rgba(255,255,255,0.5)', stepSize: 1 }, grid: { color: 'rgba(255,255,255,0.05)' } }
+                }
+            }
+        });
+        document.getElementById('dataInfo').textContent = '数据点: ' + data.values.length + ' | 演示数据';
+    }
+
+    document.getElementById('serverSelect').addEventListener('change', renderChart);
+    document.getElementById('viewMode').addEventListener('change', renderChart);
+    document.getElementById('refreshBtn').addEventListener('click', function() {
+        datasets[0].aggregated.values = Array.from({length:6},function(){return Math.floor(Math.random()*20)+3});
+        datasets[0].raw.values = Array.from({length:7},function(){return Math.floor(Math.random()*20)+3});
+        datasets[1].aggregated.values = Array.from({length:6},function(){return Math.floor(Math.random()*8)+2});
+        datasets[1].raw.values = Array.from({length:6},function(){return Math.floor(Math.random()*8)+2});
+        renderChart();
+    });
+    renderChart();
+    </script>
+</body>
+</html>
