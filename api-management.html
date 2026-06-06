@@ -715,6 +715,11 @@ table {
   margin-top: 0.5rem;
 }
 
+.table-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
 thead th {
   text-align: left;
   padding: 0.7rem 0.8rem;
@@ -730,6 +735,7 @@ tbody td {
   color: #ddf4ff;
   font-size: 0.85rem;
   border-bottom: 1px solid rgba(255,255,255,0.03);
+  white-space: nowrap;
 }
 
 .action-btn {
