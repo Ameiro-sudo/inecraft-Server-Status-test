@@ -1,6 +1,125 @@
-(function() {
+var app = (function() {
     'use strict';
 
+    var config = {
+        cdnBase: 'https://vps.snowblock.top:9443/raw/ninasukiwww-png/my-images/main/',
+        bgImage: 'https://vps.snowblock.top:9443/raw/ninasukiwww-png/my-images/main/bg.webp',
+        chartCdn: 'https://cdn.jsdelivr.net/npm/chart.js'
+    };
+
+    /* ===== Loader ===== */
+    var loader = document.getElementById('loader');
+    var loaded = false;
+    var minTimePassed = false;
+    var loaderTimeout;
+
+    if (loader) {
+        var img = new Image();
+        img.src = config.bgImage;
+        img.onload = function() { loaded = true; checkHideLoader(); };
+        img.onerror = function() { loaded = true; checkHideLoader(); };
+
+        setTimeout(function() {
+            minTimePassed = true;
+            checkHideLoader();
+        }, 1500);
+
+        loaderTimeout = setTimeout(function() {
+            if (!loader.classList.contains('hidden')) {
+                loaded = true;
+                minTimePassed = true;
+                checkHideLoader();
+            }
+        }, 5000);
+    }
+
+    function checkHideLoader() {
+        if (loaded && minTimePassed && loader && !loader.classList.contains('hidden')) {
+            clearTimeout(loaderTimeout);
+            loader.classList.add('hidden');
+            document.body.classList.add('bg-loaded');
+            loader.addEventListener('transitionend', function() {
+                if (loader.classList.contains('hidden')) {
+                    loader.style.display = 'none';
+                }
+            }, { once: true });
+        }
+    }
+
+    /* ===== Snow Canvas ===== */
+    var canvas = document.getElementById('snowCanvas');
+    if (canvas) {
+        var ctx = canvas.getContext('2d');
+        var particles = [];
+        var w, h;
+
+        function resizeCanvas() {
+            w = canvas.width = window.innerWidth;
+            h = canvas.height = window.innerHeight;
+        }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        var MAX_PARTICLES = window.innerWidth < 768 ? 30 : 60;
+
+        function createParticle() {
+            return {
+                x: Math.random() * w,
+                y: Math.random() * h - 20,
+                r: Math.random() * 2.4 + 1,
+                speed: Math.random() * 0.6 + 0.2,
+                wind: Math.random() * 0.3 - 0.12,
+                alpha: Math.random() * 0.4 + 0.15
+            };
+        }
+
+        function initSnow() {
+            for (var i = 0; i < MAX_PARTICLES; i++) {
+                var p = createParticle();
+                p.y = Math.random() * h;
+                particles.push(p);
+            }
+        }
+        initSnow();
+
+        function drawSnow() {
+            ctx.clearRect(0, 0, w, h);
+            for (var i = 0; i < particles.length; i++) {
+                var p = particles[i];
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(255, 255, 255, ' + p.alpha + ')';
+                ctx.fill();
+                p.y += p.speed;
+                p.x += p.wind;
+                if (p.y > h + 25) particles[i] = createParticle();
+                if (p.x > w + 20) p.x = -15;
+                if (p.x < -20) p.x = w + 10;
+            }
+            while (particles.length < (window.innerWidth < 768 ? 40 : 60)) {
+                particles.push(createParticle());
+            }
+            requestAnimationFrame(drawSnow);
+        }
+        drawSnow();
+    }
+
+    /* ===== Toast ===== */
+    var toast = document.getElementById('toast');
+    var toastTimer = null;
+
+    function showToast(msg, dur) {
+        if (!toast) return;
+        if (dur === undefined) dur = 2000;
+        toast.textContent = msg;
+        toast.classList.add('show');
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(function() {
+            toast.classList.remove('show');
+        }, dur);
+    }
+
+    /* ===== Modal (index.html) ===== */
     var chartModal = document.getElementById('chartModal');
     var modalTitle = document.getElementById('modalTitle');
     var modalBody = document.getElementById('modalBody');
@@ -80,4 +199,11 @@
             currentChart.update();
         }
     });
+
+    return {
+        config: config,
+        showToast: showToast,
+        hideModal: hideModal,
+        showModal: showModal
+    };
 })();
