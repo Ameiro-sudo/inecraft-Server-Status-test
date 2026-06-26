@@ -1,0 +1,72 @@
+:root {
+  /* ===== 色彩系统 ===== */
+  --color-bg-deep: #f2efe9;
+  --color-accent: #5b9bb5;
+  --color-accent-warm: #d4a86a;
+  --color-accent-glow: rgba(91, 155, 181, 0.15);
+  --text-primary: #1a2b3c;
+  --text-secondary: #4a5b6c;
+  --text-muted: #7a8a9c;
+
+  /* ===== 毛玻璃系统 ===== */
+  --glass-bg: rgba(255, 255, 255, 0.60);
+  --glass-border: rgba(0, 0, 0, 0.06);
+  --glass-hover-bg: rgba(255, 255, 255, 0.85);
+  --glass-header-bg: rgba(242, 239, 233, 0.80);
+
+  /* ===== 阴影系统 ===== */
+  --shadow-card: 0 20px 40px -12px rgba(0, 0, 0, 0.08);
+  --shadow-item: 0 4px 16px -6px rgba(0, 0, 0, 0.06);
+  --shadow-toast: 0 8px 30px rgba(0, 0, 0, 0.12);
+
+  /* ===== 圆角系统 ===== */
+  --radius-card: 3rem;
+  --radius-item: 1.5rem;
+  --radius-btn: 2rem;
+  --radius-sm: 0.8rem;
+
+  /* ===== 字体系统 ===== */
+  --font-mono: 'SF Mono', 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+  --font-sans: 'Segoe UI', Roboto, 'Helvetica Neue', system-ui, -apple-system, sans-serif;
+  --font-title: 'ZCOOL KuaiLe', cursive, var(--font-sans);
+
+  /* ===== 布局 ===== */
+  --body-pad: clamp(1.2rem, 5.88vw, 2.5rem);
+  --body-overlay: rgba(255, 255, 255, 0.15);
+
+  /* ===== 热力图 ===== */
+  --heatmap-empty: rgba(0, 0, 0, 0.04);
+  --heatmap-l1: rgba(91, 155, 181, 0.12);
+  --heatmap-l2: rgba(91, 155, 181, 0.30);
+  --heatmap-l3: rgba(91, 155, 181, 0.55);
+  --heatmap-l4: rgba(91, 155, 181, 0.80);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-bg-deep: #0b2b3b;
+    --color-accent: #8fd8ef;
+    --color-accent-warm: #e8c98a;
+    --color-accent-glow: rgba(143, 216, 239, 0.15);
+    --text-primary: #ffffff;
+    --text-secondary: rgba(220, 240, 255, 0.85);
+    --text-muted: rgba(200, 235, 250, 0.60);
+
+    --glass-bg: rgba(255, 255, 255, 0.12);
+    --glass-border: rgba(255, 255, 255, 0.20);
+    --glass-hover-bg: rgba(255, 255, 255, 0.22);
+    --glass-header-bg: rgba(11, 43, 59, 0.55);
+
+    --shadow-card: 0 30px 60px -16px rgba(0, 0, 0, 0.45);
+    --shadow-item: 0 4px 16px -6px rgba(0, 0, 0, 0.15);
+    --shadow-toast: 0 8px 30px rgba(0, 0, 0, 0.35);
+
+    --body-overlay: rgba(0, 0, 0, 0.30);
+
+    --heatmap-empty: rgba(255, 255, 255, 0.04);
+    --heatmap-l1: rgba(100, 200, 255, 0.12);
+    --heatmap-l2: rgba(100, 200, 255, 0.30);
+    --heatmap-l3: rgba(100, 200, 255, 0.55);
+    --heatmap-l4: rgba(100, 200, 255, 0.80);
+  }
+}

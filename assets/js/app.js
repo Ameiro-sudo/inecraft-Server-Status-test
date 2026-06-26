@@ -2,8 +2,8 @@ var app = (function() {
     'use strict';
 
     var config = {
-        cdnBase: 'https://vps.snowblock.top:9443/raw/ninasukiwww-png/my-images/main/',
-        bgImage: 'https://vps.snowblock.top:9443/raw/ninasukiwww-png/my-images/main/bg.webp',
+        cdnBase: 'https://raw.githubusercontent.com/ninasukiwww-png/my-images/main/',
+        bgImage: 'https://raw.githubusercontent.com/ninasukiwww-png/my-images/main/bg.webp',
         chartCdn: 'https://cdn.jsdelivr.net/npm/chart.js'
     };
 
