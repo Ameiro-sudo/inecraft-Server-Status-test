@@ -29,7 +29,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
     <link rel="stylesheet" href="assets/css/tokens.css">
     <link rel="stylesheet" href="assets/css/style.css">
 
@@ -38,6 +38,7 @@
         body {
             min-height:100vh; padding:var(--body-pad); font-family:var(--font-sans);
             -webkit-font-smoothing:antialiased; overflow-x:hidden;
+            display:flex; flex-direction:column; align-items:center;
             background: url(https://raw.githubusercontent.com/ninasukiwww-png/my-images/main/bg.webp) center/cover no-repeat fixed,
                         linear-gradient(160deg,#f8f6f0,#eef2f5);
         }
@@ -226,6 +227,6 @@
     </div>
 </div>
 
-<script src="assets/js/app.js"></script>
+<script src="assets/js/app.js" defer></script>
 </body>
 </html>
