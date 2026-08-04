@@ -2,8 +2,9 @@ var app = (function() {
     'use strict';
 
     var config = {
-        cdnBase: 'https://raw.githubusercontent.com/ninasukiwww-png/my-images/main/',
-        bgImage: 'https://raw.githubusercontent.com/ninasukiwww-png/my-images/main/bg.webp',
+        bgImage: (window.matchMedia('(orientation: portrait)').matches
+            ? 'assets/vendor/images/bg-portrait.webp'
+            : 'assets/vendor/images/bg.webp'),
         chartCdn: 'https://cdn.jsdelivr.net/npm/chart.js'
     };
 

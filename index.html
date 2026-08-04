@@ -13,7 +13,7 @@
     <meta property="og:type" content="website">
     <meta property="og:locale" content="zh_CN">
     <meta property="og:url" content="https://status.snowblock.top">
-    <meta property="og:image" content="https://raw.githubusercontent.com/ninasukiwww-png/my-images/main/bg.webp">
+    <meta property="og:image" content="assets/vendor/images/bg.webp">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta property="og:image:alt" content="SnowBlock MC 状态背景">
@@ -21,10 +21,10 @@
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Minecraft 服务器状态 · SnowBlock">
     <meta name="twitter:description" content="SnowBlock MC 服务器状态监控">
-    <meta name="twitter:image" content="https://raw.githubusercontent.com/ninasukiwww-png/my-images/main/bg.webp">
-    <link rel="icon" type="image/webp" href="https://raw.githubusercontent.com/ninasukiwww-png/my-images/main/profile.webp">
-    <link rel="apple-touch-icon" href="https://raw.githubusercontent.com/ninasukiwww-png/my-images/main/profile.webp">
-    <link rel="preload" href="https://raw.githubusercontent.com/ninasukiwww-png/my-images/main/bg.webp" as="image">
+    <meta name="twitter:image" content="assets/vendor/images/bg.webp">
+    <link rel="icon" type="image/webp" href="assets/vendor/images/profile.webp">
+    <link rel="apple-touch-icon" href="assets/vendor/images/profile.webp">
+    <link rel="preload" href="assets/vendor/images/bg.webp" as="image">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -39,10 +39,17 @@
             min-height:100vh; padding:var(--body-pad); font-family:var(--font-sans);
             -webkit-font-smoothing:antialiased; overflow-x:hidden;
             display:flex; flex-direction:column; align-items:center;
-            background: url(https://raw.githubusercontent.com/ninasukiwww-png/my-images/main/bg.webp) center/cover no-repeat fixed,
+            background: linear-gradient(160deg,#f8f6f0,#eef2f5);
+        }
+        body::after {
+            content:''; position:fixed; inset:0; z-index:-1; pointer-events:none;
+            background: url(assets/vendor/images/bg-portrait.webp) center/cover no-repeat,
                         linear-gradient(160deg,#f8f6f0,#eef2f5);
         }
-        body.bg-loaded { background: var(--color-bg-deep) url(https://raw.githubusercontent.com/ninasukiwww-png/my-images/main/bg.webp) center/cover fixed; }
+        @media (orientation: landscape) {
+            body::after { background-image: url(assets/vendor/images/bg.webp); }
+        }
+        body.bg-loaded { background: var(--color-bg-deep); }
         body::before {
             content:''; position:fixed; inset:0; background:var(--body-overlay);
             backdrop-filter:blur(2px); pointer-events:none; z-index:0;
@@ -81,9 +88,13 @@
         .loader-dots span:nth-child(3) { animation-delay:0.4s; }
         @keyframes dotBounce { 0%,100%{transform:translateY(0);opacity:0.3} 50%{transform:translateY(-8px);opacity:1} }
         @media (prefers-color-scheme: dark) {
-            body { background: url(https://raw.githubusercontent.com/ninasukiwww-png/my-images/main/bg.webp) center/cover fixed, linear-gradient(160deg,#173b52,#0b2b3b,#0a2433); }
+            body { background: linear-gradient(160deg,#173b52,#0b2b3b,#0a2433); }
+            body::after { background: url(assets/vendor/images/bg-portrait.webp) center/cover no-repeat, linear-gradient(160deg,#173b52,#0b2b3b,#0a2433); }
             body::before { background: var(--body-overlay); backdrop-filter:blur(2px); }
             #loader { background: linear-gradient(135deg,#0f3a52,#0b2b3b,#0f3a52); background-size:200% 200%; }
+        }
+        @media (prefers-color-scheme: dark) and (orientation: landscape) {
+            body::after { background-image: url(assets/vendor/images/bg.webp); }
         }
         @media (prefers-reduced-motion: reduce) {
             *,*::before,*::after { animation-duration:0.01ms!important; transition-duration:0.01ms!important; }
