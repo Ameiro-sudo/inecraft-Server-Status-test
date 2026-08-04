@@ -22,7 +22,7 @@ var app = (function() {
         setTimeout(function() {
             minTimePassed = true;
             checkHideLoader();
-        }, 1500);
+        }, 800);
 
         loaderTimeout = setTimeout(function() {
             if (!loader.classList.contains('hidden')) {
@@ -30,7 +30,7 @@ var app = (function() {
                 minTimePassed = true;
                 checkHideLoader();
             }
-        }, 5000);
+        }, 3000);
     }
 
     function checkHideLoader() {
