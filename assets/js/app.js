@@ -119,6 +119,20 @@ var app = (function() {
         }, dur);
     }
 
+    /* ===== Auth (demo 管理页守卫) ===== */
+    function requireAuth() {
+        if (sessionStorage.getItem('admin_logged_in') !== '1') {
+            var from = encodeURIComponent(location.pathname.split('/').pop());
+            location.replace('login.html?from=' + from);
+        }
+    }
+
+    function esc(s) {
+        return String(s == null ? '' : s)
+            .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+    }
+
     /* ===== Modal (index.html) ===== */
     var chartModal = document.getElementById('chartModal');
     var modalTitle = document.getElementById('modalTitle');
@@ -204,6 +218,8 @@ var app = (function() {
         config: config,
         showToast: showToast,
         hideModal: hideModal,
-        showModal: showModal
+        showModal: showModal,
+        requireAuth: requireAuth,
+        esc: esc
     };
 })();

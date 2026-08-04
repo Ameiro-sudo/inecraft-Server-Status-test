@@ -93,6 +93,7 @@
     </div>
     <script src="assets/js/app.js"></script>
     <script>
+    app.requireAuth();
     app.apiMgmt = app.apiMgmt || {};
     document.getElementById('saveApiBtn').addEventListener('click', function() {
         var m = document.getElementById('msg');

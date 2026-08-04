@@ -70,7 +70,9 @@
         }
         if (u === 'admin') {
             sessionStorage.setItem('admin_logged_in', '1');
-            window.location.href = 'admin.html';
+            var from = new URLSearchParams(location.search).get('from');
+            if (from && /^[\w.-]+\.html$/.test(from)) window.location.href = from;
+            else window.location.href = 'admin.html';
         } else {
             document.getElementById('loginError').textContent = '用户名不存在（演示环境用户名: admin）';
             document.getElementById('loginError').style.display = 'block';

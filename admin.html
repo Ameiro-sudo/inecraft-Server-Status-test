@@ -30,6 +30,7 @@
 <canvas id="snowCanvas" aria-hidden="true"></canvas>
     <script src="assets/js/app.js"></script>
     <script>
+    app.requireAuth();
     app.admin = (function() {
         var servers = [
             { id:1, name:'生存服务器', address:'play.example.com', type:'java', weight:1000, created:'2026-01-15 10:30:00' },
@@ -43,11 +44,11 @@
             tbody.innerHTML = servers.map(function(s) {
                 return '<tr>' +
                     '<td>' + s.id + '</td>' +
-                    '<td>' + s.name + '</td>' +
-                    '<td>' + s.address + '</td>' +
+                    '<td>' + app.esc(s.name) + '</td>' +
+                    '<td>' + app.esc(s.address) + '</td>' +
                     '<td>' + (s.type === 'java' ? 'Java版' : '基岩版') + '</td>' +
                     '<td>' + s.weight + '</td>' +
-                    '<td>' + s.created + '</td>' +
+                    '<td>' + app.esc(s.created) + '</td>' +
                     '<td>' +
                         '<a href="#" class="action-btn edit-btn" onclick="app.admin.editSrv(' + s.id + ');return false;">编辑</a>' +
                         '<a href="#" class="action-btn delete-btn" onclick="app.admin.delSrv(' + s.id + ');return false;">删除</a>' +
