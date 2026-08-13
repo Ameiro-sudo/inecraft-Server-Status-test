@@ -45,21 +45,19 @@
     <div class="install-container chart-standalone">
         <header class="page-header">
             <h1>在线人数历史记录</h1>
+            <p class="sub">浏览器本地采样 · 保留 7 天</p>
         </header>
 
         <div class="chart-controls" style="gap:1rem;flex-wrap:wrap;">
             <div class="control-group">
                 <label for="serverSelect">选择服务器:</label>
-                <select id="serverSelect" class="date-input">
-                    <option value="0">生存服务器</option>
-                    <option value="1">基岩互通服</option>
-                </select>
+                <select id="serverSelect" class="date-input"></select>
             </div>
             <div class="control-group">
                 <label>查看模式:</label>
                 <select id="viewMode" class="date-input">
-                    <option value="aggregated">聚合数据</option>
-                    <option value="raw">原始数据</option>
+                    <option value="aggregated">聚合数据(按天)</option>
+                    <option value="raw">原始数据(按时段)</option>
                 </select>
             </div>
             <button id="refreshBtn" class="chart-btn" style="font-size:0.85rem;">刷新</button>
@@ -69,44 +67,58 @@
             <canvas id="historyChart"></canvas>
         </div>
 
-        <p class="modal-note" id="dataInfo">* 静态演示数据</p>
+        <p class="modal-note" id="dataInfo">* 暂无本地采样数据,请先在主页停留让状态页采样</p>
         <p style="text-align:center;margin-top:1rem;"><a href="index.html" style="color:var(--color-accent);font-size:0.8rem;">返回主页</a></p>
     </div>
     <script src="assets/js/app.js"></script>
+    <script src="assets/js/servers.js"></script>
+    <script src="assets/js/status.js"></script>
     <script>
     app.requireAuth();
-    app.chart = app.chart || {};
-    var datasets = {
-        0: {
-            aggregated: { labels: ['06-01','06-02','06-03','06-04','06-05','06-06'], values: [8,12,15,10,18,22] },
-            raw: { labels: ['10:00','11:00','12:00','13:00','14:00','15:00','16:00'], values: [3,8,15,12,18,22,17] }
-        },
-        1: {
-            aggregated: { labels: ['06-01','06-02','06-03','06-04','06-05','06-06'], values: [4,6,5,7,8,5] },
-            raw: { labels: ['10:00','11:00','12:00','13:00','14:00','15:00'], values: [2,4,7,6,8,5] }
-        }
-    };
     var chart = null;
+
+    var select = document.getElementById('serverSelect');
+    SERVERS.forEach(function (srv) {
+        var opt = document.createElement('option');
+        opt.value = srv.id;
+        opt.textContent = srv.name;
+        select.appendChild(opt);
+    });
+
     function renderChart() {
-        var sid = document.getElementById('serverSelect').value;
+        var sid = select.value;
         var mode = document.getElementById('viewMode').value;
-        var data = datasets[sid][mode];
+        var hist = status.loadHistory(sid);
         var ctx = document.getElementById('historyChart');
         if (chart) chart.destroy();
+
+        var series;
+        if (hist.length) {
+            series = mode === 'aggregated' ? status.aggregateByDay(hist) : status.aggregateByHour(hist);
+        } else {
+            series = { labels: [], values: [] };
+        }
+
+        if (!series.labels.length) {
+            document.getElementById('dataInfo').textContent = '* 暂无本地采样数据,请在主页停留让状态页采样(每 60s 记录一点)';
+            document.getElementById('dataInfo').style.color = 'rgba(255,214,140,0.8)';
+            return;
+        }
+
         chart = new Chart(ctx, {
             type: 'line',
             data: {
-                labels: data.labels,
+                labels: series.labels,
                 datasets: [{
                     label: '在线人数',
-                    data: data.values,
+                    data: series.values,
                     borderColor: '#8fd8ef',
                     backgroundColor: 'rgba(143,216,239,0.15)',
                     borderWidth: 2,
                     pointBackgroundColor: '#8fd8ef',
                     pointBorderColor: '#fff',
                     pointBorderWidth: 1,
-                    pointRadius: 4,
+                    pointRadius: 3,
                     tension: 0.35,
                     fill: true
                 }]
@@ -124,17 +136,12 @@
                 }
             }
         });
-        document.getElementById('dataInfo').textContent = '数据点: ' + data.values.length + ' | 演示数据';
+        document.getElementById('dataInfo').textContent = '数据点: ' + hist.length + ' | 浏览器本地采样(每 60s 一点)';
+        document.getElementById('dataInfo').style.color = '';
     }
     document.getElementById('serverSelect').addEventListener('change', renderChart);
     document.getElementById('viewMode').addEventListener('change', renderChart);
-    document.getElementById('refreshBtn').addEventListener('click', function() {
-        datasets[0].aggregated.values = Array.from({length:6},function(){return Math.floor(Math.random()*20)+3});
-        datasets[0].raw.values = Array.from({length:7},function(){return Math.floor(Math.random()*20)+3});
-        datasets[1].aggregated.values = Array.from({length:6},function(){return Math.floor(Math.random()*8)+2});
-        datasets[1].raw.values = Array.from({length:6},function(){return Math.floor(Math.random()*8)+2});
-        renderChart();
-    });
+    document.getElementById('refreshBtn').addEventListener('click', renderChart);
     renderChart();
     </script>
 </body>

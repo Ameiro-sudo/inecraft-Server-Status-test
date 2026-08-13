@@ -171,7 +171,7 @@
         <p class="sub">
             <a href="https://snowblock.top">SnowBlock</a>
             <span class="dot">·</span>
-            静态演示
+            实时监控
         </p>
     </header>
 
@@ -183,48 +183,7 @@
     </nav>
 
     <div class="server-grid">
-        <div class="server-card" data-server-id="1">
-            <div class="server-header online">
-                <div class="server-icon" style="display:flex;align-items:center;justify-content:center;font-size:1.8rem;">SV</div>
-                <div class="server-name">示例生存服</div>
-                <div class="server-status">在线</div>
-            </div>
-            <div class="server-body">
-                <div class="server-info"><label>地址</label><p>play.example.com</p></div>
-                <div class="server-info"><label>类型</label><span class="server-type-badge java">Java</span></div>
-                <div class="server-info"><label>人数</label><p>12 / 20</p></div>
-                <div class="server-info"><label>版本</label><p>1.20.4</p></div>
-                <div class="server-motd">欢迎来到 示例服务器  Enjoy!</div>
-            </div>
-        </div>
-
-        <div class="server-card" data-server-id="2">
-            <div class="server-header offline">
-                <div class="server-icon" style="display:flex;align-items:center;justify-content:center;font-size:1.8rem;">OF</div>
-                <div class="server-name">离线测试服</div>
-                <div class="server-status">离线</div>
-            </div>
-            <div class="server-body">
-                <div class="server-info"><label>地址</label><p>offline.example.com</p></div>
-                <div class="server-info"><label>类型</label><span class="server-type-badge java">Java</span></div>
-                <div class="server-motd" style="color:rgba(200,235,250,0.4);">服务器无法连接</div>
-            </div>
-        </div>
-
-        <div class="server-card" data-server-id="3">
-            <div class="server-header online bedrock">
-                <div class="server-icon" style="display:flex;align-items:center;justify-content:center;font-size:1.8rem;">BE</div>
-                <div class="server-name">基岩互通服</div>
-                <div class="server-status">在线</div>
-            </div>
-            <div class="server-body">
-                <div class="server-info"><label>地址</label><p>bedrock.example.com:19132</p></div>
-                <div class="server-info"><label>类型</label><span class="server-type-badge bedrock">基岩</span></div>
-                <div class="server-info"><label>人数</label><p>5 / 10</p></div>
-                <div class="server-info"><label>版本</label><p>1.20.30</p></div>
-                <div class="server-motd">基岩版生存 欢迎加入</div>
-            </div>
-        </div>
+        <!-- 卡片由 assets/js/status.js 按 servers.js 配置动态渲染 -->
     </div>
 </div>
 
@@ -239,5 +198,7 @@
 </div>
 
 <script src="assets/js/app.js" defer></script>
+<script src="assets/js/servers.js" defer></script>
+<script src="assets/js/status.js" defer></script>
 </body>
 </html>
