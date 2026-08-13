@@ -8,6 +8,14 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&display=swap" rel="stylesheet">
     <style>#loader{display:flex;position:fixed;inset:0;z-index:9999}</style>
+    <script>
+    try {
+      var savedTheme = localStorage.getItem('theme')
+      var dark = savedTheme ? savedTheme === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches
+      if (dark) document.documentElement.classList.add('dark')
+    } catch (e) {}
+  </script>
+    <link rel="stylesheet" href="assets/css/tokens.css">
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body class="admin-page">
@@ -16,9 +24,9 @@
         <div class="crystal-wrapper">
             <div class="crystal-glow"></div>
             <svg class="crystal-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                <path class="main-line" stroke="#8fd8ef" stroke-width="2.2" stroke-linecap="round" fill="none" d="M50 5 L50 95 M50 5 L75 25 L50 50 M50 5 L25 25 L50 50 M50 95 L75 75 L50 50 M50 95 L25 75 L50 50 M50 50 L95 50 M75 25 L95 50 M25 25 L5 50 M75 75 L95 50 M25 75 L5 50"/>
-                <path class="inner-line" stroke="#c0f0ff" stroke-width="1.4" stroke-linecap="round" fill="none" d="M50 15 L50 85 M50 15 L65 30 L50 50 M50 15 L35 30 L50 50 M50 85 L65 70 L50 50 M50 85 L35 70 L50 50 M50 50 L85 50 M65 30 L85 50 M35 30 L15 50 M65 70 L85 50 M35 70 L15 50"/>
-                <path class="core-line" stroke="#ffe6b0" stroke-width="1.8" stroke-linecap="round" fill="none" d="M50 38 L50 62 M50 38 L57 44 L50 50 M50 38 L43 44 L50 50 M50 62 L57 56 L50 50 M50 62 L43 56 L50 50 M50 50 L62 50 M57 44 L62 50 M43 44 L38 50 M57 56 L62 50 M43 56 L38 50"/>
+                <path class="main-line" style="stroke:var(--color-accent)" stroke-width="2.2" stroke-linecap="round" fill="none" d="M50 5 L50 95 M50 5 L75 25 L50 50 M50 5 L25 25 L50 50 M50 95 L75 75 L50 50 M50 95 L25 75 L50 50 M50 50 L95 50 M75 25 L95 50 M25 25 L5 50 M75 75 L95 50 M25 75 L5 50"/>
+                <path class="inner-line" style="stroke:var(--loader-stroke-inner)" stroke-width="1.4" stroke-linecap="round" fill="none" d="M50 15 L50 85 M50 15 L65 30 L50 50 M50 15 L35 30 L50 50 M50 85 L65 70 L50 50 M50 85 L35 70 L50 50 M50 50 L85 50 M65 30 L85 50 M35 30 L15 50 M65 70 L85 50 M35 70 L15 50"/>
+                <path class="core-line" style="stroke:var(--loader-stroke-core)" stroke-width="1.8" stroke-linecap="round" fill="none" d="M50 38 L50 62 M50 38 L57 44 L50 50 M50 38 L43 44 L50 50 M50 62 L57 56 L50 50 M50 62 L43 56 L50 50 M50 50 L62 50 M57 44 L62 50 M43 44 L38 50 M57 56 L62 50 M43 56 L38 50"/>
             </svg>
         </div>
         <div class="loader-text-frost">正在连接雪境</div>
