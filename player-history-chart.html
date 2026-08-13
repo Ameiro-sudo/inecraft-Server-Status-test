@@ -109,7 +109,7 @@
 
         if (!series.labels.length) {
             document.getElementById('dataInfo').textContent = '* 暂无本地采样数据,请在主页停留让状态页采样(每 60s 记录一点)';
-            document.getElementById('dataInfo').style.color = 'rgba(255,214,140,0.8)';
+            document.getElementById('dataInfo').style.color = 'var(--status-warning)';
             return;
         }
 
@@ -135,12 +135,12 @@
                 responsive: true,
                 maintainAspectRatio: false,
                 plugins: {
-                    legend: { labels: { color: 'rgba(255,255,255,0.7)' } },
+                    legend: { labels: { color: 'var(--chart-tick)' } },
                     tooltip: { mode: 'index', intersect: false }
                 },
                 scales: {
-                    x: { ticks: { color: 'rgba(255,255,255,0.5)' }, grid: { color: 'rgba(255,255,255,0.05)' } },
-                    y: { beginAtZero: true, ticks: { color: 'rgba(255,255,255,0.5)', stepSize: 1 }, grid: { color: 'rgba(255,255,255,0.05)' } }
+                    x: { ticks: { color: 'var(--chart-tick)' }, grid: { color: 'var(--chart-grid)' } },
+                    y: { beginAtZero: true, ticks: { color: 'var(--chart-tick)', stepSize: 1 }, grid: { color: 'var(--chart-grid)' } }
                 }
             }
         });

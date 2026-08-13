@@ -95,7 +95,7 @@
         } else {
             info += '<div class="server-info"><label>地址</label><p>' + esc(srv.address) + (srv.port ? ':' + srv.port : '') + '</p></div>';
             info += '<div class="server-info"><label>类型</label><span class="server-type-badge ' + srv.type + '">' + (srv.type === 'bedrock' ? '基岩' : 'Java') + '</span></div>';
-            info += '<div class="server-motd" style="color:rgba(200,235,250,0.4);">服务器无法连接</div>';
+            info += '<div class="server-motd" style="color:var(--text-muted);">服务器无法连接</div>';
         }
         return '<div class="server-card" data-server-id="' + esc(srv.id) + '">' +
             '<div class="server-header ' + cls + '">' +
@@ -253,10 +253,10 @@
             },
             options: {
                 responsive: true, maintainAspectRatio: false,
-                plugins: { legend: { labels: { color: 'rgba(255,255,255,0.7)' } }, tooltip: { mode: 'index', intersect: false } },
+                plugins: { legend: { labels: { color: 'var(--chart-tick)' } }, tooltip: { mode: 'index', intersect: false } },
                 scales: {
-                    x: { ticks: { color: 'rgba(255,255,255,0.5)' }, grid: { color: 'rgba(255,255,255,0.05)' } },
-                    y: { beginAtZero: true, ticks: { color: 'rgba(255,255,255,0.5)', stepSize: 1 }, grid: { color: 'rgba(255,255,255,0.05)' } }
+                    x: { ticks: { color: 'var(--chart-tick)' }, grid: { color: 'var(--chart-grid)' } },
+                    y: { beginAtZero: true, ticks: { color: 'var(--chart-tick)', stepSize: 1 }, grid: { color: 'var(--chart-grid)' } }
                 }
             }
         });
