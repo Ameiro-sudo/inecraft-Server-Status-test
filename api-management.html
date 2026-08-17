@@ -4,10 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>API管理 · SnowBlock</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&display=swap" rel="stylesheet">
-    <style>#loader{display:flex;position:fixed;inset:0;z-index:9999}</style>
+    <link rel="stylesheet" href="assets/vendor/fonts/ZCOOL_KuaiLe.css">
+    <link rel="stylesheet" href="assets/vendor/font-awesome@6.5.1/css/all.min.css">
     <script>
     try {
       var savedTheme = localStorage.getItem('theme')
@@ -20,32 +18,50 @@
 </head>
 <body class="admin-page">
     <div id="loader">
-        <svg class="crystal-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-                <linearGradient id="g1" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stop-color="#8fd8ef"/>
-                    <stop offset="100%" stop-color="#4a90d9"/>
-                </linearGradient>
-                <linearGradient id="g2" x1="100%" y1="0%" x2="0%" y2="100%">
-                    <stop offset="0%" stop-color="#a8e6cf"/>
-                    <stop offset="100%" stop-color="#8fd8ef"/>
-                </linearGradient>
-            </defs>
-            <polygon points="50,5 95,25 95,75 50,95 5,75 5,25" fill="none" stroke="url(#g1)" stroke-width="2" opacity="0.8">
-                <animate attributeName="opacity" values="0.4;1;0.4" dur="2.5s" repeatCount="indefinite"/>
-            </polygon>
-            <polygon points="50,15 85,30 85,70 50,85 15,70 15,30" fill="none" stroke="url(#g2)" stroke-width="1.5" opacity="0.6">
-                <animate attributeName="opacity" values="0.6;0.2;0.6" dur="3s" repeatCount="indefinite"/>
-            </polygon>
-            <polygon points="50,25 75,35 75,65 50,75 25,65 25,35" fill="none" stroke="url(#g1)" stroke-width="1" opacity="0.4">
-                <animate attributeName="opacity" values="0.2;0.8;0.2" dur="3.5s" repeatCount="indefinite"/>
-            </polygon>
-            <circle cx="50" cy="50" r="8" fill="url(#g1)" opacity="0.6">
-                <animate attributeName="r" values="6;10;6" dur="2s" repeatCount="indefinite"/>
-                <animate attributeName="opacity" values="0.4;1;0.4" dur="2s" repeatCount="indefinite"/>
-            </circle>
-        </svg>
-        <div class="loader-text-frost">SnowBlock</div>
+        <div class="loader-crystal">
+            <div class="crystal-wrapper">
+                <div class="crystal-glow"></div>
+                <svg class="crystal-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                    <path class="main-line" stroke-width="2.2" stroke-linecap="round" fill="none"
+                          d="M50 5 L50 95
+                             M50 5 L75 25 L50 50
+                             M50 5 L25 25 L50 50
+                             M50 95 L75 75 L50 50
+                             M50 95 L25 75 L50 50
+                             M50 50 L95 50
+                             M75 25 L95 50
+                             M25 25 L5 50
+                             M75 75 L95 50
+                             M25 75 L5 50" />
+                    <path class="inner-line" stroke-width="1.4" stroke-linecap="round" fill="none"
+                          d="M50 15 L50 85
+                             M50 15 L65 30 L50 50
+                             M50 15 L35 30 L50 50
+                             M50 85 L65 70 L50 50
+                             M50 85 L35 70 L50 50
+                             M50 50 L85 50
+                             M65 30 L85 50
+                             M35 30 L15 50
+                             M65 70 L85 50
+                             M35 70 L15 50" />
+                    <path class="core-line" stroke-width="1.8" stroke-linecap="round" fill="none"
+                          d="M50 38 L50 62
+                             M50 38 L57 44 L50 50
+                             M50 38 L43 44 L50 50
+                             M50 62 L57 56 L50 50
+                             M50 62 L43 56 L50 50
+                             M50 50 L62 50
+                             M57 44 L62 50
+                             M43 44 L38 50
+                             M57 56 L62 50
+                             M43 56 L38 50" />
+                </svg>
+            </div>
+            <div class="loader-text-frost"><i class="fa-solid fa-snowflake"></i> 正在连接雪境</div>
+            <div class="loader-dots">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
     </div>
     <canvas id="snowCanvas"></canvas>
     <div id="toast" class="toast"></div>
@@ -64,57 +80,88 @@
             <div class="form-group">
                 <label for="javaApi">Java版服务器API:</label>
                 <select id="javaApi">
-                    <option value="https://api.mcsrvstat.us/2/">mcapi.us (默认)</option>
-                    <option value="http://cow.mc6.cn:10709/raw/">MC6 原始API</option>
+                    <option value="mcstatus">api.mcstatus.io (默认)</option>
+                    <option value="mcsrvstat">api.mcsrvstat.us</option>
+                    <option value="mc6">MC6 原始API (HTTP)</option>
                 </select>
             </div>
             <div class="form-group">
                 <label for="bedrockApi">基岩版服务器API:</label>
                 <select id="bedrockApi">
-                    <option value="https://api.mcsrvstat.us/bedrock/3/">mcapi.us 基岩 (默认)</option>
+                    <option value="mcstatus">api.mcstatus.io (默认)</option>
+                    <option value="mcsrvstat">api.mcsrvstat.us 基岩</option>
                 </select>
             </div>
             <button type="submit" class="btn" id="saveApiBtn">保存选择</button>
-            <button type="submit" class="btn" style="background:var(--color-success-glow);color:var(--color-success);" id="fetchApiBtn">获取API最新信息</button>
+            <button type="submit" class="btn" style="background:var(--color-success-glow);color:var(--color-success);" id="fetchApiBtn">测试所选API连通性</button>
         </form>
 
         <h2>API信息</h2>
-        <div class="api-list">
-            <h3 style="font-family:var(--font-title);font-weight:400;color:var(--text-secondary);margin:1rem 0 0.6rem;">Java版API</h3>
-            <div class="api-item">
-                <div class="api-info" style="font-weight:600;">mcapi.us</div>
-                <div class="api-info"><small>https://api.mcsrvstat.us/2/</small></div>
-                <div class="api-website" style="margin-top:0.4rem;"><a href="https://mcsrvstat.us" target="_blank" style="color:var(--color-accent);font-size:0.85rem;">官方网站</a></div>
-            </div>
-            <div class="api-item">
-                <div class="api-info" style="font-weight:600;">MC6 原始API</div>
-                <div class="api-info"><small>http://cow.mc6.cn:10709/raw/</small></div>
-            </div>
-
-            <h3 style="font-family:var(--font-title);font-weight:400;color:var(--text-secondary);margin:1rem 0 0.6rem;">基岩版API</h3>
-            <div class="api-item">
-                <div class="api-info" style="font-weight:600;">mcapi.us 基岩</div>
-                <div class="api-info"><small>https://api.mcsrvstat.us/bedrock/3/</small></div>
-                <div class="api-website" style="margin-top:0.4rem;"><a href="https://mcsrvstat.us" target="_blank" style="color:var(--color-accent);font-size:0.85rem;">官方网站</a></div>
-            </div>
-        </div>
+        <div class="api-list" id="apiInfoList"></div>
     </div>
     <script src="assets/js/app.js"></script>
+    <script src="assets/js/servers.js"></script>
+    <script src="assets/js/admin-config.js"></script>
+    <script src="assets/js/status.js"></script>
     <script>
     app.requireAuth();
     app.apiMgmt = app.apiMgmt || {};
+
+    function msg(text, isErr) {
+        var m = document.getElementById('msg');
+        m.className = isErr ? 'error' : 'success';
+        m.textContent = text;
+        m.style.display = 'block';
+        setTimeout(function(){ m.style.display = 'none'; }, 4000);
+    }
+
+    function renderInfo() {
+        var html = '';
+        var order = ['java', 'bedrock'];
+        var titles = { java: 'Java版API', bedrock: '基岩版API' };
+        order.forEach(function (type) {
+            html += '<h3 style="font-family:var(--font-title);font-weight:400;color:var(--text-secondary);margin:1rem 0 0.6rem;">' + titles[type] + '</h3>';
+            var current = AdminConfig.api(type);
+            Object.keys(mcStatus.PROVIDERS).forEach(function (key) {
+                if (type === 'bedrock' && key === 'mc6') return; // mc6 仅提供 Java
+                var p = mcStatus.PROVIDERS[key];
+                var url = p.base[type] || '';
+                var active = key === current;
+                html += '<div class="api-item">' +
+                    '<div class="api-info" style="font-weight:600;">' + app.esc(p.label) +
+                        (active ? ' <span style="color:var(--color-success);font-size:0.75rem;">(当前使用)</span>' : '') + '</div>' +
+                    '<div class="api-info"><small>' + app.esc(url) + '</small></div>' +
+                    (key === 'mc6' ? '<div class="api-info"><small style="color:var(--status-warning);">注意: MC6 为 HTTP 接口, 站点部署为 HTTPS 时会被浏览器拦截</small></div>' : '') +
+                '</div>';
+            });
+        });
+        document.getElementById('apiInfoList').innerHTML = html;
+    }
+
+    document.getElementById('javaApi').value = AdminConfig.api('java');
+    document.getElementById('bedrockApi').value = AdminConfig.api('bedrock');
+
     document.getElementById('saveApiBtn').addEventListener('click', function() {
-        var m = document.getElementById('msg');
-        m.textContent = 'API选择已保存 (演示)';
-        m.style.display = 'block';
-        setTimeout(function(){ m.style.display = 'none'; }, 3000);
+        AdminConfig.saveApi(
+            document.getElementById('javaApi').value,
+            document.getElementById('bedrockApi').value
+        );
+        renderInfo();
+        msg('API 选择已保存, 主页将在下次轮询时生效');
     });
+
     document.getElementById('fetchApiBtn').addEventListener('click', function() {
-        var m = document.getElementById('msg');
-        m.textContent = 'API信息已更新 (演示)';
-        m.style.display = 'block';
-        setTimeout(function(){ m.style.display = 'none'; }, 3000);
+        var srv = AdminConfig.servers()[0];
+        if (!srv) { msg('请先在"服务器管理"中添加服务器再测试', true); return; }
+        msg('正在测试: ' + srv.address + (srv.port ? ':' + srv.port : '') + ' ...');
+        mcStatus.fetchStatus(srv).then(function(st) {
+            msg('测试成功: ' + (st.online ? '在线 ' + st.players + '/' + st.max + ' 人' : '离线'));
+        }).catch(function() {
+            msg('测试失败: ' + srv.address + ' 无法连接(检查网络或所选API可用性)', true);
+        });
     });
+
+    renderInfo();
     </script>
 </body>
 </html>

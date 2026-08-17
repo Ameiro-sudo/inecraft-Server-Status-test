@@ -26,9 +26,8 @@
     <link rel="apple-touch-icon" href="https://avatars.githubusercontent.com/u/269375186?v=4">
     <link rel="preload" href="assets/vendor/images/bg.webp" as="image">
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/vendor/fonts/ZCOOL_KuaiLe.css">
+    <link rel="stylesheet" href="assets/vendor/font-awesome@6.5.1/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
     <script>
     try {
@@ -42,74 +41,6 @@
 
     <style>
         * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
-        body {
-            min-height:100vh; padding:var(--body-pad); font-family:var(--font-sans);
-            -webkit-font-smoothing:antialiased; overflow-x:hidden;
-            display:flex; flex-direction:column; align-items:center;
-            background: var(--bg-gradient-body-light);
-        }
-        body::after {
-            content:''; position:fixed; inset:0; z-index:-1; pointer-events:none;
-            background: url(assets/vendor/images/bg-portrait.webp) center/cover no-repeat,
-                        var(--bg-gradient-body-light);
-        }
-        @media (orientation: landscape) {
-            body::after { background-image: url(assets/vendor/images/bg.webp); }
-        }
-        body.bg-loaded { background: var(--color-bg-deep); }
-        body::before {
-            content:''; position:fixed; inset:0; background:var(--body-overlay);
-            backdrop-filter:blur(2px); pointer-events:none; z-index:0;
-        }
-        body > * { position:relative; z-index:1; }
-        #snowCanvas {
-            position:fixed; inset:0; width:100%; height:100%;
-            pointer-events:none; z-index:0; opacity:0;
-            transition:opacity 1s ease 0.2s;
-        }
-        #loader.hidden ~ #snowCanvas { opacity:1; }
-        #loader {
-            position:fixed; inset:0; z-index:9999;
-            background:var(--bg-gradient-loader-light); background-size:200% 200%;
-            animation:loaderBgShift 6s ease infinite; backdrop-filter:blur(6px);
-            display:flex; flex-direction:column; align-items:center; justify-content:center;
-            transition:opacity 0.5s ease, visibility 0.5s ease, transform 0.5s ease;
-        }
-        @keyframes loaderBgShift { 0%{background-position:0% 0%} 50%{background-position:100% 100%} 100%{background-position:0% 0%} }
-        #loader.hidden { opacity:0; visibility:hidden; pointer-events:none; transform:scale(1.05); }
-        .loader-crystal { display:flex; flex-direction:column; align-items:center; gap:1.2rem; }
-        .crystal-wrapper { position:relative; display:flex; align-items:center; justify-content:center; }
-        .crystal-svg { width:90px; height:90px; animation:crystalFloat 4s ease-in-out infinite; filter:drop-shadow(0 0 12px var(--color-accent-glow)); }
-        @keyframes crystalFloat { 0%,100%{transform:translateY(0) rotate(0deg)} 25%{transform:translateY(-8px) rotate(3deg)} 75%{transform:translateY(4px) rotate(-2deg)} }
-        .crystal-svg .main-line { stroke:var(--color-accent); stroke-dasharray:360; stroke-dashoffset:360; animation:drawCrystal 2.2s ease-in-out infinite alternate; }
-        .crystal-svg .inner-line { stroke:var(--loader-stroke-inner); stroke-dasharray:240; stroke-dashoffset:240; animation:drawCrystal 2.2s ease-in-out 0.4s infinite alternate; }
-        .crystal-svg .core-line { stroke:var(--loader-stroke-core); stroke-dasharray:80; stroke-dashoffset:80; animation:drawCrystal 1.6s ease-in-out 0.8s infinite alternate; }
-        @keyframes drawCrystal { 0%{stroke-dashoffset:360} 60%{stroke-dashoffset:0} 100%{stroke-dashoffset:0} }
-        .crystal-glow { position:absolute; inset:0; border-radius:50%; background:radial-gradient(circle,var(--color-accent-glow),transparent 70%); animation:glowPulse 2.4s ease-in-out infinite; }
-        @keyframes glowPulse { 0%,100%{opacity:0.3;transform:scale(1)} 50%{opacity:0.8;transform:scale(1.2)} }
-        .loader-text-frost { font-family:var(--font-title); font-size:1.3rem; background:linear-gradient(135deg,var(--loader-text-gradient)); background-size:300% 300%; background-clip:text; -webkit-background-clip:text; color:transparent; animation:frostShift 4s ease infinite; }
-        @keyframes frostShift { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
-        .loader-dots { display:flex; gap:6px; margin-top:0.2rem; }
-        .loader-dots span { width:6px; height:6px; border-radius:50%; background:var(--color-accent); animation:dotBounce 1.2s ease-in-out infinite; }
-        .loader-dots span:nth-child(2) { animation-delay:0.2s; }
-        .loader-dots span:nth-child(3) { animation-delay:0.4s; }
-        @keyframes dotBounce { 0%,100%{transform:translateY(0);opacity:0.3} 50%{transform:translateY(-8px);opacity:1} }
-        html.dark body { background: var(--bg-gradient-body-dark); }
-        html.dark body::after { background: url(assets/vendor/images/bg-portrait.webp) center/cover no-repeat, var(--bg-gradient-body-dark); }
-        html.dark body::before { background: var(--body-overlay); backdrop-filter:blur(2px); }
-        html.dark #loader { background: var(--bg-gradient-loader-dark); background-size:200% 200%; }
-        @media (prefers-color-scheme: dark) and (orientation: landscape) {
-            body::after { background-image: url(assets/vendor/images/bg.webp); }
-        }
-        @media (prefers-reduced-motion: reduce) {
-            *,*::before,*::after { animation-duration:0.01ms!important; transition-duration:0.01ms!important; }
-            #snowCanvas { display:none; }
-        }
-        @media print {
-            body::before { display:none; }
-            body { background:#fff!important; padding:1rem; }
-            #loader, #snowCanvas { display:none; }
-        }
     </style>
 
 </head>
@@ -159,7 +90,7 @@
                          M43 56 L38 50" />
             </svg>
         </div>
-        <div class="loader-text-frost">正在连接雪境</div>
+        <div class="loader-text-frost"><i class="fa-solid fa-snowflake"></i> 正在连接雪境</div>
         <div class="loader-dots">
             <span></span><span></span><span></span>
         </div>
@@ -174,7 +105,7 @@
     <header class="page-header">
         <h1>Minecraft 服务器</h1>
         <p class="sub">
-            <a href="https://snowblock.top">SnowBlock</a>
+            <a href="https://snowblock.top"><i class="fa-solid fa-snowflake"></i> SnowBlock</a>
             <span class="dot">·</span>
             实时监控
         </p>
@@ -204,6 +135,7 @@
 
 <script src="assets/js/app.js" defer></script>
 <script src="assets/js/servers.js" defer></script>
+<script src="assets/js/admin-config.js" defer></script>
 <script src="assets/js/status.js" defer></script>
 </body>
 </html>

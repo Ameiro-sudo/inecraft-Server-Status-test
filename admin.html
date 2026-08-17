@@ -4,10 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>服务器管理 · SnowBlock</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&display=swap" rel="stylesheet">
-    <style>#loader{display:flex;position:fixed;inset:0;z-index:9999}</style>
+    <link rel="stylesheet" href="assets/vendor/fonts/ZCOOL_KuaiLe.css">
+    <link rel="stylesheet" href="assets/vendor/font-awesome@6.5.1/css/all.min.css">
     <script>
     try {
       var savedTheme = localStorage.getItem('theme')
@@ -24,92 +22,19 @@
         <div class="crystal-wrapper">
             <div class="crystal-glow"></div>
             <svg class="crystal-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                <path class="main-line" style="stroke:var(--color-accent)" stroke-width="2.2" stroke-linecap="round" fill="none" d="M50 5 L50 95 M50 5 L75 25 L50 50 M50 5 L25 25 L50 50 M50 95 L75 75 L50 50 M50 95 L25 75 L50 50 M50 50 L95 50 M75 25 L95 50 M25 25 L5 50 M75 75 L95 50 M25 75 L5 50"/>
-                <path class="inner-line" style="stroke:var(--loader-stroke-inner)" stroke-width="1.4" stroke-linecap="round" fill="none" d="M50 15 L50 85 M50 15 L65 30 L50 50 M50 15 L35 30 L50 50 M50 85 L65 70 L50 50 M50 85 L35 70 L50 50 M50 50 L85 50 M65 30 L85 50 M35 30 L15 50 M65 70 L85 50 M35 70 L15 50"/>
-                <path class="core-line" style="stroke:var(--loader-stroke-core)" stroke-width="1.8" stroke-linecap="round" fill="none" d="M50 38 L50 62 M50 38 L57 44 L50 50 M50 38 L43 44 L50 50 M50 62 L57 56 L50 50 M50 62 L43 56 L50 50 M50 50 L62 50 M57 44 L62 50 M43 44 L38 50 M57 56 L62 50 M43 56 L38 50"/>
+                <path class="main-line" stroke-width="2.2" stroke-linecap="round" fill="none" d="M50 5 L50 95 M50 5 L75 25 L50 50 M50 5 L25 25 L50 50 M50 95 L75 75 L50 50 M50 95 L25 75 L50 50 M50 50 L95 50 M75 25 L95 50 M25 25 L5 50 M75 75 L95 50 M25 75 L5 50"/>
+                <path class="inner-line" stroke-width="1.4" stroke-linecap="round" fill="none" d="M50 15 L50 85 M50 15 L65 30 L50 50 M50 15 L35 30 L50 50 M50 85 L65 70 L50 50 M50 85 L35 70 L50 50 M50 50 L85 50 M65 30 L85 50 M35 30 L15 50 M65 70 L85 50 M35 70 L15 50"/>
+                <path class="core-line" stroke-width="1.8" stroke-linecap="round" fill="none" d="M50 38 L50 62 M50 38 L57 44 L50 50 M50 38 L43 44 L50 50 M50 62 L57 56 L50 50 M50 62 L43 56 L50 50 M50 50 L62 50 M57 44 L62 50 M43 44 L38 50 M57 56 L62 50 M43 56 L38 50"/>
             </svg>
         </div>
-        <div class="loader-text-frost">正在连接雪境</div>
+        <div class="loader-text-frost"><i class="fa-solid fa-snowflake"></i> 正在连接雪境</div>
         <div class="loader-dots">
             <span></span><span></span><span></span>
         </div>
     </div>
 </div>
 <canvas id="snowCanvas" aria-hidden="true"></canvas>
-    <script src="assets/js/app.js"></script>
-    <script>
-    app.requireAuth();
-    app.admin = (function() {
-        var servers = [
-            { id:1, name:'生存服务器', address:'play.example.com', type:'java', weight:1000, created:'2026-01-15 10:30:00' },
-            { id:2, name:'小游戏服务器', address:'mini.example.com', type:'java', weight:900, created:'2026-02-20 14:00:00' },
-            { id:3, name:'基岩互通服', address:'bedrock.example.com:19132', type:'bedrock', weight:800, created:'2026-03-10 09:15:00' }
-        ];
-        var nextId = 4;
-
-        function render() {
-            var tbody = document.getElementById('srvTable');
-            tbody.innerHTML = servers.map(function(s) {
-                return '<tr>' +
-                    '<td>' + s.id + '</td>' +
-                    '<td>' + app.esc(s.name) + '</td>' +
-                    '<td>' + app.esc(s.address) + '</td>' +
-                    '<td>' + (s.type === 'java' ? 'Java版' : '基岩版') + '</td>' +
-                    '<td>' + s.weight + '</td>' +
-                    '<td>' + app.esc(s.created) + '</td>' +
-                    '<td>' +
-                        '<a href="#" class="action-btn edit-btn" onclick="app.admin.editSrv(' + s.id + ');return false;">编辑</a>' +
-                        '<a href="#" class="action-btn delete-btn" onclick="app.admin.delSrv(' + s.id + ');return false;">删除</a>' +
-                    '</td></tr>';
-            }).join('');
-        }
-
-        function msg(text) { var m = document.getElementById('msg'); m.textContent = text; m.style.display = 'block'; setTimeout(function(){ m.style.display = 'none'; }, 3000); }
-
-        document.getElementById('saveBtn').addEventListener('click', function() {
-            var editId = document.getElementById('editId').value;
-            var name = document.getElementById('srvName').value.trim();
-            var addr = document.getElementById('srvAddr').value.trim();
-            if (!name || !addr) { msg('请填写服务器名称和地址'); return; }
-            if (editId) {
-                var s = servers.find(function(x) { return x.id == editId; });
-                if (s) { s.name = name; s.address = addr; s.type = document.getElementById('srvType').value; s.weight = parseInt(document.getElementById('srvWeight').value) || 1000; }
-                document.getElementById('editId').value = '';
-                document.getElementById('saveBtn').textContent = '添加服务器';
-                msg('服务器已更新');
-            } else {
-                servers.push({ id: nextId++, name: name, address: addr, type: document.getElementById('srvType').value, weight: parseInt(document.getElementById('srvWeight').value) || 1000, created: new Date().toISOString().replace('T',' ').substring(0,19) });
-                msg('服务器已添加');
-            }
-            document.getElementById('srvName').value = '';
-            document.getElementById('srvAddr').value = '';
-            render();
-        });
-
-        function editSrv(id) {
-            var s = servers.find(function(x) { return x.id == id; });
-            if (!s) return;
-            document.getElementById('editId').value = s.id;
-            document.getElementById('srvName').value = s.name;
-            document.getElementById('srvAddr').value = s.address;
-            document.getElementById('srvType').value = s.type;
-            document.getElementById('srvWeight').value = s.weight;
-            document.getElementById('saveBtn').textContent = '更新服务器';
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        function delSrv(id) {
-            if (!confirm('确定要删除这个服务器吗？')) return;
-            servers = servers.filter(function(s) { return s.id != id; });
-            render();
-            msg('服务器已删除');
-        }
-
-        render();
-
-        return { editSrv: editSrv, delSrv: delSrv };
-    })();
-    </script>
+<div id="toast" class="toast" aria-live="polite"></div>
     <div class="admin-container">
         <div class="header">
             <h1>服务器管理</h1>
@@ -117,14 +42,14 @@
                 <a href="index.html" class="nav-btn">回到主页</a>
                 <a href="view-logs.html" class="nav-btn">查看日志</a>
                 <a href="api-management.html" class="nav-btn">API管理</a>
-                <a href="login.html" class="nav-btn danger">退出登录</a>
+                <a href="login.html?logout=1" class="nav-btn danger">退出登录</a>
             </div>
         </div>
 
         <div class="success" id="msg" style="display:none;"></div>
 
         <div class="form-container" id="addForm">
-            <h2>添加服务器</h2>
+            <h2>添加 / 编辑服务器</h2>
             <form onsubmit="return false;">
                 <input type="hidden" id="editId" value="">
                 <div class="form-group">
@@ -132,8 +57,12 @@
                     <input type="text" id="srvName" placeholder="例如: 生存服务器" required>
                 </div>
                 <div class="form-group">
-                    <label for="srvAddr">服务器地址 (域名或IP:端口)</label>
+                    <label for="srvAddr">服务器地址 (域名或IP)</label>
                     <input type="text" id="srvAddr" placeholder="例如: play.example.com" required>
+                </div>
+                <div class="form-group">
+                    <label for="srvPort">端口 (非默认端口才需填写)</label>
+                    <input type="number" id="srvPort" min="0" max="65535" placeholder="Java 默认 25565 / 基岩 19132">
                 </div>
                 <div class="form-group">
                     <label for="srvType">服务器类型</label>
@@ -148,6 +77,25 @@
                     <small>默认值：1000</small>
                 </div>
                 <button type="submit" class="btn" id="saveBtn">添加服务器</button>
+            </form>
+        </div>
+
+        <div class="form-container">
+            <h2>管理员凭据设置</h2>
+            <form onsubmit="return false;">
+                <div class="form-group">
+                    <label for="curPwd">当前密码</label>
+                    <input type="password" id="curPwd" required>
+                </div>
+                <div class="form-group">
+                    <label for="newUser">新用户名 (留空保持不变)</label>
+                    <input type="text" id="newUser" placeholder="admin">
+                </div>
+                <div class="form-group">
+                    <label for="newPwd">新密码 (留空则允许任意密码登录)</label>
+                    <input type="password" id="newPwd" placeholder="留空不修改">
+                </div>
+                <button type="submit" class="btn" id="saveCredBtn">保存凭据</button>
             </form>
         </div>
 
@@ -168,6 +116,128 @@
         </table>
     </div>
     </div>
+
+    <script src="assets/js/app.js"></script>
+    <script src="assets/js/servers.js"></script>
+    <script src="assets/js/admin-config.js"></script>
+    <script>
+    app.requireAuth();
+    app.admin = (function() {
+        var servers = AdminConfig.servers();
+
+        function nextId() {
+            var m = 0;
+            servers.forEach(function (s) { if (Number(s.id) > m) m = Number(s.id); });
+            return m + 1;
+        }
+
+        function localNow() {
+            var d = new Date();
+            function pad(n) { return (n < 10 ? '0' : '') + n; }
+            return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()) + ' ' +
+                   pad(d.getHours()) + ':' + pad(d.getMinutes()) + ':' + pad(d.getSeconds());
+        }
+
+        function render() {
+            var tbody = document.getElementById('srvTable');
+            tbody.innerHTML = servers.map(function(s) {
+                return '<tr>' +
+                    '<td>' + app.esc(s.id) + '</td>' +
+                    '<td>' + app.esc(s.name) + '</td>' +
+                    '<td>' + app.esc(s.address) + (s.port ? ':' + s.port : '') + '</td>' +
+                    '<td>' + (s.type === 'java' ? 'Java版' : '基岩版') + '</td>' +
+                    '<td>' + (s.weight || 0) + '</td>' +
+                    '<td>' + app.esc(s.created || '') + '</td>' +
+                    '<td>' +
+                        '<a href="#" class="action-btn edit-btn" onclick="app.admin.editSrv(' + JSON.stringify(s.id) + ');return false;">编辑</a>' +
+                        '<a href="#" class="action-btn delete-btn" onclick="app.admin.delSrv(' + JSON.stringify(s.id) + ');return false;">删除</a>' +
+                    '</td></tr>';
+            }).join('');
+        }
+
+        function msg(text) { var m = document.getElementById('msg'); m.textContent = text; m.style.display = 'block'; setTimeout(function(){ m.style.display = 'none'; }, 3000); }
+
+        function persist() { AdminConfig.saveServers(servers); }
+
+        document.getElementById('saveBtn').addEventListener('click', function() {
+            var editId = document.getElementById('editId').value;
+            var name = document.getElementById('srvName').value.trim();
+            var addr = document.getElementById('srvAddr').value.trim();
+            if (!name || !addr) { msg('请填写服务器名称和地址'); return; }
+            var port = parseInt(document.getElementById('srvPort').value, 10);
+            if (isNaN(port) || port < 0) port = 0;
+            var type = document.getElementById('srvType').value;
+            var weight = parseInt(document.getElementById('srvWeight').value, 10) || 1000;
+            if (editId) {
+                var s = servers.find(function(x) { return String(x.id) === String(editId); });
+                if (s) {
+                    s.name = name; s.address = addr; s.port = port; s.type = type; s.weight = weight;
+                    if (!s.icon) s.icon = name.charAt(0).toUpperCase();
+                }
+                document.getElementById('editId').value = '';
+                document.getElementById('saveBtn').textContent = '添加服务器';
+                msg('服务器已更新');
+            } else {
+                servers.push({ id: nextId(), name: name, address: addr, port: port, type: type, weight: weight, icon: name.charAt(0).toUpperCase(), created: localNow() });
+                msg('服务器已添加');
+            }
+            persist();
+            document.getElementById('srvName').value = '';
+            document.getElementById('srvAddr').value = '';
+            document.getElementById('srvPort').value = '';
+            render();
+        });
+
+        function editSrv(id) {
+            var s = servers.find(function(x) { return String(x.id) === String(id); });
+            if (!s) return;
+            document.getElementById('editId').value = s.id;
+            document.getElementById('srvName').value = s.name;
+            document.getElementById('srvAddr').value = s.address;
+            document.getElementById('srvPort').value = s.port || '';
+            document.getElementById('srvType').value = s.type;
+            document.getElementById('srvWeight').value = s.weight || 1000;
+            document.getElementById('saveBtn').textContent = '更新服务器';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function delSrv(id) {
+            if (!confirm('确定要删除这个服务器吗？')) return;
+            servers = servers.filter(function(s) { return String(s.id) !== String(id); });
+            persist();
+            render();
+            msg('服务器已删除');
+        }
+
+        /* ---- 凭据设置(真实管理员配置) ---- */
+        document.getElementById('saveCredBtn').addEventListener('click', function() {
+            var cur = document.getElementById('curPwd').value;
+            var user = document.getElementById('newUser').value.trim();
+            var pwd = document.getElementById('newPwd').value;
+            if (!cur) { msg('请输入当前密码'); return; }
+            var cred = AdminConfig.credentials();
+            AdminConfig.verify(cred.username, cur).then(function(ok) {
+                if (!ok) { msg('当前密码错误'); return; }
+                if (!user) user = cred.username;
+                if (pwd) {
+                    AdminConfig.setPassword(pwd).then(function(hash) {
+                        AdminConfig.saveCredentials(user, hash);
+                        msg('凭据已更新');
+                    }).catch(function() { msg('当前环境不支持设置密码(需 HTTPS)'); });
+                } else {
+                    AdminConfig.saveCredentials(user, '');
+                    msg('凭据已更新(未设密码, 任意密码可登录)');
+                }
+                document.getElementById('curPwd').value = '';
+                document.getElementById('newPwd').value = '';
+            }).catch(function() { msg('校验失败, 请重试'); });
+        });
+
+        render();
+
+        return { editSrv: editSrv, delSrv: delSrv };
+    })();
+    </script>
 
 </body>
 </html>

@@ -1,3 +1,12 @@
+(function() {
+    'use strict';
+    /* 退出登录: 清除会话并回到登录页 */
+    if (/[?&]logout=/.test(location.search)) {
+        try { sessionStorage.removeItem('admin_logged_in'); } catch (e) {}
+        if (location.pathname.split('/').pop() !== 'login.html') location.replace('login.html');
+    }
+})();
+
 var app = (function() {
     'use strict';
 
@@ -23,7 +32,7 @@ var app = (function() {
         setTimeout(function() {
             minTimePassed = true;
             checkHideLoader();
-        }, 800);
+        }, 1000);
 
         loaderTimeout = setTimeout(function() {
             if (!loader.classList.contains('hidden')) {
@@ -31,7 +40,7 @@ var app = (function() {
                 minTimePassed = true;
                 checkHideLoader();
             }
-        }, 3000);
+        }, 5000);
     }
 
     function checkHideLoader() {
@@ -53,6 +62,9 @@ var app = (function() {
         var ctx = canvas.getContext('2d');
         var particles = [];
         var w, h;
+        var frame = 0;
+        var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        var isMobile = window.innerWidth < 768;
 
         function resizeCanvas() {
             w = canvas.width = window.innerWidth;
@@ -61,7 +73,7 @@ var app = (function() {
         resizeCanvas();
         window.addEventListener('resize', resizeCanvas);
 
-        var MAX_PARTICLES = window.innerWidth < 768 ? 30 : 60;
+        var MAX_PARTICLES = isMobile ? 15 : 30;
 
         function createParticle() {
             return {
@@ -84,6 +96,11 @@ var app = (function() {
         initSnow();
 
         function drawSnow() {
+            frame++;
+            if (frame % 2 === 0) {
+                requestAnimationFrame(drawSnow);
+                return;
+            }
             ctx.clearRect(0, 0, w, h);
             for (var i = 0; i < particles.length; i++) {
                 var p = particles[i];
@@ -97,12 +114,12 @@ var app = (function() {
                 if (p.x > w + 20) p.x = -15;
                 if (p.x < -20) p.x = w + 10;
             }
-            while (particles.length < (window.innerWidth < 768 ? 40 : 60)) {
+            while (particles.length < (isMobile ? 20 : 30)) {
                 particles.push(createParticle());
             }
             requestAnimationFrame(drawSnow);
         }
-        drawSnow();
+        if (!reducedMotion) drawSnow();
     }
 
     /* ===== Toast ===== */
@@ -120,12 +137,17 @@ var app = (function() {
         }, dur);
     }
 
-    /* ===== Auth (demo 管理页守卫) ===== */
+    /* ===== Auth (管理页守卫) ===== */
     function requireAuth() {
         if (sessionStorage.getItem('admin_logged_in') !== '1') {
             var from = encodeURIComponent(location.pathname.split('/').pop());
             location.replace('login.html?from=' + from);
         }
+    }
+
+    function logout() {
+        try { sessionStorage.removeItem('admin_logged_in'); } catch (e) {}
+        location.replace('login.html');
     }
 
     function esc(s) {
@@ -221,6 +243,7 @@ var app = (function() {
         hideModal: hideModal,
         showModal: showModal,
         requireAuth: requireAuth,
+        logout: logout,
         esc: esc
     };
 })();

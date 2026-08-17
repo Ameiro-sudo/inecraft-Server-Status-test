@@ -4,10 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>API调用日志 · SnowBlock</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&display=swap" rel="stylesheet">
-    <style>#loader{display:flex;position:fixed;inset:0;z-index:9999}</style>
+    <link rel="stylesheet" href="assets/vendor/fonts/ZCOOL_KuaiLe.css">
+    <link rel="stylesheet" href="assets/vendor/font-awesome@6.5.1/css/all.min.css">
     <script>
     try {
       var savedTheme = localStorage.getItem('theme')
@@ -20,32 +18,50 @@
 </head>
 <body class="admin-page">
     <div id="loader">
-        <svg class="crystal-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-                <linearGradient id="g1" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stop-color="#8fd8ef"/>
-                    <stop offset="100%" stop-color="#4a90d9"/>
-                </linearGradient>
-                <linearGradient id="g2" x1="100%" y1="0%" x2="0%" y2="100%">
-                    <stop offset="0%" stop-color="#a8e6cf"/>
-                    <stop offset="100%" stop-color="#8fd8ef"/>
-                </linearGradient>
-            </defs>
-            <polygon points="50,5 95,25 95,75 50,95 5,75 5,25" fill="none" stroke="url(#g1)" stroke-width="2" opacity="0.8">
-                <animate attributeName="opacity" values="0.4;1;0.4" dur="2.5s" repeatCount="indefinite"/>
-            </polygon>
-            <polygon points="50,15 85,30 85,70 50,85 15,70 15,30" fill="none" stroke="url(#g2)" stroke-width="1.5" opacity="0.6">
-                <animate attributeName="opacity" values="0.6;0.2;0.6" dur="3s" repeatCount="indefinite"/>
-            </polygon>
-            <polygon points="50,25 75,35 75,65 50,75 25,65 25,35" fill="none" stroke="url(#g1)" stroke-width="1" opacity="0.4">
-                <animate attributeName="opacity" values="0.2;0.8;0.2" dur="3.5s" repeatCount="indefinite"/>
-            </polygon>
-            <circle cx="50" cy="50" r="8" fill="url(#g1)" opacity="0.6">
-                <animate attributeName="r" values="6;10;6" dur="2s" repeatCount="indefinite"/>
-                <animate attributeName="opacity" values="0.4;1;0.4" dur="2s" repeatCount="indefinite"/>
-            </circle>
-        </svg>
-        <div class="loader-text-frost">SnowBlock</div>
+        <div class="loader-crystal">
+            <div class="crystal-wrapper">
+                <div class="crystal-glow"></div>
+                <svg class="crystal-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                    <path class="main-line" stroke-width="2.2" stroke-linecap="round" fill="none"
+                          d="M50 5 L50 95
+                             M50 5 L75 25 L50 50
+                             M50 5 L25 25 L50 50
+                             M50 95 L75 75 L50 50
+                             M50 95 L25 75 L50 50
+                             M50 50 L95 50
+                             M75 25 L95 50
+                             M25 25 L5 50
+                             M75 75 L95 50
+                             M25 75 L5 50" />
+                    <path class="inner-line" stroke-width="1.4" stroke-linecap="round" fill="none"
+                          d="M50 15 L50 85
+                             M50 15 L65 30 L50 50
+                             M50 15 L35 30 L50 50
+                             M50 85 L65 70 L50 50
+                             M50 85 L35 70 L50 50
+                             M50 50 L85 50
+                             M65 30 L85 50
+                             M35 30 L15 50
+                             M65 70 L85 50
+                             M35 70 L15 50" />
+                    <path class="core-line" stroke-width="1.8" stroke-linecap="round" fill="none"
+                          d="M50 38 L50 62
+                             M50 38 L57 44 L50 50
+                             M50 38 L43 44 L50 50
+                             M50 62 L57 56 L50 50
+                             M50 62 L43 56 L50 50
+                             M50 50 L62 50
+                             M57 44 L62 50
+                             M43 44 L38 50
+                             M57 56 L62 50
+                             M43 56 L38 50" />
+                </svg>
+            </div>
+            <div class="loader-text-frost"><i class="fa-solid fa-snowflake"></i> 正在连接雪境</div>
+            <div class="loader-dots">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
     </div>
     <canvas id="snowCanvas"></canvas>
     <div id="toast" class="toast"></div>
@@ -54,30 +70,44 @@
             <h1>API调用日志</h1>
             <div class="nav-links">
                 <a href="admin.html" class="nav-btn">服务器管理</a>
-                <a href="view-logs.html" class="nav-btn">查看日志</a>
+                <a href="api-management.html" class="nav-btn">API管理</a>
                 <a href="index.html" class="nav-btn">返回首页</a>
+                <button type="button" class="nav-btn danger" id="clearLogBtn">清空日志</button>
             </div>
         </div>
         <div class="log-list" id="logList"></div>
+        <p class="modal-note" id="logEmpty" style="display:none;">* 暂无日志 — 主页每 60s 自动轮询并记录真实调用结果</p>
     </div>
     <script src="assets/js/app.js"></script>
+    <script src="assets/js/servers.js"></script>
+    <script src="assets/js/admin-config.js"></script>
     <script>
     app.requireAuth();
     app.logs = app.logs || {};
-    var logs = [
-        { time: '2026-06-06 10:00:00', msg: 'API请求成功: play.example.com (Java) — 在线人数 12/20' },
-        { time: '2026-06-06 10:00:01', msg: 'API请求成功: mini.example.com (Java) — 在线人数 5/20' },
-        { time: '2026-06-06 10:00:02', msg: 'API请求成功: bedrock.example.com:19132 (基岩) — 在线人数 3/10' },
-        { time: '2026-06-06 09:55:01', msg: 'API请求超时: offline.example.com (Java)' },
-        { time: '2026-06-06 09:50:00', msg: 'API请求成功: play.example.com (Java) — 在线人数 10/20' },
-        { time: '2026-06-06 09:45:00', msg: 'API请求成功: bedrock.example.com:19132 (基岩) — 在线人数 4/10' },
-        { time: '2026-06-06 09:30:00', msg: '历史数据已归档: 30天前的记录已清理' },
-        { time: '2026-06-06 09:00:00', msg: '系统监控启动 — 共 4 台服务器' }
-    ];
-    var list = document.getElementById('logList');
-    list.innerHTML = logs.map(function(l) {
-        return '<div class="log-entry-line"><span class="log-time">' + l.time + '</span><span class="log-message">' + l.msg + '</span></div>';
-    }).join('');
+
+    function render() {
+        var logs = AdminConfig.loadLogs();
+        var list = document.getElementById('logList');
+        var empty = document.getElementById('logEmpty');
+        if (!logs.length) {
+            list.innerHTML = '';
+            empty.style.display = 'block';
+            return;
+        }
+        empty.style.display = 'none';
+        list.innerHTML = logs.slice().reverse().map(function(l) {
+            return '<div class="log-entry-line"><span class="log-time">' + app.esc(l.time) + '</span><span class="log-message">' + app.esc(l.msg) + '</span></div>';
+        }).join('');
+    }
+
+    document.getElementById('clearLogBtn').addEventListener('click', function() {
+        if (!confirm('确定要清空所有日志吗？')) return;
+        AdminConfig.clearLogs();
+        render();
+    });
+
+    render();
+    setInterval(render, 5000);
     </script>
 </body>
 </html>
