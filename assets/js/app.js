@@ -13,8 +13,7 @@ var app = (function() {
     var config = {
         bgImage: (window.matchMedia('(orientation: portrait)').matches
             ? 'assets/vendor/images/bg-portrait.webp'
-            : 'assets/vendor/images/bg.webp'),
-        chartCdn: 'https://cdn.jsdelivr.net/npm/chart.js'
+            : 'assets/vendor/images/bg.webp')
     };
 
     /* ===== Loader =====
