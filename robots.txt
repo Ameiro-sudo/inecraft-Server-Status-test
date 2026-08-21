@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Disallow: /admin.html
+Disallow: /login.html
+Disallow: /api-management.html
+Disallow: /view-logs.html
+
+Sitemap: https://status.snowblock.top/sitemap.xml

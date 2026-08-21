@@ -1,0 +1,70 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <title>404 · SnowBlock 状态站</title>
+ <meta name="robots" content="noindex">
+ <link rel="icon" type="image/webp" href="https://avatars.githubusercontent.com/u/269375186?v=4">
+ <script>
+ try {
+   var savedTheme = localStorage.getItem('theme')
+   var dark = savedTheme ? savedTheme === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches
+   if (dark) document.documentElement.classList.add('dark')
+ } catch (e) {}
+ </script>
+ <link rel="stylesheet" href="assets/vendor/fonts/ZCOOL_KuaiLe.css">
+ <link rel="stylesheet" href="assets/css/tokens.css">
+ <style>
+ * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+ body {
+   min-height:100vh; display:flex; align-items:center; justify-content:center;
+   font-family:var(--font-sans); -webkit-font-smoothing:antialiased;
+   background:var(--bg-gradient-body-light); color:var(--text-primary);
+   padding:var(--body-pad);
+ }
+ html.dark body { background:var(--bg-gradient-body-dark); }
+ .nf-card {
+   width:100%; max-width:420px; text-align:center;
+   background:linear-gradient(var(--body-overlay), var(--body-overlay)), var(--glass-bg);
+   backdrop-filter:blur(12px) saturate(1.2); -webkit-backdrop-filter:blur(12px) saturate(1.2);
+   border-radius:var(--radius-card); border:1px solid var(--glass-border);
+   box-shadow:var(--shadow-card), inset 0 1px 0 var(--glass-border);
+   padding:3rem 2rem 2.6rem;
+ }
+ .nf-crystal { width:84px; height:84px; margin-bottom:1.2rem;
+   filter:drop-shadow(0 0 12px var(--color-accent-glow));
+   animation:nfFloat 3.5s ease-in-out infinite; }
+ @keyframes nfFloat { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-7px)} }
+ .nf-crystal path { stroke-linecap:round; fill:none; }
+ .nf-crystal .main-line { stroke:var(--color-accent); stroke-width:2.2; }
+ .nf-crystal .core-line { stroke:var(--color-accent-warm); stroke-width:1.8; }
+ .nf-code {
+   font-family:var(--font-title); font-size:clamp(2.6rem,10vw,3.6rem); line-height:1.15;
+   background:linear-gradient(135deg,var(--color-accent-warm),var(--color-accent));
+   background-clip:text; -webkit-background-clip:text; color:transparent;
+ }
+ .nf-sub { color:var(--text-secondary); font-size:0.95rem; margin:0.6rem 0 1.8rem; }
+ .nf-home {
+   display:inline-block; text-decoration:none;
+   color:#fff; background:var(--color-accent);
+   font-size:0.92rem; font-weight:600;
+   padding:0.72rem 1.7rem; border-radius:999px;
+   transition:transform 0.25s, filter 0.25s;
+ }
+ .nf-home:hover { transform:translateY(-2px); filter:brightness(1.08); }
+ @media (prefers-reduced-motion: reduce) { .nf-crystal { animation:none; } }
+ </style>
+</head>
+<body>
+ <main class="nf-card">
+   <svg class="nf-crystal" viewBox="0 0 100 100" aria-hidden="true">
+     <path class="main-line" d="M50 5 L50 95 M50 5 L75 25 L50 50 M50 5 L25 25 L50 50 M50 95 L75 75 L50 50 M50 95 L25 75 L50 50 M50 50 L95 50 M75 25 L95 50 M25 25 L5 50 M75 75 L95 50 M25 75 L5 50"/>
+     <path class="core-line" d="M50 38 L50 62 M50 38 L57 44 L50 50 M50 38 L43 44 L50 50 M50 62 L57 56 L50 50 M50 62 L43 56 L50 50 M50 50 L62 50 M57 44 L62 50 M43 44 L38 50 M57 56 L62 50 M43 56 L38 50"/>
+   </svg>
+   <h1 class="nf-code">404</h1>
+   <p class="nf-sub">这个页面被末影人叼走了。</p>
+   <a class="nf-home" href="/index.html">回到状态站</a>
+ </main>
+</body>
+</html>
