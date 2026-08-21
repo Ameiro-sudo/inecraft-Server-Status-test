@@ -1,26 +1,26 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Minecraft 服务器状态 · SnowBlock</title>
-    <meta name="description" content="SnowBlock MC 服务器状态监控 — 在线人数、版本、延迟信息一览">
+    <title>Minecraft 鏈嶅姟鍣ㄧ姸鎬?路 SnowBlock</title>
+    <meta name="description" content="SnowBlock MC 鏈嶅姟鍣ㄧ姸鎬佺洃鎺?鈥?鍦ㄧ嚎浜烘暟銆佺増鏈€佸欢杩熶俊鎭竴瑙?>
     <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f2efe9">
     <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0b2b3b">
     <meta name="color-scheme" content="light dark">
-    <meta property="og:title" content="Minecraft 服务器状态 · SnowBlock">
-    <meta property="og:description" content="SnowBlock MC 服务器状态监控 — 在线人数、版本、延迟信息一览">
+    <meta property="og:title" content="Minecraft 鏈嶅姟鍣ㄧ姸鎬?路 SnowBlock">
+    <meta property="og:description" content="SnowBlock MC 鏈嶅姟鍣ㄧ姸鎬佺洃鎺?鈥?鍦ㄧ嚎浜烘暟銆佺増鏈€佸欢杩熶俊鎭竴瑙?>
     <meta property="og:type" content="website">
     <meta property="og:locale" content="zh_CN">
     <meta property="og:url" content="https://status.snowblock.top">
     <meta property="og:image" content="assets/vendor/images/bg.webp">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
-    <meta property="og:image:alt" content="SnowBlock MC 状态背景">
+    <meta property="og:image:alt" content="SnowBlock MC 鐘舵€佽儗鏅?>
     <meta property="og:site_name" content="SnowBlock">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Minecraft 服务器状态 · SnowBlock">
-    <meta name="twitter:description" content="SnowBlock MC 服务器状态监控">
+    <meta name="twitter:title" content="Minecraft 鏈嶅姟鍣ㄧ姸鎬?路 SnowBlock">
+    <meta name="twitter:description" content="SnowBlock MC 鏈嶅姟鍣ㄧ姸鎬佺洃鎺?>
     <meta name="twitter:image" content="assets/vendor/images/bg.webp">
     <link rel="icon" type="image/webp" href="https://avatars.githubusercontent.com/u/269375186?v=4">
     <link rel="apple-touch-icon" href="https://avatars.githubusercontent.com/u/269375186?v=4">
@@ -28,7 +28,7 @@
 
     <link rel="stylesheet" href="assets/vendor/fonts/ZCOOL_KuaiLe.css">
     <link rel="stylesheet" href="assets/vendor/font-awesome@6.5.1/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
+    <script src="assets/vendor/chartjs/chart.umd.min.js" defer></script>
     <script>
     try {
       var savedTheme = localStorage.getItem('theme')
@@ -46,7 +46,7 @@
 </head>
 <body>
 
-<!-- ===== 加载层 ===== -->
+<!-- ===== 鍔犺浇灞?===== -->
 <div id="loader">
     <div class="loader-crystal">
         <div class="crystal-wrapper">
@@ -90,7 +90,7 @@
                          M43 56 L38 50" />
             </svg>
         </div>
-        <div class="loader-text-frost"><i class="fa-solid fa-snowflake"></i> 正在连接雪境</div>
+        <div class="loader-text-frost"><i class="fa-solid fa-snowflake"></i> 姝ｅ湪杩炴帴闆</div>
         <div class="loader-dots">
             <span></span><span></span><span></span>
         </div>
@@ -103,31 +103,31 @@
 
 <div class="container">
     <header class="page-header">
-        <h1>Minecraft 服务器</h1>
+        <h1>Minecraft 鏈嶅姟鍣?/h1>
         <p class="sub">
             <a href="https://snowblock.top"><i class="fa-solid fa-snowflake"></i> SnowBlock</a>
-            <span class="dot">·</span>
-            实时监控
+            <span class="dot">路</span>
+            瀹炴椂鐩戞帶
         </p>
     </header>
 
     <nav class="nav-bar">
-        <a href="login.html" class="nav-entry">管理面板</a>
-        <a href="player-history-chart.html" class="nav-entry">历史图表</a>
-        <a href="view-logs.html" class="nav-entry">API日志</a>
-        <a href="api-management.html" class="nav-entry">API管理</a>
+        <a href="login.html" class="nav-entry">绠＄悊闈㈡澘</a>
+        <a href="player-history-chart.html" class="nav-entry">鍘嗗彶鍥捐〃</a>
+        <a href="view-logs.html" class="nav-entry">API鏃ュ織</a>
+        <a href="api-management.html" class="nav-entry">API绠＄悊</a>
     </nav>
 
     <div class="server-grid">
-        <!-- 卡片由 assets/js/status.js 按 servers.js 配置动态渲染 -->
+        <!-- 鍗＄墖鐢?assets/js/status.js 鎸?servers.js 閰嶇疆鍔ㄦ€佹覆鏌?-->
     </div>
 </div>
 
 <div id="chartModal" class="modal-overlay" style="display:none;">
     <div class="modal-content">
         <div class="modal-header">
-            <h3 id="modalTitle">服务器在线人数历史数据</h3>
-            <button id="closeModal" class="close-btn" aria-label="关闭">x</button>
+            <h3 id="modalTitle">鏈嶅姟鍣ㄥ湪绾夸汉鏁板巻鍙叉暟鎹?/h3>
+            <button id="closeModal" class="close-btn" aria-label="鍏抽棴">x</button>
         </div>
         <div id="modalBody" class="modal-body"></div>
     </div>
