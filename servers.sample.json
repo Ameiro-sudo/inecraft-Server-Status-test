@@ -1,0 +1,5 @@
+{
+  "servers": [
+    { "id": "survival", "address": "play.example.com", "port": 25565, "type": "java" }
+  ]
+}

@@ -268,6 +268,7 @@
                     (state.demo ? '演示模式(状态接口不可用)' : '实时监控 · 每 60s 刷新');
             }
             logResults(results, list);
+            hydrateRemoteHistory(list.map(function (s) { return s.id; }));
         });
     }
 
@@ -283,6 +284,31 @@
         try {
             localStorage.setItem(HIST_PREFIX + id, JSON.stringify(hist));
         } catch (e) { /* 存储满则静默丢弃 */ }
+    }
+
+    /* ===== 远端历史注水(后端化方案A · 渐进增强) =====
+     * REMOTE_HISTORY_BASE 非空时，周期性把采样器的 recent.json 合并进本地缓存，
+     * 历史曲线即获得 7x24 连续数据；为空则维持纯 localStorage 行为，零破坏。
+     * 部署见 sampler.py 与 deploy/DEPLOY.md。 */
+    var REMOTE_HISTORY_BASE = '';
+    function hydrateRemoteHistory(ids) {
+        if (!REMOTE_HISTORY_BASE) return;
+        ids.forEach(function (id) {
+            fetch(REMOTE_HISTORY_BASE + '/' + encodeURIComponent(id) + '/recent.json')
+                .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+                .then(function (points) {
+                    if (!Array.isArray(points) || !points.length) return;
+                    var seen = {}, merged = [];
+                    loadHistory(id).concat(points).forEach(function (p) {
+                        if (!p || typeof p.t !== 'number' || seen[p.t]) return;
+                        seen[p.t] = 1;
+                        merged.push({ t: p.t, n: p.n || 0 });
+                    });
+                    merged.sort(function (a, b) { return a.t - b.t; });
+                    saveHistory(id, merged);
+                })
+                .catch(function () { /* 远端不可达时静默保持本地行为 */ });
+        });
     }
 
     function recordPoint(id, n) {

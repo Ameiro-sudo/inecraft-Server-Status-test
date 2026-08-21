@@ -1,6 +1,8 @@
 # 后端接口真实化提案
 
-> 起草：无人值守冲刺轮 · 状态：**待决策，未实施**
+> 起草：无人值守冲刺轮 · 状态：**方案A代码已实现，部署待 VPS 恢复**
+> 交付物：`sampler.py`（零依赖采样器，已实测）+ `assets/js/status.js` 远端注水层
+> （`REMOTE_HISTORY_BASE` 渐进增强开关）+ `deploy/DEPLOY.md`（systemd/nginx/计划任务）
 > 本文基于对现有前端代码的完整走读（status.js / admin-config.js / servers.js）。
 
 ## 一、现状（纯客户端架构）
