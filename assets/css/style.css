@@ -144,6 +144,34 @@ html.dark body::before { background: var(--body-overlay); }
 
 .server-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-card); }
 
+/* 键盘可达性 — 卡片可聚焦(Tab) */
+.server-card:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+}
+
+/* ===== 骨架屏(首屏数据到达前的占位) ===== */
+.server-card.skeleton { cursor: default; pointer-events: none; }
+.server-card.skeleton:hover { transform: none; }
+.sk-line {
+  height: 0.85rem;
+  border-radius: 6px;
+  margin: 0.45rem 0;
+  background: linear-gradient(90deg, rgba(255,255,255,0.08) 25%, rgba(255,255,255,0.18) 50%, rgba(255,255,255,0.08) 75%);
+  background-size: 200% 100%;
+  animation: skShimmer 1.4s ease-in-out infinite;
+}
+.sk-line.w40 { width: 40%; }
+.sk-line.w60 { width: 60%; }
+.sk-line.w80 { width: 80%; }
+@keyframes skShimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sk-line { animation: none; }
+}
+
 .server-header {
   position: relative;
   z-index: 1;

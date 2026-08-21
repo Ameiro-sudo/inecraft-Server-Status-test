@@ -4,6 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>在线人数历史 · SnowBlock</title>
+    <meta name="description" content="SnowBlock MC 服务器在线人数历史图表 — 近 7 天按天聚合与近 24 小时按时段两种视图">
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f2efe9">
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0b2b3b">
+    <meta name="color-scheme" content="light dark">
+    <link rel="icon" type="image/webp" href="https://avatars.githubusercontent.com/u/269375186?v=4">
+    <link rel="apple-touch-icon" href="https://avatars.githubusercontent.com/u/269375186?v=4">
+    <link rel="preload" href="assets/vendor/images/bg.webp" as="image">
     <link rel="stylesheet" href="assets/vendor/fonts/ZCOOL_KuaiLe.css">
     <link rel="stylesheet" href="assets/vendor/font-awesome@6.5.1/css/all.min.css">
     <script src="assets/vendor/chartjs/chart.umd.min.js"></script>
@@ -78,7 +85,7 @@
                 <select id="serverSelect" class="date-input"></select>
             </div>
             <div class="control-group">
-                <label>查看模式:</label>
+                <label for="viewMode">查看模式:</label>
                 <select id="viewMode" class="date-input">
                     <option value="aggregated">聚合数据(按天)</option>
                     <option value="raw">原始数据(按时段)</option>

@@ -17,35 +17,22 @@ var app = (function() {
         chartCdn: 'https://cdn.jsdelivr.net/npm/chart.js'
     };
 
-    /* ===== Loader ===== */
+    /* ===== Loader =====
+     * 内容展示与背景大图解耦: 最短展示 1s 后即撤掉 loader。
+     * 背景图由 CSS(body::after)自行渲染,无需等待 JS 预载完整下载
+     * (此前内容被 ~700KB 的背景图下载卡住,严重拖慢首屏)。 */
     var loader = document.getElementById('loader');
-    var loaded = false;
     var minTimePassed = false;
-    var loaderTimeout;
 
     if (loader) {
-        var img = new Image();
-        img.src = config.bgImage;
-        img.onload = function() { loaded = true; checkHideLoader(); };
-        img.onerror = function() { loaded = true; checkHideLoader(); };
-
         setTimeout(function() {
             minTimePassed = true;
             checkHideLoader();
         }, 1000);
-
-        loaderTimeout = setTimeout(function() {
-            if (!loader.classList.contains('hidden')) {
-                loaded = true;
-                minTimePassed = true;
-                checkHideLoader();
-            }
-        }, 5000);
     }
 
     function checkHideLoader() {
-        if (loaded && minTimePassed && loader && !loader.classList.contains('hidden')) {
-            clearTimeout(loaderTimeout);
+        if (minTimePassed && loader && !loader.classList.contains('hidden')) {
             loader.classList.add('hidden');
             document.body.classList.add('bg-loaded');
             loader.addEventListener('transitionend', function() {

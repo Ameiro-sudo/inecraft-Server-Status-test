@@ -157,7 +157,7 @@
         } else {
             info += '<div class="server-motd" style="color:var(--text-muted);">服务器无法连接</div>';
         }
-        return '<div class="server-card" data-server-id="' + esc(srv.id) + '">' +
+        return '<div class="server-card" data-server-id="' + esc(srv.id) + '" tabindex="0" role="button" aria-label="查看 ' + esc(srv.name) + ' 的在线人数历史">' +
             '<div class="server-header ' + cls + '">' +
                 '<div class="server-icon" style="display:flex;align-items:center;justify-content:center;font-size:1.8rem;">' + esc(srv.icon || '?') + '</div>' +
                 '<div class="server-name">' + esc(srv.name) + '</div>' +
@@ -167,24 +167,51 @@
         '</div>';
     }
 
+    /* 首屏骨架卡(数据到达前的占位,避免闪现演示数据) */
+    function skeletonHtml(srv) {
+        return '<div class="server-card skeleton" data-server-id="' + esc(srv.id) + '" aria-hidden="true">' +
+            '<div class="server-header">' +
+                '<div class="server-icon">&nbsp;</div>' +
+                '<div class="server-name">&nbsp;</div>' +
+            '</div>' +
+            '<div class="server-body">' +
+                '<div class="sk-line w60"></div>' +
+                '<div class="sk-line w40"></div>' +
+                '<div class="sk-line w80"></div>' +
+            '</div>' +
+        '</div>';
+    }
+
+    function bindCardEvents(grid) {
+        grid.querySelectorAll('.server-card').forEach(function (card) {
+            var id = card.getAttribute('data-server-id');
+            card.addEventListener('click', function () { showHistoryModal(id); });
+            card.addEventListener('keydown', function (e) {
+                if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); showHistoryModal(id); }
+            });
+        });
+    }
+
     function renderCards(statuses) {
         var grid = document.querySelector('.server-grid');
         if (!grid) return;
         var list = currentServers();
         if (!list.length) {
             grid.innerHTML = '<div class="no-servers"><h2>暂无服务器</h2><p>请前往管理面板添加服务器</p></div>';
+            grid.removeAttribute('data-rendered');
             return;
         }
         var html = '';
         list.forEach(function (srv) {
-            var st = statuses[srv.id] || demoStatus(srv);
-            html += cardHtml(srv, st);
+            if (statuses && statuses[srv.id]) html += cardHtml(srv, statuses[srv.id]);
+            else if (statuses) html += cardHtml(srv, demoStatus(srv));
+            else html += skeletonHtml(srv);
         });
+        /* 数据无变化时跳过重绘 — 保留用户焦点/悬停/选区 */
+        if (grid.getAttribute('data-rendered') === html) return;
         grid.innerHTML = html;
-        grid.querySelectorAll('.server-card').forEach(function (card) {
-            var id = card.getAttribute('data-server-id');
-            card.addEventListener('click', function () { showHistoryModal(id); });
-        });
+        grid.setAttribute('data-rendered', html);
+        bindCardEvents(grid);
     }
 
     function demoStatus(srv) {
@@ -272,6 +299,19 @@
     }
 
     /* ===== 历史弹窗 ===== */
+    var lastModalFocus = null;
+
+    function watchModalClose(modal) {
+        if (!modal || modal.dataset.focusWatched) return;
+        modal.dataset.focusWatched = '1';
+        new MutationObserver(function () {
+            if (modal.style.display === 'none' && lastModalFocus && document.contains(lastModalFocus)) {
+                try { lastModalFocus.focus(); } catch (e) { /* 元素已不可聚焦 */ }
+                lastModalFocus = null;
+            }
+        }).observe(modal, { attributes: true, attributeFilter: ['style'] });
+    }
+
     function showHistoryModal(id) {
         var srv = currentServers().filter(function (s) { return s.id === id; })[0];
         if (!srv) return;
@@ -279,6 +319,7 @@
         var title = document.getElementById('modalTitle');
         var body = document.getElementById('modalBody');
         if (!modal || !body) return;
+        watchModalClose(modal);
         title.innerHTML = '<span class="modal-title-icon" style="display:flex;align-items:center;justify-content:center;font-size:1.6rem;background:rgba(255,255,255,0.08);border-radius:10px;">' + esc(srv.icon || '?') + '</span>' +
             esc(srv.name) + ' — 在线人数历史';
 
@@ -305,7 +346,10 @@
                 drawLineChart(document.getElementById('modalPlayerChart'), d.labels, d.values, '平均在线');
             });
         }
+        lastModalFocus = document.activeElement;
         modal.style.display = 'flex';
+        var closeBtn = document.getElementById('closeModal');
+        if (closeBtn) closeBtn.focus();
     }
 
     function aggregateByDay(hist) {
@@ -387,7 +431,7 @@
 
     document.addEventListener('DOMContentLoaded', function () {
         if (!document.querySelector('.server-grid')) return; // 仅状态页轮询
-        renderCards({});
+        renderCards(null); // 首屏骨架屏
         checkAll();
         setInterval(checkAll, POLL_MS);
     });
