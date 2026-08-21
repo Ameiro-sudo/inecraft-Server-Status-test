@@ -15,7 +15,7 @@ GitHub Pages 静态站 ← fetch recent.json ← nginx 只读暴露 /history-dat
 
 ## 1. 准备服务器列表
 
-复制 `servers.sample.json` 为 `servers.json`，与 `assets/js/servers.js`
+复制 `deploy/servers.sample.json` 为 `servers.json`，与 `assets/js/servers.js`
 保持同源（id/address/port/type 一一对应）：
 
 ```json
