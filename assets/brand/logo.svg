@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <!-- SnowBlock 正式 logo · 主版本（loader 水晶雪花升格，三层细节完整保留）
+       几何来源：三站 loader .crystal-svg 原始路径
+       底色：tokens.css 的 loader 深色渐变色系 -->
+  <defs>
+    <linearGradient id="tile" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#164a66"/>
+      <stop offset="0.55" stop-color="#0f3a52"/>
+      <stop offset="1" stop-color="#0b2b3b"/>
+    </linearGradient>
+    <linearGradient id="rim" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#c0f0ff" stop-opacity="0.28"/>
+      <stop offset="1" stop-color="#c0f0ff" stop-opacity="0.05"/>
+    </linearGradient>
+  </defs>
+  <rect width="100" height="100" rx="22" fill="url(#tile)"/>
+  <rect x="1" y="1" width="98" height="98" rx="21" fill="none" stroke="url(#rim)" stroke-width="1.6"/>
+  <g fill="none" stroke-linecap="round" transform="translate(50 50) scale(0.76) translate(-50 -50)">
+    <path stroke="#8fd8ef" stroke-width="3.0" d="M50 5 L50 95 M50 5 L75 25 L50 50 M50 5 L25 25 L50 50 M50 95 L75 75 L50 50 M50 95 L25 75 L50 50 M50 50 L95 50 M75 25 L95 50 M25 25 L5 50 M75 75 L95 50 M25 75 L5 50"/>
+    <path stroke="#c0f0ff" stroke-width="1.8" d="M50 15 L50 85 M50 15 L65 30 L50 50 M50 15 L35 30 L50 50 M50 85 L65 70 L50 50 M50 85 L35 70 L50 50 M50 50 L85 50 M65 30 L85 50 M35 30 L15 50 M65 70 L85 50 M35 70 L15 50"/>
+    <path stroke="#ffe6b0" stroke-width="2.4" d="M50 38 L50 62 M50 38 L57 44 L50 50 M50 38 L43 44 L50 50 M50 62 L57 56 L50 50 M50 62 L43 56 L50 50 M50 50 L62 50 M57 44 L62 50 M43 44 L38 50 M57 56 L62 50 M43 56 L38 50"/>
+  </g>
+</svg>
