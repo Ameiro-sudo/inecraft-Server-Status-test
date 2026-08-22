@@ -29,7 +29,7 @@ GitHub Pages 静态站 ← fetch recent.json ← nginx 只读暴露 /history-dat
 
 ```bash
 python3 sampler.py --list servers.json --out ./history --once
-cat history/survival/recent.json   # 应看到 [{\"t\":...,\"n\":...}]
+cat history/survival/recent.json   # 应看到 [{"t":...,"n":...}]
 ```
 
 ## 3. systemd 常驻（推荐二选一）
