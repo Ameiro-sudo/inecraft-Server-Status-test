@@ -24,6 +24,12 @@
   </script>
     <link rel="stylesheet" href="assets/css/tokens.css">
     <link rel="stylesheet" href="assets/css/style.css">
+
+    <style>
+        /* 全局 reset —— 与 index.html / 404.html 保持一致。缺这一段会让 box-sizing
+           退回 content-box 且 body 带 UA 默认 8px margin，容器 width:100% 超出视口。 */
+        * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+    </style>
 </head>
 <body>
     <div id="loader">
@@ -100,7 +106,7 @@
         </div>
 
         <p class="modal-note" id="dataInfo">* 暂无本地采样数据,请先在主页停留让状态页采样</p>
-        <p style="text-align:center;margin-top:1rem;"><a href="index.html" style="color:var(--color-accent);font-size:0.8rem;">返回主页</a></p>
+        <p style="text-align:center;margin-top:1rem;"><a href="index.html" class="back-home">返回主页</a></p>
     </div>
     <script src="assets/js/app.js"></script>
     <script src="assets/js/servers.js"></script>
@@ -134,7 +140,7 @@
 
         if (!series.labels.length) {
             document.getElementById('dataInfo').textContent = '* 暂无本地采样数据,请在主页停留让状态页采样(每 60s 记录一点)';
-            document.getElementById('dataInfo').style.color = 'var(--status-warning)';
+            document.getElementById('dataInfo').style.color = 'var(--status-warning-text)';
             return;
         }
 

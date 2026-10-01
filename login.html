@@ -22,6 +22,13 @@
   </script>
     <link rel="stylesheet" href="assets/css/tokens.css">
     <link rel="stylesheet" href="assets/css/style.css">
+
+    <style>
+        /* 全局 reset —— 与 index.html / 404.html 保持一致。缺这一段会让 box-sizing
+           退回 content-box 且 body 带 UA 默认 8px margin，.login-container 的
+           width:100% 会超出视口 36px，390px 手机上登录表单右边缘被切在屏外。 */
+        * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+    </style>
 </head>
 <body class="login-page">
     <div id="loader">
@@ -87,7 +94,7 @@
             <button type="submit" class="btn" id="loginBtn">登录</button>
         </form>
         <p style="text-align:center;margin-top:1rem;color:var(--text-muted);font-size:0.8rem;">默认账号 admin · 可在管理面板修改密码</p>
-        <p style="text-align:center;margin-top:1rem;"><a href="index.html" style="color:var(--text-muted);font-size:0.8rem;">返回主页</a></p>
+        <p style="text-align:center;margin-top:1rem;"><a href="index.html" class="back-home">返回主页</a></p>
     </div>
     <script src="assets/js/app.js"></script>
     <script src="assets/js/servers.js"></script>

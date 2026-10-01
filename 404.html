@@ -48,11 +48,15 @@
  .nf-sub { color:var(--text-secondary); font-size:0.95rem; margin:0.6rem 0 1.8rem; }
  .nf-home {
    display:inline-block; text-decoration:none;
-   color:#fff; background:var(--color-accent);
+   /* 白字压 --color-accent 实测浅色 3.09:1 / 深色 1.59:1，都不达标。改用
+       --heading-accent 打底（浅色 #2f6a84、深色 #8fd8ef），文字色按主题翻转
+       后分别是 5.97:1 与 9.31:1。 */
+    color:#fff; background:var(--heading-accent);
    font-size:0.92rem; font-weight:600;
    padding:0.72rem 1.7rem; border-radius:999px;
    transition:transform 0.25s, filter 0.25s;
  }
+ html.dark .nf-home { color:var(--color-bg-deep); }
  .nf-home:hover { transform:translateY(-2px); filter:brightness(1.08); }
  @media (prefers-reduced-motion: reduce) { .nf-crystal { animation:none; } }
  </style>

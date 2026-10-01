@@ -22,6 +22,13 @@
   </script>
     <link rel="stylesheet" href="assets/css/tokens.css">
     <link rel="stylesheet" href="assets/css/style.css">
+
+    <style>
+        /* 全局 reset —— 与 index.html / 404.html 保持一致。缺这一段会让 box-sizing
+           退回 content-box 且 body 带 UA 默认 8px margin，容器 width:100% 超出视口，
+           390px 手机上表单右边缘被切在屏外。 */
+        * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+    </style>
 </head>
 <body class="admin-page">
     <div id="loader">
@@ -100,7 +107,7 @@
                 </select>
             </div>
             <button type="submit" class="btn" id="saveApiBtn">保存选择</button>
-            <button type="submit" class="btn" style="background:var(--color-success-glow);color:var(--color-success);" id="fetchApiBtn">测试所选API连通性</button>
+            <button type="submit" class="btn btn-success" id="fetchApiBtn">测试所选API连通性</button>
         </form>
 
         <h2>API信息</h2>
@@ -136,9 +143,9 @@
                 var active = key === current;
                 html += '<div class="api-item">' +
                     '<div class="api-info" style="font-weight:600;">' + app.esc(p.label) +
-                        (active ? ' <span style="color:var(--color-success);font-size:0.75rem;">(当前使用)</span>' : '') + '</div>' +
+                        (active ? ' <span style="color:var(--status-success-text);font-size:0.75rem;">(当前使用)</span>' : '') + '</div>' +
                     '<div class="api-info"><small>' + app.esc(url) + '</small></div>' +
-                    (key === 'mc6' ? '<div class="api-info"><small style="color:var(--status-warning);">注意: MC6 为 HTTP 接口, 站点部署为 HTTPS 时会被浏览器拦截</small></div>' : '') +
+                    (key === 'mc6' ? '<div class="api-info"><small style="color:var(--status-warning-text);">注意: MC6 为 HTTP 接口, 站点部署为 HTTPS 时会被浏览器拦截</small></div>' : '') +
                 '</div>';
             });
         });

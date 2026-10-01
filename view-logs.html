@@ -22,6 +22,13 @@
   </script>
     <link rel="stylesheet" href="assets/css/tokens.css">
     <link rel="stylesheet" href="assets/css/style.css">
+
+    <style>
+        /* 全局 reset —— 与 index.html / 404.html 保持一致。缺这一段会让 box-sizing
+           退回 content-box 且 body 带 UA 默认 8px margin，容器 width:100% 超出视口，
+           390px 手机上表单右边缘被切在屏外。 */
+        * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+    </style>
 </head>
 <body class="admin-page">
     <div id="loader">

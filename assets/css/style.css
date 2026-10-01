@@ -31,7 +31,7 @@ body::before {
   content: '';
   position: fixed;
   inset: 0;
-  background: var(--body-overlay);
+  background: var(--bg-scrim);
   backdrop-filter: blur(2px);
   pointer-events: none;
   z-index: 0;
@@ -44,7 +44,6 @@ html.dark body::after {
   background: url(../vendor/images/bg-portrait.webp) center/cover no-repeat,
               var(--bg-gradient-body-dark);
 }
-html.dark body::before { background: var(--body-overlay); }
 
 @media (prefers-color-scheme: dark) and (orientation: landscape) {
   html.dark body::after { background-image: url(../vendor/images/bg.webp); }
@@ -59,7 +58,20 @@ html.dark body::before { background: var(--body-overlay); }
 
 .install-container { width: 100%; max-width: 1200px; margin: 0 auto; padding-top: 1rem; }
 
-.page-header { position: relative; text-align: center; margin-bottom: 1.5rem; }
+.page-header {
+  position: relative; text-align: center; margin-bottom: 1.5rem;
+  /* 标题原本直接压在背景照上：浅色下深蓝 #2f6a84 落在照片暗部实测 1.14:1，
+     深色下浅蓝 #8fd8ef 落在照片亮部实测 1.34:1。改成与卡片同款的磨砂底衬
+     （blog 的既有配方：body-overlay 叠在 glass-bg 上），文字落在受控底色上，
+     不再取决于照片那一像素是亮是暗。 */
+  padding: 1.4rem 1.6rem 1.2rem;
+  background: linear-gradient(var(--body-overlay), var(--body-overlay)), var(--glass-bg);
+  backdrop-filter: blur(14px) saturate(1.3);
+  -webkit-backdrop-filter: blur(14px) saturate(1.3);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+}
 
 .nav-bar {
   display: flex;
@@ -107,7 +119,7 @@ html.dark body::before { background: var(--body-overlay); }
   letter-spacing: 0.03em;
 }
 
-.page-header .sub a { color: var(--color-accent); text-decoration: none; transition: color 0.25s; }
+.page-header .sub a { color: var(--heading-accent); text-decoration: none; transition: color 0.25s; }
 .page-header .sub a:hover { color: var(--color-accent-warm); }
 .page-header .sub .dot { color: var(--text-muted); margin: 0 6px; }
 
@@ -258,8 +270,11 @@ html.dark body::before { background: var(--body-overlay); }
   letter-spacing: 0.02em;
 }
 
-.server-type-badge.java    { background: var(--color-success-glow); color: var(--color-success); }
-.server-type-badge.bedrock { background: rgba(33,150,243,0.18); color: var(--status-blue); }
+/* 徽章文字用的是饱和状态色，压在半透明同色底上只有 1.67~3.53:1。
+   改成同色相但为前景优化的深/浅两支（与 --status-warning-text 同一套做法）。
+   深浅两支都在 tokens.css 里，这里不必再按主题覆写。 */
+.server-type-badge.java    { background: var(--color-success-glow); color: var(--status-success-text); }
+.server-type-badge.bedrock { background: rgba(33,150,243,0.18); color: var(--status-blue-text); }
 
 .server-motd {
   background: var(--glass-bg);
@@ -569,20 +584,43 @@ html.dark body::before { background: var(--body-overlay); }
   margin-top: 0.2rem;
 }
 
+/* 「返回主页」原来是内联样式的纯文本链接：高 17px（低于 WCAG 2.5.8 的 24px），
+   且图表页用 --color-accent（浅色下实测 2.99:1）。改成带内边距的类，
+   文字色统一走 --heading-accent。 */
+.back-home {
+  display: inline-block;
+  padding: 0.45rem 0.9rem;
+  /* 这行直接落在背景照上，纯文字色够不着 4.5:1；加一层玻璃底衬把底色定住 */
+  background: var(--glass-bg);
+  backdrop-filter: blur(8px) saturate(1.2);
+  -webkit-backdrop-filter: blur(8px) saturate(1.2);
+  border: 1px solid var(--glass-border);
+  color: var(--heading-accent);
+  font-size: 0.8rem;
+  text-decoration: none;
+  border-radius: 999px;
+  transition: background 0.25s, color 0.25s;
+}
+.back-home:hover { background: var(--glass-hover-bg); }
+
+/* 主按钮改成实心：原先 --color-accent 文字压在同色半透明底上只有 2.12~2.56:1。
+   实心 + 主题翻转文字色后是 5.97:1（浅）/ 9.31:1（深）。 */
 .btn {
   padding: 0.6rem 1.8rem;
-  background: var(--color-accent-glow);
-  border: 1px solid var(--color-accent);
+  background: var(--heading-accent);
+  border: 1px solid var(--heading-accent);
   border-radius: var(--radius-btn);
-  color: var(--color-accent);
+  color: #fff;
   font-size: 0.9rem;
   font-family: var(--font-sans);
   cursor: pointer;
-  transition: background 0.25s,transform 0.25s;
+  transition: background 0.25s, transform 0.25s, border-color 0.25s;
 }
+html.dark .btn { color: var(--color-bg-deep); }
 
 .btn:hover {
-  background: var(--glass-hover-bg);
+  background: var(--color-accent);
+  border-color: var(--color-accent);
   transform: translateY(-2px);
 }
 
@@ -634,12 +672,13 @@ tbody td {
 
 .edit-btn {
   background: var(--color-accent-glow);
-  color: var(--color-accent);
+  /* 与 .btn 同一处欠账的漏网之鱼：--color-accent 压在自身半透明底上 2.12~2.56:1 */
+  color: var(--heading-accent);
 }
 
 .delete-btn {
   background: rgba(244,67,54,0.15);
-  color: var(--status-offline);
+  color: var(--status-danger-text);
 }
 
 .success, .error {
@@ -652,13 +691,13 @@ tbody td {
 
 .success {
   background: var(--color-success-glow);
-  color: var(--color-success);
+  color: var(--status-success-text);
   border-color: var(--color-success-border);
 }
 
 .error {
   background: rgba(244,67,54,0.12);
-  color: var(--status-offline);
+  color: var(--status-danger-text);
   border-color: rgba(244,67,54,0.15);
 }
 
@@ -802,15 +841,18 @@ tbody td {
   background: var(--color-accent-glow);
   border: 1px solid var(--color-accent);
   border-radius: var(--radius-btn);
-  color: var(--color-accent);
+  color: var(--heading-accent);
   cursor: pointer;
   font-family: var(--font-sans);
-  transition: background 0.25s;
+  transition: background 0.25s, border-color 0.25s, color 0.25s;
 }
 
 .chart-btn:hover {
-  background: var(--glass-hover-bg);
+  background: var(--heading-accent);
+  border-color: var(--heading-accent);
+  color: #fff;
 }
+html.dark .chart-btn:hover { color: var(--color-bg-deep); }
 
 .chart-wrapper {
   background: var(--glass-bg);
@@ -847,21 +889,12 @@ select.date-input option,
   font-family: var(--font-sans);
 }
 
-/* ===== Return links ===== */
-.return-link {
-  text-align: center;
-  margin-top: 1rem;
-}
-
-.return-link a {
-  color: var(--color-accent);
-  font-size: 0.8rem;
-  text-decoration: none;
-}
-
-.return-link a:hover {
-  text-decoration: underline;
-}
+/* ===== 表单操作 ===== */
+/* 「测试所选API连通性」原先是内联的绿底绿字（--color-success-glow 上压
+   --color-success，1.80:1）。实心化，与 .btn 同一套做法。 */
+.btn-success { background: var(--status-success-text); border-color: var(--status-success-text); color: #fff; }
+html.dark .btn-success { color: var(--color-bg-deep); }
+.btn-success:hover { background: var(--color-success); border-color: var(--color-success); }
 
 @media (max-width: 760px) {
   :root { --body-pad: 1.5rem; }
@@ -1068,4 +1101,18 @@ html.dark { color-scheme: dark; }
 
 @media print {
   #loader, #snowCanvas { display: none; }
+}
+
+/* ===== 键盘焦点可见性 =====
+   输入框等控件原先 outline:none，只在 :focus 时改边框色，
+   键盘用户看不出焦点落在哪。放在文件末尾以覆盖那些 outline:none。 */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+  border-radius: 4px;
 }

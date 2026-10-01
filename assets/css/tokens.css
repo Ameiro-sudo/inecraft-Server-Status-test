@@ -72,6 +72,9 @@
   /* 页面左右内边距（响应式） */
   --body-overlay: rgba(255, 255, 255, 0.15);
   /* body 伪元素叠加层颜色（用于提亮） */
+  --bg-scrim: var(--body-overlay);
+  /* 全屏背景蒙版（仅供 body::before 使用）。与 --body-overlay 分开，
+     这样加深深色主题的蒙版不会连带改暗卡片填充层。 */
 
   /* ===== 热力图（归档页面贡献图） ===== */
   --heatmap-empty: rgba(0, 0, 0, 0.04);
@@ -170,8 +173,24 @@
   /* 离线/红色 */
   --status-warning: #f0b34b;
   /* 警告/黄色 */
+  --status-warning-text: #5c3a00;
+  /* 警告文字专用色：--status-warning 作前景色在浅色底上只有 1.12~1.38:1。
+     这支保留琥珀色相但压到 6:1，深色主题换成亮琥珀（见 html.dark）。 */
+  --status-success-text: #1a5c34;
+  /* 在线/成功文字专用色：--color-success 作前景色在自身色底上只有 1.80:1 */
+  --status-blue-text: #124a80;
+  /* 基岩/蓝文字专用色：--status-blue 作前景色在自身色底上只有 1.69:1 */
+  --status-danger-text: #a3241c;
+  /* 危险/红文字专用色：--status-offline(#f25e5e) 作前景色在自身色底上只有
+     2.6:1。这支保留红相但压到 5:1 以上，与上面两支同一套做法。 */
   --status-blue: #5ea3f2;
   /* 蓝色状态 */
+
+  /* ===== 代码块 ===== */
+  --code-surface: #0d1117;
+  /* 代码块底色 = atom-one-dark 的原始底色。两种主题都用深色底：
+     深色 token 配色（#e6c07b/#98c379/#d19a66）压在浅色底上实测只有
+     1.67~2.38:1，浅色主题下代码几乎不可读。 */
 }
 
 html.dark {
@@ -179,6 +198,12 @@ html.dark {
     --color-accent: #8fd8ef;
     --heading-accent: #8fd8ef;
     --color-accent-warm: #e8c98a;
+    --status-warning-text: #ffe4a8;
+    --status-success-text: #7ee2a8;
+    --status-blue-text: #8cc8f5;
+    --status-danger-text: #ff9d94;
+    /* 上面四支「为前景优化」的色，深色主题一律翻到亮支。此前成功/蓝两支
+       的深色值硬编码在状态站 style.css 里，token 与实现不同源，已归位。 */
     --color-accent-glow: rgba(143, 216, 239, 0.15);
     --text-primary: #ffffff;
     --text-secondary: rgba(230, 245, 255, 0.92);
@@ -196,6 +221,9 @@ html.dark {
     --shadow-toast: 0 8px 30px rgba(0, 0, 0, 0.35);
 
     --body-overlay: rgba(0, 0, 0, 0.30);
+    --bg-scrim: rgba(0, 0, 0, 0.45);
+    /* 深色主题的全屏蒙版单独调深：0.30 压在高亮背景照上，背景相对亮度仍有
+       0.28，"深色"看起来和浅色几乎一样；实测 0.45 把最亮处从 0.28 降到 0.17。 */
 
     --heatmap-empty: rgba(255, 255, 255, 0.04);
     --heatmap-l1: rgba(100, 200, 255, 0.12);
