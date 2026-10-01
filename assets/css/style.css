@@ -590,8 +590,10 @@ html.dark body::after {
 .back-home {
   display: inline-block;
   padding: 0.45rem 0.9rem;
-  /* 这行直接落在背景照上，纯文字色够不着 4.5:1；加一层玻璃底衬把底色定住 */
-  background: var(--glass-bg);
+  /* 这行直接落在背景照上，纯文字色够不着 4.5:1；加一层玻璃底衬把底色定住。
+     单层 --glass-bg(0.65) 实测仍只有 4.4:1（差 0.1），改用与 .page-header
+     同一套双层配方，合成不透明度 0.65→0.70。 */
+  background: linear-gradient(var(--body-overlay), var(--body-overlay)), var(--glass-bg);
   backdrop-filter: blur(8px) saturate(1.2);
   -webkit-backdrop-filter: blur(8px) saturate(1.2);
   border: 1px solid var(--glass-border);
@@ -601,7 +603,9 @@ html.dark body::after {
   border-radius: 999px;
   transition: background 0.25s, color 0.25s;
 }
-.back-home:hover { background: var(--glass-hover-bg); }
+.back-home:hover {
+  background: linear-gradient(var(--body-overlay), var(--body-overlay)), var(--glass-hover-bg);
+}
 
 /* 主按钮改成实心：原先 --color-accent 文字压在同色半透明底上只有 2.12~2.56:1。
    实心 + 主题翻转文字色后是 5.97:1（浅）/ 9.31:1（深）。 */
@@ -838,7 +842,9 @@ tbody td {
 
 .chart-btn {
   padding: 0.4rem 1.2rem;
-  background: var(--color-accent-glow);
+  /* 底衬此前只有单层 --color-accent-glow(0.15)，底下就是背景照，实测浅色
+     3.33:1。补一层 --glass-bg 与 .back-home 同一套配方。 */
+  background: linear-gradient(var(--color-accent-glow), var(--color-accent-glow)), var(--glass-bg);
   border: 1px solid var(--color-accent);
   border-radius: var(--radius-btn);
   color: var(--heading-accent);
