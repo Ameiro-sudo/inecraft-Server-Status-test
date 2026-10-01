@@ -20,24 +20,16 @@ view-logs.html              日志查看
 assets/vendor/              本地化第三方资源（字体/图标/Chart.js/图片）
 ```
 
-## 已知问题
+## 自定义域名
 
-### ⚠️ status.snowblock.top DNS 记录缺失（站点当前不可达）
+`status.snowblock.top`（`CNAME` → `Ameiro-sudo.github.io`，Cloudflare 代理开启）。
+2026-09-12 复核：DNS 正常解析（Cloudflare 的 A/AAAA），`https://status.snowblock.top/` 返回 200，
+GitHub Pages 证书已签发并走 HTTPS。
 
-GitHub Pages 已配置自定义域名 `status.snowblock.top`（见 `CNAME`），但
-Cloudflare 上 **缺少该子域的 DNS 记录**（NXDOMAIN），导致：
-
-- 域名无法解析，站点不可访问
-- GitHub Pages 的 ACME 证书签发失败（`bad_authz`）
-
-**修复方法**：在 Cloudflare 的 `snowblock.top` 域名下添加记录：
-
-| 类型 | 名称 | 目标 | 代理 |
-| --- | --- | --- | --- |
-| CNAME | `status` | `Ameiro-sudo.github.io` | 开启（与 blog 一致） |
-
-添加后 Cloudflare 边缘证书即刻生效；GitHub Pages 侧证书会自动重试签发，
-之后可在 Pages 设置中开启 Enforce HTTPS。
+> 历史故障记录（若将来再次出现"域名不可达 / `bad_authz`"，按此排查）：
+> Cloudflare 上缺少 `status` 子域记录会造成 NXDOMAIN，站点不可访问且 Pages 的 ACME 证书签发失败。
+> 修复即在 `snowblock.top` 下补一条 `CNAME status → Ameiro-sudo.github.io`（代理开启，与 blog 一致）；
+> 补记录后 Cloudflare 边缘证书即刻生效，Pages 侧证书会自动重试签发，之后可在 Pages 设置中开启 Enforce HTTPS。
 
 ## 安全说明
 
