@@ -843,8 +843,12 @@ tbody td {
 .chart-btn {
   padding: 0.4rem 1.2rem;
   /* 底衬此前只有单层 --color-accent-glow(0.15)，底下就是背景照，实测浅色
-     3.33:1。补一层 --glass-bg 与 .back-home 同一套配方。 */
-  background: linear-gradient(var(--color-accent-glow), var(--color-accent-glow)), var(--glass-bg);
+     3.33:1。补一层玻璃后到 4.46:1，顶层换成白色 --body-overlay 仍是 4.44——
+     这个采样点背后的照片本身偏亮，0.70 的合成不透明度不够。
+     静止态改用 --glass-hover-bg(0.75) 打底 + 白色 0.15，合成 0.7875，
+     实测 4.87:1。这里借 --glass-hover-bg 只是要「更不透明的那档玻璃」，
+     不是 hover 语义——hover 另有实心态（见 .chart-btn:hover）。 */
+  background: linear-gradient(var(--body-overlay), var(--body-overlay)), var(--glass-hover-bg);
   border: 1px solid var(--color-accent);
   border-radius: var(--radius-btn);
   color: var(--heading-accent);
