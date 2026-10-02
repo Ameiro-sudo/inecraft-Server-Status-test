@@ -6,6 +6,10 @@
   /* 主色调（蓝灰，用于链接/图标/强调） */
   --heading-accent: #2f6a84;
   /* 页面标题色（深蓝，保证浅色背景对比度） */
+  --link-text: #24566d;
+  /* 正文/导航里的链接色。--heading-accent 在玻璃叠加照片处只有 4.0~4.4:1
+     （顶栏当前页、文章卡标签、正文链接三类都卡在这里），这支再压深一档，
+     对浅色底 ≥5.3:1。标题仍用 --heading-accent，不受影响。 */
   --color-accent-warm: #d4a86a;
   /* 暖色强调（金褐色，用于水晶核心/点缀） */
   --color-accent-glow: rgba(91, 155, 181, 0.15);
@@ -198,6 +202,7 @@ html.dark {
     --color-accent: #8fd8ef;
     --heading-accent: #8fd8ef;
     --color-accent-warm: #e8c98a;
+    --link-text: #9fe0f5;
     --status-warning-text: #ffe4a8;
     --status-success-text: #7ee2a8;
     --status-blue-text: #8cc8f5;
