@@ -92,12 +92,18 @@ html.dark body::after {
   font-size: 0.9rem;
   font-family: var(--font-sans);
   text-decoration: none;
-  transition: background 0.25s,transform 0.25s,box-shadow 0.25s;
+  /* background 是简写，会把 background-image/position 一起挂上过渡；那几个在
+     多数浏览器里不可插值，结果是整条声明被忽略，hover 背景直接跳变。
+     悬停反馈也从 250ms 收到 --dur-fast（150ms）：250ms 的卡片抬起跟不上鼠标，
+     手感上像「粘住了」。 */
+  transition: background-color var(--dur-fast) var(--ease-out),
+              transform var(--dur-fast) var(--ease-out),
+              box-shadow var(--dur-fast) var(--ease-out);
   box-shadow: var(--shadow-item);
 }
 
 .nav-entry:hover {
-  background: var(--glass-hover-bg);
+  background-color: var(--glass-hover-bg);
   transform: translateY(-3px);
   box-shadow: var(--shadow-card);
 }
@@ -119,7 +125,7 @@ html.dark body::after {
   letter-spacing: 0.03em;
 }
 
-.page-header .sub a { color: var(--heading-accent); text-decoration: none; transition: color 0.25s; }
+.page-header .sub a { color: var(--heading-accent); text-decoration: none; transition: color var(--dur-fast) var(--ease-out); }
 .page-header .sub a:hover { color: var(--color-accent-warm); }
 .page-header .sub .dot { color: var(--text-muted); margin: 0 6px; }
 
@@ -138,7 +144,7 @@ html.dark body::after {
   border: 1px solid var(--glass-border);
   box-shadow: var(--shadow-card),inset 0 1px 0 rgba(255,255,255,0.08);
   overflow: hidden;
-  transition: transform 0.25s,box-shadow 0.25s;
+  transition: transform var(--dur-fast) var(--ease-out),box-shadow var(--dur-fast) var(--ease-out);
   cursor: pointer;
   display: flex;
   flex-direction: column;
@@ -207,7 +213,7 @@ html.dark body::after {
   flex-shrink: 0;
   object-fit: cover;
   box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-  transition: transform 0.25s;
+  transition: transform var(--dur-normal) var(--ease-out);
 }
 
 .server-card:hover .server-icon { transform: scale(1.05); }
@@ -335,12 +341,15 @@ html.dark body::after {
   justify-content: center;
   align-items: center;
   z-index: 1000;
-  animation: fadeIn 0.3s ease;
+  /* 遮罩只淡入，不位移。它是铺满视口的一层整色底，滑 20px 会让整块背景跟着
+     挪——边缘先露出后面的内容再补上，是能看出来的。位移交给下面那个
+     modal-content，那才是有边界、值得动的东西。 */
+  animation: fadeBackdrop var(--dur-normal) var(--ease-out);
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(20px); }
-  to   { opacity: 1; transform: translateY(0); }
+@keyframes fadeBackdrop {
+  from { opacity: 0; }
+  to   { opacity: 1; }
 }
 
 .modal-content {
@@ -354,7 +363,7 @@ html.dark body::after {
   border: 1px solid var(--glass-border);
   box-shadow: 0 30px 80px rgba(0,0,0,0.5);
   overflow: hidden;
-  animation: modalIn 0.35s ease;
+  animation: modalIn var(--dur-normal) var(--ease-out);
 }
 
 @keyframes modalIn {
@@ -391,10 +400,10 @@ html.dark body::after {
   justify-content: center;
   align-items: center;
   border-radius: 50%;
-  transition: background 0.25s,color 0.25s;
+  transition: background-color var(--dur-fast) var(--ease-out),color var(--dur-fast) var(--ease-out);
 }
 
-.close-btn:hover { background: var(--glass-hover-bg); color: var(--text-primary); }
+.close-btn:hover { background-color: var(--glass-hover-bg); color: var(--text-primary); }
 
 .modal-body { padding: 1.5rem; max-height: calc(85vh - 80px); overflow-y: auto; }
 .modal-body .chart-wrapper { height: 280px; margin: 1.2rem 0; }
@@ -425,7 +434,9 @@ html.dark body::after {
   font-size: 0.85rem;
   font-family: var(--font-mono);
   outline: none;
-  transition: border 0.25s;
+  /* 简写 border 会把 border-image 一起挂进过渡，而它不可插值，
+     :focus 只改 border-color，却整条声明失效——焦点框是直接跳出来的。 */
+  transition: border-color var(--dur-fast) var(--ease-out);
 }
 
 .date-input:focus { border-color: var(--color-accent); }
@@ -467,7 +478,11 @@ html.dark body::after {
   box-shadow: var(--shadow-toast);
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.3s,transform 0.3s;
+  /* 退场走 accelerate：淡出本来就是在往「不打扰」的方向走，尾巴再拖一段
+     等于把提示赖在屏幕上。visibility 刻意不动——toast 是 aria-live 区域，
+     文本是先写进去再加 .show；未显示时若 visibility: hidden，内容落在隐藏
+     子树里，部分读屏组合不会再播报。 */
+  transition: opacity var(--dur-fast) var(--ease-in),transform var(--dur-fast) var(--ease-in);
   z-index: 999;
 }
 
@@ -475,6 +490,7 @@ html.dark body::after {
   opacity: 1;
   pointer-events: auto;
   transform: translateX(-50%) translateY(0);
+  transition: opacity var(--dur-normal) var(--ease-out),transform var(--dur-normal) var(--ease-out);
 }
 
 /* ===== Admin Pages ===== */
@@ -523,13 +539,13 @@ html.dark body::after {
   font-size: 0.85rem;
   font-family: var(--font-sans);
   text-decoration: none;
-  transition: background 0.25s,transform 0.25s;
+  transition: background-color var(--dur-fast) var(--ease-out),transform var(--dur-fast) var(--ease-out);
   cursor: pointer;
   display: inline-block;
 }
 
 .nav-btn:hover {
-  background: var(--glass-hover-bg);
+  background-color: var(--glass-hover-bg);
   transform: translateY(-2px);
 }
 
@@ -578,7 +594,9 @@ html.dark body::after {
   font-size: 0.9rem;
   font-family: var(--font-sans);
   outline: none;
-  transition: border 0.25s;
+  /* 简写 border 会把 border-image 一起挂进过渡，而它不可插值，
+     :focus 只改 border-color，却整条声明失效——焦点框是直接跳出来的。 */
+  transition: border-color var(--dur-fast) var(--ease-out);
 }
 
 .form-group input:focus,
@@ -610,7 +628,9 @@ html.dark body::after {
   font-size: 0.8rem;
   text-decoration: none;
   border-radius: 999px;
-  transition: background 0.25s, color 0.25s;
+  /* 这块底色是叠成 background-image 的渐变，换 background-color 没用，
+     过渡得挂在 background-image 上——两层渐变结构一致，浏览器才插得进去。 */
+  transition: background-image var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out);
 }
 .back-home:hover {
   background: linear-gradient(var(--body-overlay), var(--body-overlay)), var(--glass-hover-bg);
@@ -627,12 +647,12 @@ html.dark body::after {
   font-size: 0.9rem;
   font-family: var(--font-sans);
   cursor: pointer;
-  transition: background 0.25s, transform 0.25s, border-color 0.25s;
+  transition: background-color var(--dur-fast) var(--ease-out), transform var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out);
 }
 html.dark .btn { color: var(--color-bg-deep); }
 
 .btn:hover {
-  background: var(--color-accent);
+  background-color: var(--color-accent);
   border-color: var(--color-accent);
   transform: translateY(-2px);
 }
@@ -680,7 +700,7 @@ tbody td {
   font-size: 0.78rem;
   text-decoration: none;
   margin-right: 4px;
-  transition: background 0.2s;
+  transition: background-color var(--dur-fast) var(--ease-out);
 }
 
 .edit-btn {
@@ -863,9 +883,14 @@ tbody td {
   color: var(--heading-accent);
   cursor: pointer;
   font-family: var(--font-sans);
-  transition: background 0.25s, border-color 0.25s, color 0.25s;
+  transition: border-color var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out);
 }
 
+/* 底色故意不过渡：静止态是「玻璃渐变叠色」，hover 是「一整块实心强调色」，
+   两者绘制结构不同，background 简写过渡会被整条忽略（写了也是假过渡）。
+   而要让它过渡，就得把渐变拆成常驻图层——上面那套渐变 + --glass-hover-bg
+   是按对比度实测调出来的，叠到实心态上会冲淡它。所以这里只过渡确实能插值的
+   边框色和文字色，底色直接换。 */
 .chart-btn:hover {
   background: var(--heading-accent);
   border-color: var(--heading-accent);
@@ -972,7 +997,7 @@ html.dark .page-header h1 { text-shadow: 0 2px 12px rgba(0,0,0,0.5); }
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  transition: opacity 0.5s ease, visibility 0.5s ease, transform 0.5s ease;
+  transition: opacity var(--dur-slow) var(--ease-out), visibility 0s linear var(--dur-slow), transform var(--dur-slow) var(--ease-out);
 }
 
 @keyframes loaderBgShift {
@@ -1044,7 +1069,7 @@ html.dark { color-scheme: dark; }
   pointer-events: none;
   z-index: 0;
   opacity: 0;
-  transition: opacity 1.5s ease 0.5s;
+  transition: opacity 1.5s var(--ease-out) 0.5s;
 }
 
 #loader.hidden ~ #snowCanvas { opacity: 1; }

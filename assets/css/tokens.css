@@ -93,20 +93,40 @@
   /* 高活跃度 */
 
   /* ===== 动效系统 ===== */
-  --motion-enter: fadeSlideUp 0.3s ease both;
+  --motion-enter: fadeSlideUp var(--dur-normal) var(--ease-out) backwards;
   /* 通用入场动画（淡入上移，多数视图/卡片） */
-  --motion-enter-slow: fadeSlideUp 0.35s ease 0.05s both;
+  --motion-enter-slow: fadeSlideUp 0.35s var(--ease-out) 0.05s backwards;
   /* 慢速入场（简介卡等带延迟） */
-  --motion-photo: photoIn 0.45s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  --motion-photo: photoIn var(--dur-slow) var(--ease-soft) backwards;
   /* 照片/相册卡片入场（放大淡入） */
-  --motion-photo-fast: photoIn 0.35s ease both;
-  /* 相册详情照片入场（较快） */
+  --motion-photo-fast: photoIn var(--dur-normal) var(--ease-out) backwards;
+  /* 相册详情照片入场（较快）。四条一律用 backwards：forwards 会把最后一帧的
+     transform 永久钉在元素上，压过 :hover 等普通声明（见 blog 的同名令牌）。
+     本项目目前没有引用这四条，保留是为了与 blog 保持同一份配方。 */
   --motion-stagger: 0.06s;
   /* 列表/瀑布流逐项错峰间隔 */
   --motion-stagger-max: 0.8s;
   /* 错峰上限 */
-  --transition-theme: 0.35s ease;
+  --transition-theme: var(--dur-normal) var(--ease-out);
   /* 主题（深浅色）切换过渡时长/缓动 */
+
+  /* 缓动曲线。进场走 decelerate（起步快、尾巴慢），退场走 accelerate（起步慢、
+     越走越快）——展开和收起用同一个节奏，是「点一下没反应」最常见的原因：
+     收起时 decelerate 会让内容先慢后快地消失，看起来像卡了一帧。 */
+  --ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --ease-in: cubic-bezier(0.4, 0, 1, 1);
+  --ease-standard: cubic-bezier(0, 0, 1, 1);
+  --ease-soft: cubic-bezier(0.2, 0.8, 0.2, 1.15);
+  /* 缩放类反馈。y 越过 1 一点再落回来——收得太干净的缩放看着像「贴图平移」 */
+
+  /* 时长档位。原来散着写 0.15/0.2/0.25/0.3/0.35/0.4/0.5/0.7 八个值，
+     悬停和入场撞在一起时看不出来是哪个更长。 */
+  --dur-fast: 150ms;
+  /* 悬停、按下、复制反馈这类即时响应 */
+  --dur-normal: 250ms;
+  /* 弹层、展开收起、图标旋转 */
+  --dur-slow: 450ms;
+  /* 卡片入场、浮层、loader 退场 */
 
   /* ===== 背景渐变 ===== */
   --bg-gradient-body-light: linear-gradient(160deg, #f8f6f0, #eef2f5);
