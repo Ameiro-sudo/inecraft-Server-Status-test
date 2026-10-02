@@ -439,6 +439,15 @@ html.dark body::after {
   font-size: 0.75rem;
   margin-top: 0.8rem;
   font-family: var(--font-mono);
+  /* 这行直接落在背景照上。空数据时 player-history-chart.html 会把它的行内颜色
+     改成 --status-warning-text（深色下 #ffe4a8），压在照片亮处实测 3.98:1。
+     之前被记为「可接受现状」，但那是上一轮会话的判断、不是本人拍板。
+     补一层磨砂底衬把底色定住，行内改色也不受影响。 */
+  padding: 0.55rem 0.9rem;
+  background: linear-gradient(var(--body-overlay), var(--body-overlay)), var(--glass-bg);
+  backdrop-filter: blur(8px) saturate(1.2);
+  -webkit-backdrop-filter: blur(8px) saturate(1.2);
+  border-radius: var(--radius-item);
 }
 
 .toast {
