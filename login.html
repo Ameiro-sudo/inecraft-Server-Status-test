@@ -31,7 +31,7 @@
     </style>
 </head>
 <body class="login-page">
-    <div id="loader">
+    <div id="loader" aria-hidden="true">
         <div class="loader-crystal">
             <div class="crystal-wrapper">
                 <div class="crystal-glow"></div>
@@ -77,9 +77,9 @@
             </div>
         </div>
     </div>
-    <canvas id="snowCanvas"></canvas>
-    <div id="toast" class="toast"></div>
-    <div class="login-container">
+    <canvas id="snowCanvas" aria-hidden="true"></canvas>
+    <div id="toast" class="toast" aria-live="polite"></div>
+    <main class="login-container">
         <h1>管理员登录</h1>
         <div class="error" id="loginError" style="display:none;"></div>
         <form onsubmit="return false;">
@@ -95,7 +95,7 @@
         </form>
         <p style="text-align:center;margin-top:1rem;color:var(--text-muted);font-size:0.8rem;">默认账号 admin · 可在管理面板修改密码</p>
         <p style="text-align:center;margin-top:1rem;"><a href="index.html" class="back-home">返回主页</a></p>
-    </div>
+        </main>
     <script src="assets/js/app.js"></script>
     <script src="assets/js/servers.js"></script>
     <script src="assets/js/admin-config.js"></script>

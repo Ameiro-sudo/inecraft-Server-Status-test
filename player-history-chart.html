@@ -32,7 +32,7 @@
     </style>
 </head>
 <body>
-    <div id="loader">
+    <div id="loader" aria-hidden="true">
         <div class="loader-crystal">
             <div class="crystal-wrapper">
                 <div class="crystal-glow"></div>
@@ -78,9 +78,9 @@
             </div>
         </div>
     </div>
-    <canvas id="snowCanvas"></canvas>
-    <div id="toast" class="toast"></div>
-    <div class="install-container chart-standalone">
+    <canvas id="snowCanvas" aria-hidden="true"></canvas>
+    <div id="toast" class="toast" aria-live="polite"></div>
+    <main class="install-container chart-standalone">
         <header class="page-header">
             <h1>在线人数历史记录</h1>
             <p class="sub">浏览器本地采样 · 保留 7 天</p>
@@ -107,7 +107,7 @@
 
         <p class="modal-note" id="dataInfo">* 暂无本地采样数据,请先在主页停留让状态页采样</p>
         <p style="text-align:center;margin-top:1rem;"><a href="index.html" class="back-home">返回主页</a></p>
-    </div>
+        </main>
     <script src="assets/js/app.js"></script>
     <script src="assets/js/servers.js"></script>
     <script src="assets/js/admin-config.js"></script>

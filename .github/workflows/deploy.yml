@@ -1,4 +1,13 @@
-﻿name: Deploy to GitHub Pages
+name: Deploy to GitHub Pages
+
+# 两件事在这个仓库里是同一个道理：修了没有闸门，就必然回归。
+#   1. git log 里 fix(a11y) 反复出现，全是人肉点出来、人肉改完、人肉确认。
+#      下面这个 a11y job 就是那道闸门。
+#   2. 原来 `upload-pages-artifact` 的 path 是 `.`，也就是把整个仓库发布出去。
+#      实测 https://status.snowblock.top/deploy/DEPLOY.md 能直接读到，里面写着
+#      VPS 路径、systemd 单元名、服务账号和 nginx 的 location alias —— 不是
+#      密钥，但那是白送的侦察面，而访客一个字都用不上。改成白名单发布。
+
 on:
   push:
     branches: [main]
@@ -10,12 +19,47 @@ permissions:
 concurrency:
   group: pages
   cancel-in-progress: true
+
 jobs:
+  a11y:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      # axe 必须对着真的 HTTP origin 扫。传本地文件路径时它会去请求自己的
+      # 服务器并拿回一张错误页，于是报出来的违规全是那张页面的（实测会报
+      # 「没有 main landmark」，而本仓库的页面明明有）。
+      - name: 起本地服务
+        run: |
+          python3 -m http.server 8081 --bind 127.0.0.1 &
+          for i in $(seq 1 40); do
+            if curl -sf http://127.0.0.1:8081/index.html -o /dev/null; then echo ready; exit 0; fi
+            sleep 0.5
+          done
+          echo "服务未在 20s 内就绪" >&2
+          exit 1
+
+      # 7 个页面全扫，包括三个「纯前端演示」的管理页 —— 它们同样是要被人访问的
+      # 公开 URL，正因为是演示页才更该把基本可访问性守住。
+      - name: axe 扫描（0 违规才继续）
+        run: npx --yes @axe-core/cli@latest --exit \
+          http://127.0.0.1:8081/index.html \
+          http://127.0.0.1:8081/404.html \
+          http://127.0.0.1:8081/login.html \
+          http://127.0.0.1:8081/admin.html \
+          http://127.0.0.1:8081/api-management.html \
+          http://127.0.0.1:8081/view-logs.html \
+          http://127.0.0.1:8081/player-history-chart.html
+
   deploy:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
+    needs: a11y
     steps:
       - uses: actions/checkout@v4
       - uses: actions/configure-pages@v5
@@ -23,6 +67,13 @@ jobs:
           enablement: true
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: .
+          # 白名单，而不是 `.`。原来发布整个仓库，于是 deploy/、docs/、
+          # sampler.py、README.md 都在公网上可读。
+          path: |
+            CNAME
+            robots.txt
+            sitemap.xml
+            *.html
+            assets
       - id: deployment
         uses: actions/deploy-pages@v4

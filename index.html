@@ -50,7 +50,7 @@
 <body>
 
 <!-- ===== 加载层 ===== -->
-<div id="loader">
+<div id="loader" aria-hidden="true">
     <div class="loader-crystal">
         <div class="crystal-wrapper">
             <div class="crystal-glow"></div>
@@ -104,7 +104,7 @@
 
 <div class="toast" id="toast" aria-live="polite"></div>
 
-<div class="container">
+<main class="container">
     <header class="page-header">
         <h1>Minecraft 服务器</h1>
         <p class="sub">
@@ -124,7 +124,7 @@
     <div class="server-grid">
         <!-- 卡片由 assets/js/status.js 按 servers.js 配置动态渲染 -->
     </div>
-</div>
+</main>
 
 <div id="chartModal" class="modal-overlay" style="display:none;">
     <div class="modal-content">
