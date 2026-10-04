@@ -65,15 +65,26 @@ jobs:
       - uses: actions/configure-pages@v5
         with:
           enablement: true
+
+      # 白名单，而不是 `.`。原来发布整个仓库，于是 deploy/、docs/、
+      # sampler.py、README.md 都在公网上可读（实测 /deploy/DEPLOY.md 返回 200，
+      # 里面写着 VPS 路径、systemd 单元名、服务账号与 nginx 的 location alias）。
+      #
+      # 必须先落到一个目录再上传，不能把多条 path 直接写进 with: ——
+      # upload-pages-artifact 不像 upload-artifact 那样支持多行 path，它会把整段
+      # 当成一个文件名传给 tar，于是第一次跑直接挂在
+      # 「tar: CNAME\nrobots.txt\n...: Cannot open」。
+      - name: 收集要发布的文件
+        run: |
+          mkdir -p _site
+          cp CNAME robots.txt sitemap.xml _site/
+          cp ./*.html _site/
+          cp -r ./assets _site/assets
+          echo "将发布："; find _site -maxdepth 1 | sort
+
       - uses: actions/upload-pages-artifact@v3
         with:
-          # 白名单，而不是 `.`。原来发布整个仓库，于是 deploy/、docs/、
-          # sampler.py、README.md 都在公网上可读。
-          path: |
-            CNAME
-            robots.txt
-            sitemap.xml
-            *.html
-            assets
+          path: _site
+
       - id: deployment
         uses: actions/deploy-pages@v4
