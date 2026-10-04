@@ -94,7 +94,7 @@ html.dark body::after {
   text-decoration: none;
   /* background 是简写，会把 background-image/position 一起挂上过渡；那几个在
      多数浏览器里不可插值，结果是整条声明被忽略，hover 背景直接跳变。
-     悬停反馈也从 250ms 收到 --dur-fast（150ms）：250ms 的卡片抬起跟不上鼠标，
+     悬停反馈也从 250ms 收到 --dur-fast（现为 100ms）：250ms 的卡片抬起跟不上鼠标，
      手感上像「粘住了」。 */
   transition: background-color var(--dur-fast) var(--ease-out),
               transform var(--dur-fast) var(--ease-out),
