@@ -24,7 +24,9 @@ var AdminConfig = (function () {
         username: 'admin',
         passwordHash: '',   /* SHA-256 hex; 留空 = 任意密码可登录(演示) */
         servers: DEFAULT_SERVERS,
-        javaApi: 'mcstatus',    /* mcstatus | mcsrvstat | mc6 */
+        javaApi: 'mcstatus',    /* mcstatus | mcsrvstat（mc6 已下架：它只有 HTTP 端点，
+                            而本站强制 HTTPS，浏览器按混合内容规则直接拦，
+                            摆在选择器里等于给用户一个必然失败的选项） */
         bedrockApi: 'mcstatus'  /* mcstatus | mcsrvstat */
     };
 

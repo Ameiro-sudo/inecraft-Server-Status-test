@@ -59,29 +59,6 @@
                     latency: null
                 };
             }
-        },
-        mc6: {
-            label: 'cow.mc6.cn 原始API',
-            base: {
-                java: 'http://cow.mc6.cn:10709/raw/',
-                bedrock: 'http://cow.mc6.cn:10709/raw/'
-            },
-            url: function (type, addr, port) {
-                return this.base[type] + addr + (port ? ':' + port : '');
-            },
-            parse: function (d) {
-                var list = d.players;
-                var online = d.online === true || d.online === 'true' ||
-                             d.status === 'online' || (list && list.length != null);
-                return {
-                    online: !!online,
-                    players: online && list && list.length != null ? list.length : 0,
-                    max: d.maxPlayers || d.max_players || d.playersMax || 0,
-                    version: d.version || d.gameVersion || '',
-                    motd: d.motd || d.description || '',
-                    latency: null
-                };
-            }
         }
     };
 
@@ -440,6 +417,39 @@
         });
     }
 
+    /* ===== 关闭弹层 =====
+     * 关闭绑定原来在 app.js 里，而那里管的是另一套假图表：closeBtn / 背景点击 /
+     * Escape 都走 app.js 的 hideModal()，它只把 display 设成 none，**不销毁**图表。
+     * 于是本文件 drawLineChart() 建出来的那个 Chart 从来不被 destroy —— 每开关
+     * 一次弹窗泄漏一个实例（canvas 被替换了，但 Chart 仍注册在 Chart.instances 上）。
+     *
+     * 既然只有这里打开弹层，关闭也归这里：先 destroy，再藏。 */
+    function closeHistoryModal() {
+        var canvas = document.getElementById('modalPlayerChart');
+        if (canvas && typeof Chart !== 'undefined') {
+            var existing = Chart.getChart(canvas);
+            if (existing) existing.destroy();
+        }
+        if (window.app && typeof window.app.hideModal === 'function') {
+            window.app.hideModal();
+        } else {
+            var modal = document.getElementById('chartModal');
+            if (modal) modal.style.display = 'none';
+        }
+    }
+
+    function bindModalClose() {
+        var closeBtn = document.getElementById('closeModal');
+        var modal = document.getElementById('chartModal');
+        if (closeBtn) closeBtn.addEventListener('click', closeHistoryModal);
+        if (modal) modal.addEventListener('click', function (e) {
+            if (e.target === this) closeHistoryModal();
+        });
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape') closeHistoryModal();
+        });
+    }
+
     /* ===== 对外接口 ===== */
     var api = {
         state: state,
@@ -451,12 +461,15 @@
         aggregateByDay: aggregateByDay,
         aggregateByHour: aggregateByHour,
         renderCards: renderCards,
-        showHistoryModal: showHistoryModal
+        showHistoryModal: showHistoryModal,
+        closeHistoryModal: closeHistoryModal,
+        bindModalClose: bindModalClose
     };
     window.mcStatus = api;
 
     document.addEventListener('DOMContentLoaded', function () {
         if (!document.querySelector('.server-grid')) return; // 仅状态页轮询
+        bindModalClose();
         renderCards(null); // 首屏骨架屏
         checkAll();
         setInterval(checkAll, POLL_MS);
