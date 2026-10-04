@@ -45,7 +45,8 @@ jobs:
       # 7 个页面全扫，包括三个「纯前端演示」的管理页 —— 它们同样是要被人访问的
       # 公开 URL，正因为是演示页才更该把基本可访问性守住。
       - name: axe 扫描（0 违规才继续）
-        run: npx --yes @axe-core/cli@latest --exit \
+        run: |
+          npx --yes @axe-core/cli@latest --exit --load-delay 1500 --save axe-report \
           http://127.0.0.1:8081/index.html \
           http://127.0.0.1:8081/404.html \
           http://127.0.0.1:8081/login.html \
@@ -53,6 +54,14 @@ jobs:
           http://127.0.0.1:8081/api-management.html \
           http://127.0.0.1:8081/view-logs.html \
           http://127.0.0.1:8081/player-history-chart.html
+
+      - name: 上传 axe 报告
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: axe-report
+          path: axe-report
+          if-no-files-found: ignore
 
   deploy:
     environment:
