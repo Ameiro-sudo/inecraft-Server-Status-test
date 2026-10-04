@@ -264,9 +264,21 @@
     }
 
     /* ===== 远端历史注水(后端化方案A · 渐进增强) =====
-     * REMOTE_HISTORY_BASE 非空时，周期性把采样器的 recent.json 合并进本地缓存，
-     * 历史曲线即获得 7x24 连续数据；为空则维持纯 localStorage 行为，零破坏。
-     * 部署见 sampler.py 与 deploy/DEPLOY.md。 */
+     * 非空时，周期性把采样器的 recent.json 合并进本地缓存，历史曲线即获得
+     * 7x24 连续数据；为空则维持纯 localStorage 行为，零破坏。
+     *
+     * **现在是空的，而且是有意留空的**：`sampler.py` 写好了、也实测过，
+     * 但**没有部署**——它需要在服务器上常驻（systemd timer）并由 nginx 暴露
+     * 只读目录。填上地址之前，每个访客的历史曲线都只有他自己这台浏览器里
+     * 积累的那几个点。
+     *
+     * 所以它不是「忘了填的配置项」，而是一段**还没上线的功能**。真要上线：
+     * 1. 在服务器上按 deploy/DEPLOY.md 部署 sampler.py（systemd timer）
+     * 2. nginx 加一段只读 location 暴露 <out> 目录
+     * 3. 把下面的值改成那个前缀，例如 '/history'
+     *
+     * 页面上的文案已经按「未部署」如实说明（见 showHistoryModal 的空状态）。
+     * 上线之后记得把那段文案也一并改掉。 */
     var REMOTE_HISTORY_BASE = '';
     function hydrateRemoteHistory(ids) {
         if (!REMOTE_HISTORY_BASE) return;
@@ -328,8 +340,18 @@
 
         var hist = loadHistory(id);
         if (!hist.length) {
+            // 这段话原来写的是「暂无历史数据(每 60s 自动采样记录)」——那句话是假的。
+            // sampler.py 确实存在也确实每 60 秒采一次，但它**没有部署**：
+            // 下面的 REMOTE_HISTORY_BASE 还是空字符串，远端注水层根本不执行。
+            // 于是每个新访客打开弹层，看到的都是一条空的「历史」曲线，
+            // 而文字让他以为有个采样服务在跑、只是这台服务器刚开机。
+            // 一句话把没部署说成「暂无」，用户对不上账，也没法判断该不该等。
+            // 现在按实情说：数据只存在于他自己这台浏览器的 localStorage 里。
             body.innerHTML = '<div class="chart-wrapper" style="height:320px;display:flex;align-items:center;justify-content:center;">' +
-                '<p class="modal-note">暂无历史数据(每 60s 自动采样记录)</p></div>';
+                '<p class="modal-note">这里还没有历史数据。<br>' +
+                '本页面只在你自己的浏览器里每 60 秒记一个点，所以要等一段时间才开始有；' +
+                '换一台设备或清了缓存，就从零开始。<br>' +
+                '全站共享的历史档案（<code>sampler.py</code>）尚未部署。</p></div>';
         } else {
             var daily = aggregateByDay(hist);
             var hourly = aggregateByHour(hist);
