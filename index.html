@@ -3,6 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- 内容安全策略。
+       资源全部在同域（vendor 目录连字体都带版本号跟着一起提交），
+       唯一的出网是查 MC 状态用的那两个 API。
+
+       'unsafe-inline' 是现状的如实描述，不是偷懒：七个页面各自带着内联
+       <script>（主题、AUTH_KEY 的 sessionStorage 读写、页面自己的逻辑）。
+       base-uri / form-action / frame-ancestors 才是这里真正拿得到的东西——
+       它们拦的是注入进来的表单提交与点击劫持，跟内联脚本无关。
+       要去掉 script-src 里的 'unsafe-inline'，得先把七份内联脚本搬出去，
+       那是一次有回归风险的重构，不该顺手做。 -->
+  <meta http-equiv="Content-Security-Policy" content="
+      default-src 'self';
+      script-src 'self' 'unsafe-inline';
+      style-src 'self' 'unsafe-inline';
+      font-src 'self';
+      img-src 'self' data: blob:;
+      connect-src 'self' https://api.mcstatus.io https://api.mcsrvstat.us;
+      base-uri 'none';
+      form-action 'self';
+      object-src 'none'">
+       frame-ancestors 写在这里是**无效**的：它只能走 HTTP 响应头，而这里是
+       <meta>——浏览器照常解析然后打一条 console 警告（"directive 'frame-ancestors'
+       is ignored when delivered via a <meta> element"），每页一次。所以不写它：
+       一条每页刷屏的警告换不来任何防护。要防点击劫持得让服务器发 X-Frame-Options，
+       而 GitHub Pages 不给这个口子。
     <title>Minecraft 服务器状态 · SnowBlock</title>
     <meta name="description" content="SnowBlock MC 服务器状态监控 — 在线人数、版本、延迟信息一览">
     <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f2efe9">
