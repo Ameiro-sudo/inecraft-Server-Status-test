@@ -62,6 +62,26 @@ jobs:
           name: axe-report
           path: axe-report
           if-no-files-found: ignore
+      # ---------------------------------------------------------------
+      # 设计令牌漂移检查
+      #
+      # 三个静态站的 assets/css/tokens.css 是同一套设计令牌的三份副本。
+      # 实测过：三站里只有这一份是共享资产——style.css 三份全不同、toast.css
+      # 只有两站有、shell.css 只有 blog 有，它们是各站自己的样式表。
+      #
+      # 比的是每一处自定义属性的取值（按出现顺序），不是文件字节：注释各站自己写。
+      # 只比每个属性的「最后一个值」是不够的——深色主题在文件后面，最后一个值永远
+      # 是深色的，浅色那处漂移就查不出来（第一版就是这么写的，注入一处浅色改动
+      # 试过，没报）。
+      #
+      # 期望的摩擦：改了一处而另外两站没跟上时，这几仓的构建会一起红。这正是它的
+      # 作用——把「改一处要记得同步另外两处」从口头约定变成会红的检查。
+      # 两边都像是故意的，就挑一个当成本次改动的意图，把另一个对齐它。
+      - name: 设计令牌漂移检查
+        run: |
+          node scripts/check-tokens-drift.mjs \
+            'B=https://raw.githubusercontent.com/Ameiro-sudo/inecraft-Server-Status-test/main/assets/css/tokens.css' \
+            'blog=https://raw.githubusercontent.com/Ameiro-sudo/blog/main/assets/css/tokens.css'
 
   deploy:
     environment:
