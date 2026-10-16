@@ -29,11 +29,12 @@ jobs:
         with:
           node-version: 22
 
-      # runner 镜像里的 Chrome 会自己往前跑（10-05 那次是 152，十几天后已经是 155），
-      # 而 @axe-core/cli 自带的 chromedriver 钉在旧大版本上，于是它连浏览器都起不来：
+      # runner 镜像里的 Chrome 会自己往前跑（10-05 跑绿那次还是 152，十几天后的这两次
+      # push 已经是 155），而 @axe-core/cli 自带的 chromedriver 钉在旧大版本上，于是
+      # 它连浏览器都起不来：
       #   session not created: This version of ChromeDriver only supports Chrome version 152
-      # 这不是页面问题，却让整条流水线红着、Pages 一直没更新。装一个跟当前 Chrome
-      # 同大版本的 chromedriver 交给 axe。
+      # 这两次 push 都不是页面问题，却全挂在这一步，Pages 也就跟着没动。装一个跟当前
+      # Chrome 同大版本的 chromedriver 交给 axe。
       - name: 装与 Chrome 同版的 ChromeDriver
         run: |
           MAJOR=$(google-chrome --version | awk '{print $3}' | cut -d. -f1)
