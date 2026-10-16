@@ -3,16 +3,8 @@
 <head>
  <meta charset="UTF-8">
  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- 内容安全策略。
-       资源全部在同域（vendor 目录连字体都带版本号跟着一起提交），
-       唯一的出网是查 MC 状态用的那两个 API。
-
-       'unsafe-inline' 是现状的如实描述，不是偷懒：七个页面各自带着内联
-       <script>（主题、AUTH_KEY 的 sessionStorage 读写、页面自己的逻辑）。
-       base-uri / form-action / frame-ancestors 才是这里真正拿得到的东西——
-       它们拦的是注入进来的表单提交与点击劫持，跟内联脚本无关。
-       要去掉 script-src 里的 'unsafe-inline'，得先把七份内联脚本搬出去，
-       那是一次有回归风险的重构，不该顺手做。 -->
+  <!-- CSP：'unsafe-inline' 是现状的如实描述——七个页面各自带着内联 <script>。
+       要摘掉它得先把七份脚本搬出去，那是一次有回归风险的重构，不该顺手做。-->
   <meta http-equiv="Content-Security-Policy" content="
       default-src 'self';
       script-src 'self' 'unsafe-inline';
@@ -23,11 +15,8 @@
       base-uri 'none';
       form-action 'self';
       object-src 'none'">
-       frame-ancestors 写在这里是**无效**的：它只能走 HTTP 响应头，而这里是
-       <meta>——浏览器照常解析然后打一条 console 警告（"directive 'frame-ancestors'
-       is ignored when delivered via a <meta> element"），每页一次。所以不写它：
-       一条每页刷屏的警告换不来任何防护。要防点击劫持得让服务器发 X-Frame-Options，
-       而 GitHub Pages 不给这个口子。
+  <!-- frame-ancestors 只能走响应头，GitHub Pages 发不了，写在这里只会每页刷一条
+       console 警告，故不写。-->
  <title>404 · SnowBlock 状态站</title>
  <meta name="robots" content="noindex">
  <link rel="icon" href="assets/brand/favicon.ico" sizes="48x48">
@@ -73,9 +62,8 @@
  .nf-sub { color:var(--text-secondary); font-size:0.95rem; margin:0.6rem 0 1.8rem; }
  .nf-home {
    display:inline-block; text-decoration:none;
-   /* 白字压 --color-accent 实测浅色 3.09:1 / 深色 1.59:1，都不达标。改用
-       --heading-accent 打底（浅色 #2f6a84、深色 #8fd8ef），文字色按主题翻转
-       后分别是 5.97:1 与 9.31:1。 */
+   /* --color-accent 打底的白字实测 3.09:1(浅) / 1.59:1(深)，均不达标；
+   改用 --heading-accent 打底，按主题翻转文字色后为 5.97:1 与 9.31:1。 */
     color:#fff; background:var(--heading-accent);
    font-size:0.92rem; font-weight:600;
    padding:0.72rem 1.7rem; border-radius:999px;
