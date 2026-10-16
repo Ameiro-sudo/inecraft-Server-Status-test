@@ -82,6 +82,20 @@ jobs:
           node scripts/check-tokens-drift.mjs \
             'B=https://raw.githubusercontent.com/Ameiro-sudo/inecraft-Server-Status-test/main/assets/css/tokens.css' \
             'blog=https://raw.githubusercontent.com/Ameiro-sudo/blog/main/assets/css/tokens.css'
+      # ---------------------------------------------------------------
+      # 页面不变量检查
+      #
+      # 这三条约束以前写在本站 7 个页面的 HTML 注释里，而散文拦不住回归：那段讲
+      # frame-ancestors 的说明少写了一个 `<!--`，整段说明变成正文，把 <title> 和
+      # 二十来个 <meta> 从 head 挤进了 body —— 线上 8460 字节的响应里含着它，
+      # 每个访客都会先看到一段无样式的黑字。防错措施自己成了最大的那次错误。
+      # 现在注释只留一行禁令，判据搬到这里：
+      #   1. head 里不许有注释外的裸文本，注释必须闭合；
+      #   2. 内联 <style> 里不许出现 @media (prefers-color-scheme: dark)；
+      #   3. toast.css 的 <link> 必须排在 style.css 之后（本仓没这个文件，这条自动跳过）。
+      # 三条都属于「改错了不会报错」的那类，所以只能由 CI 报。改注释没用。
+      - name: 页面不变量检查
+        run: node scripts/check-page-invariants.mjs
 
   deploy:
     environment:
@@ -106,7 +120,7 @@ jobs:
       - name: 收集要发布的文件
         run: |
           mkdir -p _site
-          cp CNAME robots.txt sitemap.xml _site/
+          cp CNAME robots.txt sitemap.xml favicon.ico _site/
           cp ./*.html _site/
           cp -r ./assets _site/assets
           echo "将发布："; find _site -maxdepth 1 | sort
