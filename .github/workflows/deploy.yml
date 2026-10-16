@@ -29,6 +29,22 @@ jobs:
         with:
           node-version: 22
 
+      # runner 镜像里的 Chrome 会自己往前跑（10-05 那次是 152，十几天后已经是 155），
+      # 而 @axe-core/cli 自带的 chromedriver 钉在旧大版本上，于是它连浏览器都起不来：
+      #   session not created: This version of ChromeDriver only supports Chrome version 152
+      # 这不是页面问题，却让整条流水线红着、Pages 一直没更新。装一个跟当前 Chrome
+      # 同大版本的 chromedriver 交给 axe。
+      - name: 装与 Chrome 同版的 ChromeDriver
+        run: |
+          MAJOR=$(google-chrome --version | awk '{print $3}' | cut -d. -f1)
+          npm i --prefix "$RUNNER_TEMP/driver" --no-save --no-package-lock "chromedriver@$MAJOR" \
+            || npm i --prefix "$RUNNER_TEMP/driver" --no-save --no-package-lock chromedriver@latest
+          DRIVER=$(node -e "process.stdout.write(require('$RUNNER_TEMP/driver/node_modules/chromedriver').path)")
+          test -x "$DRIVER"
+          google-chrome --version
+          "$DRIVER" --version
+          echo "CHROMEDRIVER_PATH=$DRIVER" >> "$GITHUB_ENV"
+
       # axe 必须对着真的 HTTP origin 扫。传本地文件路径时它会去请求自己的
       # 服务器并拿回一张错误页，于是报出来的违规全是那张页面的（实测会报
       # 「没有 main landmark」，而本仓库的页面明明有）。
@@ -47,6 +63,7 @@ jobs:
       - name: axe 扫描（0 违规才继续）
         run: |
           npx --yes @axe-core/cli@latest --exit --load-delay 1500 --save axe-report \
+          --chromedriver-path "$CHROMEDRIVER_PATH" \
           http://127.0.0.1:8081/index.html \
           http://127.0.0.1:8081/404.html \
           http://127.0.0.1:8081/login.html \

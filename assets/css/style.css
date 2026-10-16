@@ -1160,3 +1160,19 @@ textarea:focus-visible,
   outline-offset: 2px;
   border-radius: 4px;
 }
+
+/* ===== 屏读专用 =====
+   status.js 生成的服务器卡片里，靠这个类把那句「查看 X 的在线人数历史」藏起来。
+   别改成依赖 vendor 里 font-awesome 的同名类：那是个第三方大包，哪天把它子集化
+   或换掉，这句隐藏文字会直接显示在页面上，而且不会有任何报错。 */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}

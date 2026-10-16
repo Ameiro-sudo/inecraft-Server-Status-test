@@ -134,13 +134,17 @@
         } else {
             info += '<div class="server-motd" style="color:var(--text-muted);">服务器无法连接</div>';
         }
-        return '<div class="server-card" data-server-id="' + esc(srv.id) + '" tabindex="0" role="button" aria-label="查看 ' + esc(srv.name) + ' 的在线人数历史">' +
+        /* 不用 aria-label：这个按钮的可见文字是整张卡（人数/版本/延迟/MOTD），
+           2.5.3 要求屏读名称涵盖可见文字，手写的短标签必然不满足。
+           名称取自内容，动作提示靠末尾那句屏读专用文字补。 */
+        return '<div class="server-card" data-server-id="' + esc(srv.id) + '" tabindex="0" role="button">' +
             '<div class="server-header ' + cls + '">' +
                 '<div class="server-icon" style="display:flex;align-items:center;justify-content:center;font-size:1.8rem;">' + esc(srv.icon || '?') + '</div>' +
                 '<div class="server-name">' + esc(srv.name) + '</div>' +
                 '<div class="server-status">' + (online ? '在线' : '离线') + '</div>' +
             '</div>' +
             '<div class="server-body">' + info + '</div>' +
+            '<span class="sr-only">查看 ' + esc(srv.name) + ' 的在线人数历史</span>' +
         '</div>';
     }
 
